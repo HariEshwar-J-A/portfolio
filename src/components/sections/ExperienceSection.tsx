@@ -8,7 +8,7 @@ import Plot from 'react-plotly.js';
 const ExperienceSection: React.FC = () => {
   const { theme } = useTheme();
   const { experience } = portfolioData;
-  
+
   // Prepare data for timeline visualization
   const timelineData = {
     companies: experience.map(exp => exp.company),
@@ -16,6 +16,10 @@ const ExperienceSection: React.FC = () => {
     endDates: experience.map(exp => exp.endDate === 'Present' ? new Date() : new Date(exp.endDate)),
     positions: experience.map(exp => exp.position),
   };
+  
+  useEffect(() => {
+    console.log(timelineData);
+  }, [timelineData]);
   
   const plotlyColors = theme.mode === 'dark' ? 
     { bg: 'rgba(30, 41, 59, 0.8)', text: '#fff', gridColor: 'rgba(255, 255, 255, 0.1)' } : 
