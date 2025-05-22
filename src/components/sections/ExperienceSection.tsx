@@ -1,4 +1,4 @@
-import React, {useeffect} from 'react';
+import React, {useEffect} from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../hooks/useTheme';
 import { portfolioData } from '../../data/portfolioData';
