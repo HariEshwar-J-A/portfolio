@@ -10,6 +10,12 @@ const ExperienceSection: React.FC = () => {
   const { experience } = portfolioData;
   const [viewMode, setViewMode] = useState<'timeline' | 'map'>('timeline');
 
+  const handleCompanyClick = (url: string | undefined) => {
+    if (url) {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+  };
+
   // Prepare data for timeline visualization
   const timelineData = {
     companies: experience.toReversed().map(exp => exp.company),
@@ -274,7 +280,14 @@ const ExperienceSection: React.FC = () => {
                 
                 <div className="flex-grow">
                   <h3 className="text-2xl font-bold">{exp.position}</h3>
-                  <h4 className="text-xl" style={{ color: theme.colors.primary }}>{exp.company}</h4>
+                  <button
+                    onClick={() => handleCompanyClick(exp.website)}
+                    className={`text-xl hover:underline ${exp.website ? 'cursor-pointer' : 'cursor-default'}`}
+                    style={{ color: theme.colors.primary }}
+                    disabled={!exp.website}
+                  >
+                    {exp.company}
+                  </button>
                   
                   <div className="flex flex-wrap gap-4 mt-2">
                     <div className="flex items-center text-sm opacity-70">
