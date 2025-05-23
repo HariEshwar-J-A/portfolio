@@ -37,7 +37,7 @@ const Earth = ({ scale = 1 }) => {
       <Sphere args={[1.01, 64, 64]}>
         <meshPhongMaterial
           transparent
-          opacity={0.2}
+          opacity={1}
           color={theme.colors.primary}
         />
       </Sphere>
