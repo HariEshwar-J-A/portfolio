@@ -103,7 +103,7 @@ const Earth = ({ scale = 1 }) => {
       </Sphere>
       <Sphere ref={cloudsRef} args={[1.01, 32, 32]}>
         <meshPhongMaterial
-          map={textures.cloudsMap}
+          map={cloudsMap}
           transparent
           opacity={0.4}
           depthWrite={false}
