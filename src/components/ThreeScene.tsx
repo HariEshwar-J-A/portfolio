@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useMemo } from 'react';
 import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
-import { Points, PointMaterial } from '@react-three/drei';
+import { Points, PointMaterial, Stars, Environment } from '@react-three/drei';
 import { useTheme } from '../hooks/useTheme';
 import * as THREE from 'three';
 import { useSpring, animated } from '@react-spring/three';
@@ -83,28 +83,69 @@ const ParticleSystem = () => {
   );
 };
 
-// CelestialBody component
-const CelestialBody = ({ isDark }: { isDark: boolean }) => {
-  const meshRef = useRef<THREE.Mesh>(null);
-  const { clock } = useThree();
+// Earth component with atmosphere
+const Earth = ({ isDark }: { isDark: boolean }) => {
+  const earthRef = useRef<THREE.Mesh>(null);
+  const cloudsRef = useRef<THREE.Mesh>(null);
+  const atmosphereRef = useRef<THREE.Mesh>(null);
+  
+  // Load Earth textures
+  const [earthMap, bumpMap, cloudsMap, specularMap] = useLoader(THREE.TextureLoader, [
+    'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_atmos_2048.jpg',
+    'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_normal_2048.jpg',
+    'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_clouds_1024.png',
+    'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_specular_2048.jpg'
+  ]);
 
-  useFrame(() => {
-    if (meshRef.current) {
-      meshRef.current.rotation.y = clock.getElapsedTime() * 0.1;
+  useFrame(({ clock }) => {
+    if (earthRef.current) {
+      earthRef.current.rotation.y = clock.getElapsedTime() * 0.1;
+    }
+    if (cloudsRef.current) {
+      cloudsRef.current.rotation.y = clock.getElapsedTime() * 0.12;
+    }
+    if (atmosphereRef.current) {
+      atmosphereRef.current.rotation.y = clock.getElapsedTime() * 0.1;
     }
   });
 
   return (
-    <mesh ref={meshRef}>
-      <sphereGeometry args={[2, 64, 64]} />
-      <meshStandardMaterial
-        color={isDark ? '#f1f5f9' : '#fbbf24'}
-        emissive={isDark ? '#94a3b8' : '#fef3c7'}
-        emissiveIntensity={0.5}
-        roughness={0.7}
-        metalness={0.3}
-      />
-    </mesh>
+    <group>
+      {/* Earth base */}
+      <mesh ref={earthRef}>
+        <sphereGeometry args={[2, 64, 64]} />
+        <meshPhongMaterial
+          map={earthMap}
+          bumpMap={bumpMap}
+          bumpScale={0.05}
+          specularMap={specularMap}
+          specular={new THREE.Color('#909090')}
+          shininess={5}
+        />
+      </mesh>
+      
+      {/* Clouds layer */}
+      <mesh ref={cloudsRef} scale={1.003}>
+        <sphereGeometry args={[2, 64, 64]} />
+        <meshPhongMaterial
+          map={cloudsMap}
+          transparent={true}
+          opacity={0.4}
+          depthWrite={false}
+        />
+      </mesh>
+      
+      {/* Atmosphere glow */}
+      <mesh ref={atmosphereRef} scale={1.01}>
+        <sphereGeometry args={[2, 64, 64]} />
+        <meshPhongMaterial
+          transparent={true}
+          opacity={0.2}
+          color={isDark ? '#4B5563' : '#60A5FA'}
+          side={THREE.BackSide}
+        />
+      </mesh>
+    </group>
   );
 };
 
@@ -153,10 +194,30 @@ const Scene = () => {
 
   return (
     <>
-      <ambientLight intensity={0.5} />
-      <pointLight position={[10, 10, 10]} intensity={1} />
+      {/* Dynamic lighting based on theme */}
+      <ambientLight intensity={isDark ? 0.1 : 0.4} />
+      <pointLight 
+        position={[50, 20, 20]} 
+        intensity={isDark ? 0.5 : 2}
+        color={isDark ? '#94A3B8' : '#FCD34D'}
+      />
+      
+      {/* Starry background */}
+      <Stars 
+        radius={300} 
+        depth={50} 
+        count={5000} 
+        factor={4} 
+        saturation={0} 
+        fade={true}
+        speed={0.5}
+      />
+      
+      {/* Scene environment */}
+      <Environment preset={isDark ? "night" : "sunset"} />
+      
       <ParticleSystem />
-      <CelestialBody isDark={isDark} />
+      <Earth isDark={isDark} />
       <Planets isDark={isDark} />
     </>
   );
@@ -177,18 +238,20 @@ const ThreeScene: React.FC = () => {
     >
       <Canvas
         camera={{ 
-          position: [0, 0, 20],
+          position: [0, 5, 20],
           fov: 60,
           near: 0.1,
           far: 1000
         }}
         gl={{ 
           antialias: true,
-          alpha: true
+          alpha: true,
+          logarithmicDepthBuffer: true
         }}
         style={{ 
           position: 'absolute',
-          pointerEvents: 'none'
+          pointerEvents: 'none',
+          background: theme.mode === 'dark' ? '#0F172A' : '#F8FAFC'
         }}
       >
         <Scene />
