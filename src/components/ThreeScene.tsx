@@ -15,7 +15,6 @@ const TEXTURE_URLS = {
 const Earth = ({ isDark }: { isDark: boolean }) => {
   const earthRef = useRef<THREE.Mesh>(null);
   const cloudsRef = useRef<THREE.Mesh>(null);
-  const atmosphereRef = useRef<THREE.Mesh>(null);
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
   const [texturesLoaded, setTexturesLoaded] = useState(false);
   
@@ -56,9 +55,6 @@ const Earth = ({ isDark }: { isDark: boolean }) => {
     if (cloudsRef.current) {
       cloudsRef.current.rotation.y = clock.getElapsedTime() * 0.08;
     }
-    if (atmosphereRef.current) {
-      atmosphereRef.current.rotation.y = clock.getElapsedTime() * 0.05;
-    }
   });
 
   if (!texturesLoaded) {
@@ -71,9 +67,10 @@ const Earth = ({ isDark }: { isDark: boolean }) => {
       <mesh ref={earthRef}>
         <sphereGeometry args={[2, 64, 64]} />
         <meshPhongMaterial
+          attach="material"
           map={textures.earthMap}
-          shininess={isDark ? 15 : 10}
-          specular={new THREE.Color(isDark ? '#334155' : '#94A3B8')}
+          shininess={5}
+          specular={new THREE.Color(0x333333)}
         />
       </mesh>
       
@@ -81,22 +78,12 @@ const Earth = ({ isDark }: { isDark: boolean }) => {
       <mesh ref={cloudsRef} scale={1.003}>
         <sphereGeometry args={[2, 64, 64]} />
         <meshPhongMaterial
+          attach="material"
           map={textures.cloudsMap}
           transparent={true}
-          opacity={isDark ? 0.2 : 0.3}
+          opacity={0.4}
           depthWrite={false}
         />
-      </mesh>
-      
-      {/* Enhanced atmosphere glow */}
-      <mesh ref={atmosphereRef} scale={1.01}>
-        <sphereGeometry args={[2, 64, 64]} />
-        <meshPhongMaterial
-          transparent={true}
-          opacity={0.2}
-          color={isDark ? '#1E293B' : '#3B82F6'}
-          side={THREE.BackSide}
-          blending={THREE.AdditiveBlending} />
       </mesh>
     </group>
   );
@@ -106,23 +93,20 @@ const Earth = ({ isDark }: { isDark: boolean }) => {
 const Scene = () => {
   const { theme } = useTheme();
   const isDark = theme.mode === 'dark';
-  const ambientIntensity = isDark ? 0.8 : 1;
-  const pointLightIntensity = isDark ? 0.6 : 0.8;
+  const ambientIntensity = isDark ? 1 : 1.2;
+  const pointLightIntensity = isDark ? 1 : 1.2;
   
   // Create multiple light sources for even illumination
   const lightPositions = [
-    [10, 0, 0],
-    [-10, 0, 0],
-    [0, 10, 0],
-    [0, -10, 0],
-    [0, 0, 10],
-    [0, 0, -10]
+    [5, 5, 5],
+    [-5, -5, 5],
+    [5, -5, -5],
+    [-5, 5, -5]
   ];
 
   return (
     <>
       {/* Ambient light for base illumination */}
-      <ambientLight intensity={isDark ? 0.4 : 0.6} />
       <ambientLight intensity={ambientIntensity} />
       
       {/* Multiple point lights for even illumination */}
@@ -131,8 +115,8 @@ const Scene = () => {
           key={index}
           position={position}
           intensity={pointLightIntensity}
-          color={isDark ? '#CBD5E1' : '#FFFFFF'}
-          distance={20}
+          color="#FFFFFF"
+          distance={50}
           decay={2}
         />
       ))}
@@ -141,20 +125,11 @@ const Scene = () => {
       <Stars 
         radius={300} 
         depth={100} 
-        count={isDark ? 8000 : 4000} 
-        factor={isDark ? 6 : 4} 
-        saturation={isDark ? 1 : 0.5} 
+        count={5000} 
+        factor={4} 
+        saturation={0.8} 
         fade={true}
         speed={0.5}
-      />
-      <Stars 
-        radius={100}
-        depth={80}
-        count={isDark ? 6000 : 3000}
-        factor={4} 
-        saturation={isDark ? 0.8 : 0.3}
-        fade={true}
-        speed={0.2}
       />
       
       {/* Scene environment */}
@@ -174,15 +149,15 @@ const ThreeScene: React.FC = () => {
     <div 
       ref={containerRef}
       className="fixed top-0 left-0 w-full h-full pointer-events-none -z-10"
-      style={{ 
-        opacity: 0.6,
+      style={{
+        opacity: 0.8,
         transition: 'opacity 0.5s ease-in-out',
         background: theme.mode === 'dark' ? 'radial-gradient(circle at center, #1E293B 0%, #0F172A 100%)' : 'radial-gradient(circle at center, #BFDBFE 0%, #F8FAFC 100%)'
       }}
     >
       <Canvas
         camera={{ 
-          position: [0, 0, 8],
+          position: [0, 0, 6],
           fov: 60,
           near: 0.1,
           far: 1000
