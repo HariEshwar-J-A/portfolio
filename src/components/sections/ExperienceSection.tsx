@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../hooks/useTheme';
 import { portfolioData } from '../../data/portfolioData';
-import { Calendar, MapPin, Globe, Timeline } from 'lucide-react';
+import { Calendar, MapPin, Globe, Baseline as Timeline } from 'lucide-react';
 import Plot from 'react-plotly.js';
 
 const ExperienceSection: React.FC = () => {
