@@ -97,6 +97,7 @@ const Astronaut = ({ position }: { position: [number, number, number] }) => {
 const Scene = () => {
   const { theme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
+  const [smoothScroll, setSmoothScroll] = useState(0);
   const scroll = useScroll();
   const { camera } = useThree();
   const [animationProgress, setAnimationProgress] = useState(0);
@@ -108,13 +109,21 @@ const Scene = () => {
   useFrame(() => {
     if (!isMounted || !scroll) return;
     
-    const scrollOffset = scroll.offset || 0;
-    setAnimationProgress(scrollOffset);
+    // Smooth lerp for scroll animation
+    const scrollOffset = scroll.offset;
+    const lerpFactor = 0.1; // Adjust this value to control smoothness (0.1 = smooth, 1 = instant)
+    const newScroll = THREE.MathUtils.lerp(smoothScroll, scrollOffset, lerpFactor);
+    setSmoothScroll(newScroll);
+    setAnimationProgress(newScroll);
 
     // Camera movement based on scroll
-    camera.position.y = -scrollOffset * 20;
-    camera.position.z = 10 - scrollOffset * 5;
-    camera.lookAt(0, -scrollOffset * 20, 0);
+    const targetY = -newScroll * 20;
+    const targetZ = 10 - newScroll * 5;
+    
+    // Smooth camera movement
+    camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetY, lerpFactor);
+    camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, lerpFactor);
+    camera.lookAt(0, targetY, 0);
   });
 
   const earthPosition = useMemo(() => {
@@ -136,8 +145,14 @@ const Scene = () => {
       <group position={moonPosition}>
         <Moon />
       </group>
-      
-      <Astronaut position={[0, animationProgress * 15, 5 - animationProgress * 3]} />
+
+      <Astronaut 
+        position={[
+          THREE.MathUtils.lerp(0, 0, smoothScroll),
+          THREE.MathUtils.lerp(0, 15, smoothScroll),
+          THREE.MathUtils.lerp(5, 2, smoothScroll)
+        ]} 
+      />
       
       <ambientLight intensity={0.5} />
       <pointLight position={[10, 10, 10]} intensity={1} />
