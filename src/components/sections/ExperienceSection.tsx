@@ -10,6 +10,31 @@ const ExperienceSection: React.FC = () => {
   const { experience } = portfolioData;
   const [viewMode, setViewMode] = useState<'timeline' | 'map'>('timeline');
 
+  // Get unique locations with their associated experiences
+  const uniqueLocations = experience.reduce((acc, exp) => {
+    const key = `${exp.location}`;
+    if (!acc[key]) {
+      acc[key] = {
+        experiences: [],
+        coordinates: getCoordinates(exp.location)
+      };
+    }
+    acc[key].experiences.push(exp);
+    return acc;
+  }, {} as Record<string, { experiences: typeof experience, coordinates: [number, number] }>);
+
+  // Helper function to get coordinates for each location
+  function getCoordinates(location: string): [number, number] {
+    const coordinates: Record<string, [number, number]> = {
+      'Hamilton, Canada': [-79.8711, 43.2557],
+      'Mississauga, Canada': [-79.6583, 43.5890],
+      'Bangalore, India': [77.5946, 12.9716],
+      'Chennai, India': [80.2707, 13.0827],
+      'Thiruvallur, India': [79.1378, 13.1231]
+    };
+    return coordinates[location] || [0, 0];
+  }
+
   const handleCompanyClick = (url: string | undefined) => {
     if (url) {
       window.open(url, '_blank', 'noopener,noreferrer');
@@ -26,25 +51,37 @@ const ExperienceSection: React.FC = () => {
   };
 
   // Prepare data for map visualization
-  const mapData = experience.map(exp => ({
-    type: 'scattergeo',
-    lon: [78.9629], // Bangalore coordinates
-    lat: [17.3850],
-    name: exp.company,
-    text: [
-      `${exp.company}<br>${exp.position}<br>${exp.startDate} - ${exp.endDate}<br>${exp.location}`
-    ],
-    mode: 'markers',
-    marker: {
-      size: 12,
-      color: theme.colors.primary,
-      line: {
-        color: 'white',
-        width: 2
+  const mapData = Object.entries(uniqueLocations).map(([location, data]) => {
+    const [lon, lat] = data.coordinates;
+    const experiences = data.experiences;
+    
+    const text = experiences.map(exp => 
+      `${exp.company}\n${exp.position}\n${exp.startDate} - ${exp.endDate}`
+    ).join('\n\n');
+    
+    return {
+      type: 'scattergeo',
+      lon: [lon],
+      lat: [lat],
+      name: location,
+      text: [text],
+      mode: 'markers',
+      marker: {
+        size: 12,
+        color: theme.colors.primary,
+        line: {
+          color: 'white',
+          width: 2
+        }
+      },
+      hoverinfo: 'text',
+      hoverlabel: {
+        bgcolor: theme.mode === 'dark' ? 'rgba(30, 41, 59, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+        bordercolor: theme.colors.primary,
+        font: { family: 'Inter, system-ui, sans-serif' }
       }
-    },
-    hoverinfo: 'text'
-  }));
+    };
+  });
 
   const plotlyColors = theme.mode === 'dark' ? 
     { bg: 'rgba(30, 41, 59, 0.8)', text: '#fff', gridColor: 'rgba(255, 255, 255, 0.1)' } : 
@@ -226,6 +263,10 @@ const ExperienceSection: React.FC = () => {
                 geo: {
                   scope: 'world',
                   showland: true,
+                  center: { lon: 0, lat: 20 },
+                  projection: {
+                    scale: 1.5
+                  },
                   landcolor: theme.mode === 'dark' ? 'rgb(30, 41, 59)' : 'rgb(243, 244, 246)',
                   showocean: true,
                   oceancolor: theme.mode === 'dark' ? 'rgb(15, 23, 42)' : 'rgb(219, 234, 254)',
