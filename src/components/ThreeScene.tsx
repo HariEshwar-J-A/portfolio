@@ -106,6 +106,8 @@ const Earth = ({ isDark }: { isDark: boolean }) => {
 const Scene = () => {
   const { theme } = useTheme();
   const isDark = theme.mode === 'dark';
+  const ambientIntensity = isDark ? 0.8 : 1;
+  const pointLightIntensity = isDark ? 0.6 : 0.8;
   
   // Create multiple light sources for even illumination
   const lightPositions = [
@@ -121,13 +123,14 @@ const Scene = () => {
     <>
       {/* Ambient light for base illumination */}
       <ambientLight intensity={isDark ? 0.4 : 0.6} />
+      <ambientLight intensity={ambientIntensity} />
       
       {/* Multiple point lights for even illumination */}
       {lightPositions.map((position, index) => (
         <pointLight
           key={index}
           position={position}
-          intensity={isDark ? 0.3 : 0.4}
+          intensity={pointLightIntensity}
           color={isDark ? '#CBD5E1' : '#FFFFFF'}
           distance={20}
           decay={2}
@@ -138,7 +141,7 @@ const Scene = () => {
       <Stars 
         radius={300} 
         depth={100} 
-        count={isDark ? 10000 : 5000} 
+        count={isDark ? 8000 : 4000} 
         factor={isDark ? 6 : 4} 
         saturation={isDark ? 1 : 0.5} 
         fade={true}
@@ -147,7 +150,7 @@ const Scene = () => {
       <Stars 
         radius={100}
         depth={80}
-        count={isDark ? 8000 : 4000}
+        count={isDark ? 6000 : 3000}
         factor={4} 
         saturation={isDark ? 0.8 : 0.3}
         fade={true}
@@ -170,16 +173,16 @@ const ThreeScene: React.FC = () => {
   return (
     <div 
       ref={containerRef}
-      className="fixed top-0 left-0 w-full h-full pointer-events-none z-0"
+      className="fixed top-0 left-0 w-full h-full pointer-events-none -z-10"
       style={{ 
-        opacity: 0.8,
+        opacity: 0.6,
         transition: 'opacity 0.5s ease-in-out',
         background: theme.mode === 'dark' ? 'radial-gradient(circle at center, #1E293B 0%, #0F172A 100%)' : 'radial-gradient(circle at center, #BFDBFE 0%, #F8FAFC 100%)'
       }}
     >
       <Canvas
         camera={{ 
-          position: [0, 0, 6],
+          position: [0, 0, 8],
           fov: 60,
           near: 0.1,
           far: 1000
