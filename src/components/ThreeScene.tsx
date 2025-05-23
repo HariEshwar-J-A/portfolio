@@ -15,15 +15,12 @@ const Rocket = () => {
   useFrame((state) => {
     if (!meshRef.current) return;
     
-    // Update position
     meshRef.current.position.x += direction.x * speed;
     meshRef.current.position.y += direction.y * speed;
     
-    // Rotate based on direction
     const targetRotation = Math.atan2(direction.y, direction.x);
     meshRef.current.rotation.z = targetRotation - Math.PI / 2;
     
-    // Bounce off edges
     if (meshRef.current.position.x > 2 || meshRef.current.position.x < -2) {
       setDirection(prev => ({ ...prev, x: -prev.x }));
     }
@@ -66,15 +63,12 @@ const BouncingBall = () => {
   useFrame(() => {
     if (!meshRef.current) return;
     
-    // Update position
     meshRef.current.position.x += direction.x * speed;
     meshRef.current.position.y += direction.y * speed;
     
-    // Rotate
     meshRef.current.rotation.x += 0.01;
     meshRef.current.rotation.y += 0.01;
     
-    // Bounce off edges
     if (meshRef.current.position.x > 2 || meshRef.current.position.x < -2) {
       setDirection(prev => ({ ...prev, x: -prev.x }));
     }
@@ -101,12 +95,10 @@ const AnimatedShape = () => {
   const activeSection = useSelector((state: RootState) => state.navigation.activeSection);
   const [currentSection, setCurrentSection] = useState(activeSection);
   
-  // Only update the section when it actually changes
   useEffect(() => {
     setCurrentSection(activeSection);
   }, [activeSection]);
 
-  // Memoize the shape component to prevent unnecessary re-renders
   const ShapeComponent = useMemo(() => {
     switch(currentSection) {
       case 'skills':
@@ -136,7 +128,10 @@ const ThreeScene: React.FC = () => {
       <Canvas 
         camera={{ position: [0, 0, 5], fov: 45 }}
         gl={{ antialias: true }}
-        style={{ position: 'absolute' }}
+        style={{ 
+          position: 'absolute',
+          pointerEvents: 'none'
+        }}
         frameloop="always"
       >
         <ambientLight intensity={0.5} />
