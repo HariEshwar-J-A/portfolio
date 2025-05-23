@@ -41,6 +41,16 @@ const ContactSection: React.FC = () => {
     dispatch(resetStatus());
   };
   
+  const handleEmailClick = () => {
+    window.location.href = `mailto:${contact.email}`;
+  };
+  
+  const handlePhoneClick = () => {
+    if (contact.phone) {
+      window.location.href = `tel:${contact.phone}`;
+    }
+  };
+  
   const handleSocialClick = (url: string) => {
     window.open(url, '_blank', 'noopener,noreferrer');
   };
@@ -70,7 +80,7 @@ const ContactSection: React.FC = () => {
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{duration: 0.5, delay: 0.2 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
             >
               <h3 className="text-2xl font-bold mb-6">Contact Information</h3>
               
@@ -84,13 +94,13 @@ const ContactSection: React.FC = () => {
                   </div>
                   <div>
                     <h4 className="font-medium mb-1">Email</h4>
-                    <a 
-                      href={`mailto:${contact.email}`}
-                      className="text-primary hover:underline"
+                    <button 
+                      onClick={handleEmailClick}
+                      className="text-primary hover:underline cursor-pointer"
                       style={{ color: theme.colors.primary }}
                     >
                       {contact.email}
-                    </a>
+                    </button>
                   </div>
                 </div>
                 
@@ -104,13 +114,13 @@ const ContactSection: React.FC = () => {
                     </div>
                     <div>
                       <h4 className="font-medium mb-1">Phone</h4>
-                      <a 
-                        href={`tel:${contact.phone}`}
-                        className="text-primary hover:underline"
+                      <button 
+                        onClick={handlePhoneClick}
+                        className="text-primary hover:underline cursor-pointer"
                         style={{ color: theme.colors.primary }}
                       >
                         {contact.phone}
-                      </a>
+                      </button>
                     </div>
                   </div>
                 )}
