@@ -48,16 +48,16 @@ const Earth = ({ isDark }: { isDark: boolean }) => {
 
   useFrame(({ clock }) => {
     if (earthRef.current) {
-      earthRef.current.rotation.y = clock.getElapsedTime() * 0.5;
+      earthRef.current.rotation.y = clock.getElapsedTime() * 0.1;
       // Subtle tilt based on mouse position
       earthRef.current.rotation.x = mouse.y * 0.5;
       earthRef.current.rotation.z = mouse.x * 0.5;
     }
     if (cloudsRef.current) {
-      cloudsRef.current.rotation.y = clock.getElapsedTime() * 0.12;
+      cloudsRef.current.rotation.y = clock.getElapsedTime() * 0.08;
     }
     if (atmosphereRef.current) {
-      atmosphereRef.current.rotation.y = clock.getElapsedTime() * 0.1;
+      atmosphereRef.current.rotation.y = clock.getElapsedTime() * 0.05;
     }
   });
 
@@ -106,16 +106,33 @@ const Earth = ({ isDark }: { isDark: boolean }) => {
 const Scene = () => {
   const { theme } = useTheme();
   const isDark = theme.mode === 'dark';
+  
+  // Create multiple light sources for even illumination
+  const lightPositions = [
+    [10, 0, 0],
+    [-10, 0, 0],
+    [0, 10, 0],
+    [0, -10, 0],
+    [0, 0, 10],
+    [0, 0, -10]
+  ];
 
   return (
     <>
-      {/* Dynamic lighting based on theme */}
-      <ambientLight intensity={isDark ? 0.1 : 0.4} />
-      <pointLight 
-        position={[10, 5, 10]} 
-        intensity={isDark ? 1 : 2}
-        color={isDark ? '#CBD5E1' : '#FCD34D'}
-      />
+      {/* Ambient light for base illumination */}
+      <ambientLight intensity={isDark ? 0.4 : 0.6} />
+      
+      {/* Multiple point lights for even illumination */}
+      {lightPositions.map((position, index) => (
+        <pointLight
+          key={index}
+          position={position}
+          intensity={isDark ? 0.3 : 0.4}
+          color={isDark ? '#CBD5E1' : '#FFFFFF'}
+          distance={20}
+          decay={2}
+        />
+      ))}
       
       {/* Dense starfield with theme-based adjustments */}
       <Stars 
@@ -162,7 +179,7 @@ const ThreeScene: React.FC = () => {
     >
       <Canvas
         camera={{ 
-          position: [0, 0, 8],
+          position: [0, 0, 6],
           fov: 60,
           near: 0.1,
           far: 1000
