@@ -18,29 +18,42 @@ const Rocket = ({ position }: { position: [number, number, number] }) => {
   const rocketRef = useRef<THREE.Group>(null);
   const flameRef = useRef<THREE.Group>(null);
   
+  const flameColors = useMemo(() => ({
+    primary: new THREE.Color('#ff4400'),
+    secondary: new THREE.Color('#ff8800')
+  }), []);
+  
   useFrame(({ clock }) => {
     if (rocketRef.current) {
-      // Add more dynamic rocket movement
-      rocketRef.current.rotation.z = Math.sin(clock.getElapsedTime() * 2) * 0.1;
+      // Smoother rocket movement
+      rocketRef.current.rotation.z = Math.sin(clock.getElapsedTime()) * 0.05;
+      rocketRef.current.rotation.x = Math.cos(clock.getElapsedTime() * 0.5) * 0.02;
     }
     if (flameRef.current) {
-      // Animate rocket flame
-      flameRef.current.scale.y = 1 + Math.sin(clock.getElapsedTime() * 30) * 0.2;
+      // More dynamic flame animation
+      flameRef.current.scale.y = 1 + Math.sin(clock.getElapsedTime() * 20) * 0.3;
+      flameRef.current.scale.x = 1 + Math.cos(clock.getElapsedTime() * 15) * 0.1;
     }
   });
   
   return (
     <group ref={rocketRef} position={position}>
       <Trail
-        width={1}
-        length={4}
+        width={2}
+        length={8}
         color={'#ffffff'}
-        attenuation={(t) => t * t}
+        attenuation={(t) => Math.pow(t, 1.5)}
       >
       {/* Main body */}
       <mesh position={[0, 0, 0]}>
         <cylinderGeometry args={[0.5, 0.8, 4, 32]} />
-        <meshStandardMaterial color="#ffffff" metalness={0.9} roughness={0.1} />
+        <meshPhysicalMaterial 
+          color="#ffffff" 
+          metalness={0.9} 
+          roughness={0.1}
+          clearcoat={1}
+          clearcoatRoughness={0.1} 
+        />
       </mesh>
       </Trail>
       {/* Nose cone */}
@@ -52,11 +65,11 @@ const Rocket = ({ position }: { position: [number, number, number] }) => {
       <group ref={flameRef} position={[0, -2, 0]}>
         <mesh>
           <coneGeometry args={[0.4, 2, 32]} />
-          <meshBasicMaterial color="#ff4400" transparent opacity={0.8} />
+          <meshBasicMaterial color={flameColors.primary} transparent opacity={0.9} />
         </mesh>
         <mesh position={[0, -0.5, 0]}>
           <coneGeometry args={[0.2, 1, 32]} />
-          <meshBasicMaterial color="#ff8800" transparent opacity={0.6} />
+          <meshBasicMaterial color={flameColors.secondary} transparent opacity={0.7} />
         </mesh>
       </group>
       {/* Fins */}
@@ -163,11 +176,11 @@ const Scene = () => {
   const calculateCameraPosition = (progress: number): [number, number, number] => {
     if (progress < 0.3) {
       // Initial phase: On Earth, looking at rocket
-      const t = THREE.MathUtils.smoothstep(progress, 0, 0.3);
+      const t = THREE.MathUtils.smootherstep(progress, 0, 0.3);
       const curve = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(6, 2, 16),
-        new THREE.Vector3(8, 4, 18),
-        new THREE.Vector3(10, 6, 24)
+        new THREE.Vector3(12, 4, 24),
+        new THREE.Vector3(14, 6, 28),
+        new THREE.Vector3(16, 8, 32)
       ]);
       const point = curve.getPoint(t);
       return [point.x, point.y, point.z];
@@ -251,22 +264,36 @@ const Scene = () => {
   return (
     <>
       <ScrollControls pages={2} damping={0.2}>
-        <Scroll onScroll={onScroll}>
-          <Stars radius={100} depth={50} count={5000} factor={4} fade speed={1} />
+        <Scroll onScroll={onScroll} damping={0.4}>
+          <Stars 
+            radius={120} 
+            depth={60} 
+            count={7000} 
+            factor={6} 
+            saturation={1} 
+            fade 
+            speed={0.5} 
+          />
           {/* Reduced group nesting for better performance */}
           <group position={earthPosition}>
-            <Earth scale={5} />
+            <Earth scale={6} />
             <Moon scale={1.2} />
             <Rocket position={calculateRocketPosition(scrollProgress)} />
           </group>
           
-          <ambientLight intensity={0.5} />
-          <pointLight position={[10, 10, 10]} intensity={2} />
+          <ambientLight intensity={0.3} />
+          <pointLight position={[10, 10, 10]} intensity={1.5} />
           <pointLight position={[-10, -10, -10]} intensity={0.5} />
-          <Environment preset="night" />
+          <Environment preset="sunset" />
           
           {/* Atmospheric effects */}
-          <Cloud opacity={0.2} speed={0.2} width={20} depth={1.5} segments={20} />
+          <Cloud 
+            opacity={0.15} 
+            speed={0.3} 
+            width={30} 
+            depth={2} 
+            segments={25} 
+          />
         </Scroll>
       </ScrollControls>
     </>
@@ -283,24 +310,30 @@ const ThreeScene: React.FC = () => {
       ref={containerRef}
       className="fixed top-0 left-0 w-full h-full pointer-events-none z-0"
       style={{ 
-        opacity: isInView ? 0.6 : 0,
+        opacity: isInView ? 0.8 : 0,
         transition: 'opacity 0.5s ease-in-out',
       }}
     >
       {isInView && (
         <Canvas 
-          camera={{ position: [6, 2, 16], fov: 45 }}
+          camera={{ 
+            position: [12, 4, 24], 
+            fov: 60,
+            near: 0.1,
+            far: 1000
+          }}
           gl={{ 
             antialias: true,
             powerPreference: "high-performance",
-            precision: "highp"
+            precision: "highp",
+            alpha: true
           }}
           linear
           style={{ 
             position: 'absolute',
             pointerEvents: 'none'
           }}
-          frameloop="demand"
+          frameloop="always"
           dpr={Math.min(2, window.devicePixelRatio)}
         >
           <Scene />
