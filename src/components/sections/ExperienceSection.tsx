@@ -96,7 +96,7 @@ const ExperienceSection: React.FC = () => {
             <Plot
               data={[
                 {
-                  x: timelineData.endDates,
+                  x: timelineData.endDate,
                   y: timelineData.companies,
                   type: 'scatter',
                   mode: 'lines+markers',
