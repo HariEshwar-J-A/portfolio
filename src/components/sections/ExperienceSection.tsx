@@ -12,11 +12,11 @@ const ExperienceSection: React.FC = () => {
 
   // Prepare data for timeline visualization
   const timelineData = {
-    companies: experience.map(exp => exp.company),
-    startDates: experience.map(exp => new Date(exp.startDate)),
-    endDates: experience.map(exp => exp.endDate === 'Present' ? new Date() : new Date(exp.endDate)),
-    positions: experience.map(exp => exp.position),
-    locations: experience.map(exp => exp.location),
+    companies: experience.toReversed().map(exp => exp.company),
+    startDates: experience.toReversed().map(exp => new Date(exp.startDate)),
+    endDates: experience.toReversed().map(exp => exp.endDate === 'Present' ? new Date() : new Date(exp.endDate)),
+    positions: experience.toReversed().map(exp => exp.position),
+    locations: experience.toReversed().map(exp => exp.location),
   };
 
   // Prepare data for map visualization
