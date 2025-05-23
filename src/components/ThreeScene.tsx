@@ -11,12 +11,12 @@ const Earth = ({ isDark }: { isDark: boolean }) => {
   const atmosphereRef = useRef<THREE.Mesh>(null);
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
   
-  // Load Earth textures - using updated reliable URLs
+  // Load Earth textures - using NASA's public domain textures
   const [earthDayMap, bumpMap, cloudsMap, specularMap] = useLoader(THREE.TextureLoader, [
-    'https://unpkg.com/three-globe@2.30.0/example/img/earth-day.jpg',
-    'https://unpkg.com/three-globe@2.30.0/example/img/earth-topology.png',
-    'https://unpkg.com/three-globe@2.30.0/example/img/earth-clouds.png',
-    'https://unpkg.com/three-globe@2.30.0/example/img/earth-water.png'
+    'https://svs.gsfc.nasa.gov/vis/a000000/a002900/a002915/bluemarble-2048.png',
+    'https://svs.gsfc.nasa.gov/vis/a000000/a004500/a004536/elevation.jpg',
+    'https://eoimages.gsfc.nasa.gov/images/imagerecords/57000/57747/cloud_combined_2048.jpg',
+    'https://svs.gsfc.nasa.gov/vis/a000000/a004700/a004720/land_ocean_ice_2048.png'
   ]);
 
   useEffect(() => {
