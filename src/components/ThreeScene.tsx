@@ -11,13 +11,12 @@ const Earth = ({ isDark }: { isDark: boolean }) => {
   const atmosphereRef = useRef<THREE.Mesh>(null);
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
   
-  // Load Earth textures - using reliable CDN URLs
-  const [earthDayMap, earthNightMap, bumpMap, cloudsMap, specularMap] = useLoader(THREE.TextureLoader, [
-    'https://cdn.jsdelivr.net/gh/mrdoob/three.js/examples/textures/planets/earth_atmos_2048.jpg',
-    'https://cdn.jsdelivr.net/gh/mrdoob/three.js/examples/textures/planets/earth_lights_2048.jpg',
-    'https://cdn.jsdelivr.net/gh/mrdoob/three.js/examples/textures/planets/earth_normal_2048.jpg',
-    'https://cdn.jsdelivr.net/gh/mrdoob/three.js/examples/textures/planets/earth_clouds_1024.png',
-    'https://cdn.jsdelivr.net/gh/mrdoob/three.js/examples/textures/planets/earth_specular_2048.jpg'
+  // Load Earth textures - using updated reliable URLs
+  const [earthDayMap, bumpMap, cloudsMap, specularMap] = useLoader(THREE.TextureLoader, [
+    'https://unpkg.com/three-globe@2.30.0/example/img/earth-day.jpg',
+    'https://unpkg.com/three-globe@2.30.0/example/img/earth-topology.png',
+    'https://unpkg.com/three-globe@2.30.0/example/img/earth-clouds.png',
+    'https://unpkg.com/three-globe@2.30.0/example/img/earth-water.png'
   ]);
 
   useEffect(() => {
@@ -53,12 +52,13 @@ const Earth = ({ isDark }: { isDark: boolean }) => {
       <mesh ref={earthRef}>
         <sphereGeometry args={[2, 64, 64]} />
         <meshPhongMaterial
-          map={isDark ? earthNightMap : earthDayMap}
+          map={earthDayMap}
           bumpMap={bumpMap}
           bumpScale={0.05}
           specularMap={specularMap}
           specular={new THREE.Color(isDark ? '#ffffff' : '#909090')}
           shininess={isDark ? 10 : 5}
+          color={isDark ? '#666666' : '#ffffff'}
         />
       </mesh>
       
