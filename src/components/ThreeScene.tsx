@@ -4,15 +4,45 @@ import {
   Sphere, 
   Stars, 
   useScroll,
-  PerspectiveCamera,
-  useAnimations,
   Environment,
   Cloud
 } from '@react-three/drei';
 import { useTheme } from '../hooks/useTheme';
-import { useSelector } from 'react-redux';
-import { RootState } from '../store/store';
 import * as THREE from 'three';
+
+// Rocket component
+const Rocket = ({ position }: { position: [number, number, number] }) => {
+  const rocketRef = useRef<THREE.Group>(null);
+  
+  useFrame(({ clock }) => {
+    if (rocketRef.current) {
+      // Add subtle hover animation
+      rocketRef.current.position.y += Math.sin(clock.getElapsedTime() * 2) * 0.001;
+    }
+  });
+  
+  return (
+    <group ref={rocketRef} position={position}>
+      {/* Main body */}
+      <mesh position={[0, 0, 0]}>
+        <cylinderGeometry args={[0.5, 0.8, 4, 32]} />
+        <meshStandardMaterial color="#ffffff" metalness={0.8} roughness={0.2} />
+      </mesh>
+      {/* Nose cone */}
+      <mesh position={[0, 2.5, 0]}>
+        <coneGeometry args={[0.5, 1, 32]} />
+        <meshStandardMaterial color="#ffffff" metalness={0.8} roughness={0.2} />
+      </mesh>
+      {/* Fins */}
+      {[0, Math.PI * 0.5, Math.PI, Math.PI * 1.5].map((rotation, i) => (
+        <mesh key={i} position={[0, -1.5, 0]} rotation={[0, rotation, 0]}>
+          <boxGeometry args={[0.1, 1, 1]} />
+          <meshStandardMaterial color="#ff0000" metalness={0.6} roughness={0.3} />
+        </mesh>
+      ))}
+    </group>
+  );
+};
 
 // Earth component with atmosphere effect
 const Earth = ({ scale = 1 }) => {
@@ -67,63 +97,92 @@ const Moon = ({ scale = 0.27 }) => {
   );
 };
 
-// Astronaut component
-const Astronaut = ({ position }: { position: [number, number, number] }) => {
-  const { theme } = useTheme();
-  const meshRef = useRef<THREE.Group>(null);
-
-  useFrame(({ clock }) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.y = Math.sin(clock.getElapsedTime() * 0.5) * 0.1;
-      meshRef.current.position.y = Math.sin(clock.getElapsedTime()) * 0.1;
-    }
-  });
-
-  return (
-    <group ref={meshRef} position={position} scale={0.5}>
-      <mesh>
-        <capsuleGeometry args={[0.5, 1, 4, 8]} />
-        <meshStandardMaterial color={theme.colors.primary} metalness={0.8} roughness={0.2} />
-      </mesh>
-      <mesh position={[0, 0.8, 0]}>
-        <sphereGeometry args={[0.4, 32, 32]} />
-        <meshStandardMaterial color="#ffffff" metalness={0.2} roughness={0.1} />
-      </mesh>
-    </group>
-  );
-};
-
 // Scene component that handles animations
 const Scene = () => {
-  const { theme } = useTheme();
   const [isMounted, setIsMounted] = useState(false);
   const [smoothScroll, setSmoothScroll] = useState(0);
   const scroll = useScroll();
   const { camera } = useThree();
-  const [animationProgress, setAnimationProgress] = useState(0);
+  const rocketRef = useRef<THREE.Group>(null);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  const calculateCameraPosition = (progress: number): [number, number, number] => {
+    if (progress < 0.3) {
+      // Initial phase: On Earth, looking at rocket
+      return [
+        THREE.MathUtils.lerp(5, 10, progress / 0.3),
+        THREE.MathUtils.lerp(2, 5, progress / 0.3),
+        THREE.MathUtils.lerp(10, 15, progress / 0.3)
+      ];
+    } else if (progress < 0.7) {
+      // Middle phase: Following rocket through space
+      const t = (progress - 0.3) / 0.4;
+      return [
+        THREE.MathUtils.lerp(10, 15, t),
+        THREE.MathUtils.lerp(5, 20, t),
+        THREE.MathUtils.lerp(15, 5, t)
+      ];
+    } else {
+      // Final phase: Approaching moon
+      const t = (progress - 0.7) / 0.3;
+      return [
+        THREE.MathUtils.lerp(15, 8, t),
+        THREE.MathUtils.lerp(20, 25, t),
+        THREE.MathUtils.lerp(5, 0, t)
+      ];
+    }
+  };
+
+  const calculateRocketPosition = (progress: number): [number, number, number] => {
+    if (progress < 0.3) {
+      // On Earth's surface
+      return [
+        THREE.MathUtils.lerp(0, 2, progress / 0.3),
+        THREE.MathUtils.lerp(1, 3, progress / 0.3),
+        THREE.MathUtils.lerp(0, 5, progress / 0.3)
+      ];
+    } else if (progress < 0.7) {
+      // Space journey
+      const t = (progress - 0.3) / 0.4;
+      return [
+        THREE.MathUtils.lerp(2, 5, t),
+        THREE.MathUtils.lerp(3, 18, t),
+        THREE.MathUtils.lerp(5, 0, t)
+      ];
+    } else {
+      // Moon approach
+      const t = (progress - 0.7) / 0.3;
+      return [
+        THREE.MathUtils.lerp(5, 5, t),
+        THREE.MathUtils.lerp(18, 22, t),
+        THREE.MathUtils.lerp(0, -3, t)
+      ];
+    }
+  };
 
   useFrame(() => {
     if (!isMounted || !scroll) return;
     
     // Smooth lerp for scroll animation
     const scrollOffset = scroll.offset;
-    const lerpFactor = 0.1; // Adjust this value to control smoothness (0.1 = smooth, 1 = instant)
+    const lerpFactor = 0.05; // Smoother transition
     const newScroll = THREE.MathUtils.lerp(smoothScroll, scrollOffset, lerpFactor);
     setSmoothScroll(newScroll);
-    setAnimationProgress(newScroll);
 
-    // Camera movement based on scroll
-    const targetY = -newScroll * 20;
-    const targetZ = 10 - newScroll * 5;
+    // Calculate camera and rocket positions
+    const [camX, camY, camZ] = calculateCameraPosition(newScroll);
+    const [rocketX, rocketY, rocketZ] = calculateRocketPosition(newScroll);
     
     // Smooth camera movement
-    camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetY, lerpFactor);
-    camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetZ, lerpFactor);
-    camera.lookAt(0, targetY, 0);
+    camera.position.x = THREE.MathUtils.lerp(camera.position.x, camX, lerpFactor);
+    camera.position.y = THREE.MathUtils.lerp(camera.position.y, camY, lerpFactor);
+    camera.position.z = THREE.MathUtils.lerp(camera.position.z, camZ, lerpFactor);
+    
+    // Make camera look at rocket
+    camera.lookAt(rocketX, rocketY, rocketZ);
   });
 
   const earthPosition = useMemo(() => {
@@ -131,7 +190,7 @@ const Scene = () => {
   }, []);
 
   const moonPosition = useMemo(() => {
-    return [5, 20, -5] as [number, number, number];
+    return [5, 25, -5] as [number, number, number];
   }, []);
 
   return (
@@ -139,26 +198,21 @@ const Scene = () => {
       <Stars radius={100} depth={50} count={5000} factor={4} fade speed={1} />
       
       <group position={earthPosition}>
-        <Earth scale={3} />
+        <Earth scale={2} />
       </group>
       
       <group position={moonPosition}>
         <Moon />
       </group>
 
-      <Astronaut 
-        position={[
-          THREE.MathUtils.lerp(0, 0, smoothScroll),
-          THREE.MathUtils.lerp(0, 15, smoothScroll),
-          THREE.MathUtils.lerp(5, 2, smoothScroll)
-        ]} 
-      />
+      <Rocket position={calculateRocketPosition(smoothScroll)} />
       
       <ambientLight intensity={0.5} />
       <pointLight position={[10, 10, 10]} intensity={1} />
+      <pointLight position={[-10, -10, -10]} intensity={0.5} />
       <Environment preset="sunset" />
       
-      {/* Add some atmospheric clouds */}
+      {/* Atmospheric effects */}
       <Cloud opacity={0.5} speed={0.4} width={20} depth={1.5} segments={20} />
     </>
   );
@@ -173,7 +227,7 @@ const ThreeScene: React.FC = () => {
       ref={containerRef}
       className="fixed top-0 left-0 w-full h-full pointer-events-none z-0"
       style={{ 
-        opacity: 0.4,
+        opacity: 0.6,
         transition: 'opacity 0.5s ease-in-out',
       }}
     >
