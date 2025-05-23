@@ -31,6 +31,7 @@ export interface WorkExperience {
   achievements: string[];
   logo: string;
   location: string;
+  website?: string;
 }
 
 export interface Education {
@@ -132,6 +133,7 @@ export const WorkData: WorkExperience[] = [
     ],
     logo: "https://upload.wikimedia.org/wikipedia/en/thumb/2/29/SOTI_logo.svg/1200px-SOTI_logo.svg.png",
     location: "Mississauga, Canada",
+    website: "https://www.soti.net"
   },
   {
     company: "Soliton Technologies",
@@ -149,10 +151,11 @@ export const WorkData: WorkExperience[] = [
       "Counseled 10 college students for career preparedness as part of a Corporate Social Responsibility initiative, achieving 100% student placement and satisfaction.",
       "Drafted a pull request checklist by standardizing conventional commits and hosting Knowledge Sharing Sessions (KSS), enhancing estimation accuracy and productivity.",
       "Engaged in external product discussions to deepen customer insights, converting one-year contracts into long-term engagements.",
-      "Received two ‘Star Soliton’ awards, recognizing exceptional hard work and significant value addition.",
+      "Received two 'Star Soliton' awards, recognizing exceptional hard work and significant value addition.",
     ],
     logo: "https://1414g3edy9az5.cdn.shift8web.com/wp-content/uploads/2023/01/Soliton-Logo.png",
     location: "Bangalore, India",
+    website: "https://www.solitontech.com"
   },
   {
     company: "Soliton Technologies",
@@ -173,6 +176,7 @@ export const WorkData: WorkExperience[] = [
     ],
     logo: "https://1414g3edy9az5.cdn.shift8web.com/wp-content/uploads/2023/01/Soliton-Logo.png",
     location: "Bangalore, India",
+    website: "https://www.solitontech.com"
   },
   {
     company: "Soliton Technologies",
@@ -186,6 +190,7 @@ export const WorkData: WorkExperience[] = [
     ],
     logo: "https://1414g3edy9az5.cdn.shift8web.com/wp-content/uploads/2023/01/Soliton-Logo.png",
     location: "Bangalore, India",
+    website: "https://www.solitontech.com"
   },
   {
     company: "Zoho Corporation",
@@ -199,6 +204,7 @@ export const WorkData: WorkExperience[] = [
     ],
     logo: "https://1414g3edy9az5.cdn.shift8web.com/wp-content/uploads/2023/01/Soliton-Logo.png",
     location: "Chennai, India",
+    website: "https://www.zoho.com"
   },
 ];
 
