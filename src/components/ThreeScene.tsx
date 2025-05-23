@@ -6,7 +6,9 @@ import {
   ScrollControls,
   Scroll,
   Environment,
-  Cloud
+  Cloud,
+  Trail,
+  useTexture
 } from '@react-three/drei';
 import { useTheme } from '../hooks/useTheme';
 import * as THREE from 'three';
@@ -14,26 +16,49 @@ import * as THREE from 'three';
 // Rocket component
 const Rocket = ({ position }: { position: [number, number, number] }) => {
   const rocketRef = useRef<THREE.Group>(null);
+  const flameRef = useRef<THREE.Group>(null);
   
   useFrame(({ clock }) => {
     if (rocketRef.current) {
-      // Add subtle hover animation
-      rocketRef.current.position.y += Math.sin(clock.getElapsedTime() * 2) * 0.001;
+      // Add more dynamic rocket movement
+      rocketRef.current.rotation.z = Math.sin(clock.getElapsedTime() * 2) * 0.1;
+    }
+    if (flameRef.current) {
+      // Animate rocket flame
+      flameRef.current.scale.y = 1 + Math.sin(clock.getElapsedTime() * 30) * 0.2;
     }
   });
   
   return (
     <group ref={rocketRef} position={position}>
+      <Trail
+        width={1}
+        length={4}
+        color={'#ffffff'}
+        attenuation={(t) => t * t}
+      >
       {/* Main body */}
       <mesh position={[0, 0, 0]}>
         <cylinderGeometry args={[0.5, 0.8, 4, 32]} />
-        <meshStandardMaterial color="#ffffff" metalness={0.8} roughness={0.2} />
+        <meshStandardMaterial color="#ffffff" metalness={0.9} roughness={0.1} />
       </mesh>
+      </Trail>
       {/* Nose cone */}
       <mesh position={[0, 2.5, 0]}>
         <coneGeometry args={[0.5, 1, 32]} />
-        <meshStandardMaterial color="#ffffff" metalness={0.8} roughness={0.2} />
+        <meshStandardMaterial color="#ffffff" metalness={0.9} roughness={0.1} />
       </mesh>
+      {/* Rocket flame */}
+      <group ref={flameRef} position={[0, -2, 0]}>
+        <mesh>
+          <coneGeometry args={[0.4, 2, 32]} />
+          <meshBasicMaterial color="#ff4400" transparent opacity={0.8} />
+        </mesh>
+        <mesh position={[0, -0.5, 0]}>
+          <coneGeometry args={[0.2, 1, 32]} />
+          <meshBasicMaterial color="#ff8800" transparent opacity={0.6} />
+        </mesh>
+      </group>
       {/* Fins */}
       {[0, Math.PI * 0.5, Math.PI, Math.PI * 1.5].map((rotation, i) => (
         <mesh key={i} position={[0, -1.5, 0]} rotation={[0, rotation, 0]}>
@@ -49,10 +74,20 @@ const Rocket = ({ position }: { position: [number, number, number] }) => {
 const Earth = ({ scale = 1 }) => {
   const { theme } = useTheme();
   const earthRef = useRef<THREE.Mesh>(null);
+  const cloudsRef = useRef<THREE.Mesh>(null);
+  
+  const textures = useTexture({
+    map: 'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_atmos_2048.jpg',
+    bumpMap: 'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_normal_2048.jpg',
+    cloudsMap: 'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_clouds_1024.jpg',
+  });
 
   useFrame(() => {
     if (earthRef.current) {
       earthRef.current.rotation.y += 0.001;
+    }
+    if (cloudsRef.current) {
+      cloudsRef.current.rotation.y += 0.0015;
     }
   });
 
@@ -60,15 +95,23 @@ const Earth = ({ scale = 1 }) => {
     <group scale={scale}>
       <Sphere ref={earthRef} args={[1, 64, 64]}>
         <meshPhongMaterial
-          map={new THREE.TextureLoader().load('https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_atmos_2048.jpg')}
-          bumpMap={new THREE.TextureLoader().load('https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_normal_2048.jpg')}
+          map={textures.map}
+          bumpMap={textures.bumpMap}
           bumpScale={0.05}
+        />
+      </Sphere>
+      <Sphere ref={cloudsRef} args={[1.01, 32, 32]}>
+        <meshPhongMaterial
+          map={textures.cloudsMap}
+          transparent
+          opacity={0.4}
+          depthWrite={false}
         />
       </Sphere>
       <Sphere args={[1.01, 64, 64]}>
         <meshPhongMaterial
           transparent
-          opacity={1}
+          opacity={0.3}
           color={theme.colors.primary}
         />
       </Sphere>
@@ -116,27 +159,34 @@ const Scene = () => {
   const calculateCameraPosition = (progress: number): [number, number, number] => {
     if (progress < 0.3) {
       // Initial phase: On Earth, looking at rocket
-      return [
-        THREE.MathUtils.lerp(5, 10, progress / 0.3),
-        THREE.MathUtils.lerp(2, 5, progress / 0.3),
-        THREE.MathUtils.lerp(10, 15, progress / 0.3)
-      ];
+      const t = progress / 0.3;
+      const curve = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(5, 2, 10),
+        new THREE.Vector3(8, 4, 12),
+        new THREE.Vector3(10, 5, 15)
+      ]);
+      const point = curve.getPoint(t);
+      return [point.x, point.y, point.z];
     } else if (progress < 0.7) {
       // Middle phase: Following rocket through space
       const t = (progress - 0.3) / 0.4;
-      return [
-        THREE.MathUtils.lerp(10, 15, t),
-        THREE.MathUtils.lerp(5, 20, t),
-        THREE.MathUtils.lerp(15, 5, t)
-      ];
+      const curve = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(10, 5, 15),
+        new THREE.Vector3(12, 12, 10),
+        new THREE.Vector3(15, 20, 5)
+      ]);
+      const point = curve.getPoint(t);
+      return [point.x, point.y, point.z];
     } else {
       // Final phase: Approaching moon
       const t = (progress - 0.7) / 0.3;
-      return [
-        THREE.MathUtils.lerp(15, 8, t),
-        THREE.MathUtils.lerp(20, 25, t),
-        THREE.MathUtils.lerp(5, 0, t)
-      ];
+      const curve = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(15, 20, 5),
+        new THREE.Vector3(12, 22, 3),
+        new THREE.Vector3(8, 25, 0)
+      ]);
+      const point = curve.getPoint(t);
+      return [point.x, point.y, point.z];
     }
   };
 
@@ -195,9 +245,9 @@ const Scene = () => {
 
   return (
     <>
-      <ScrollControls pages={3} damping={0.1}>
+      <ScrollControls pages={3} damping={0.2}>
         <Scroll onScroll={onScroll}>
-          <Stars radius={100} depth={50} count={5000} factor={4} fade speed={1} />
+          <Stars radius={300} depth={100} count={10000} factor={6} fade speed={1.5} />
           
           <group position={earthPosition}>
             <Earth scale={2} />
@@ -210,12 +260,12 @@ const Scene = () => {
           <Rocket position={calculateRocketPosition(scrollProgress)} />
           
           <ambientLight intensity={0.5} />
-          <pointLight position={[10, 10, 10]} intensity={1} />
+          <pointLight position={[10, 10, 10]} intensity={1.5} />
           <pointLight position={[-10, -10, -10]} intensity={0.5} />
-          <Environment preset="sunset" />
+          <Environment preset="night" />
           
           {/* Atmospheric effects */}
-          <Cloud opacity={0.5} speed={0.4} width={20} depth={1.5} segments={20} />
+          <Cloud opacity={0.3} speed={0.3} width={30} depth={2} segments={30} />
         </Scroll>
       </ScrollControls>
     </>
