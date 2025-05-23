@@ -117,7 +117,7 @@ export const WorkData: WorkExperience[] = [
       "Deployed and maintained scalable, cloud-hosted applications with 99.9% uptime.",
     ],
     logo: "https://yourdomain.com/path-to-freelance-logo.png",
-    location: "",
+    location: "Hamilton, Ontario",
   },
   {
     company: "SOTI Inc.",
