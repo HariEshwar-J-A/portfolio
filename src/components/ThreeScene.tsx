@@ -1,15 +1,14 @@
 import React, { useRef, useEffect, useState, useMemo } from 'react';
 import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
-import { Stars, Environment, useTexture } from '@react-three/drei';
+import { Stars, Environment, useTexture, Preload } from '@react-three/drei';
 import { useTheme } from '../hooks/useTheme';
 import * as THREE from 'three';
 
 // Fallback texture URLs that are known to work
 const TEXTURE_URLS = {
-  day: 'https://images.pexels.com/photos/1169754/pexels-photo-1169754.jpeg',
-  bump: 'https://images.pexels.com/photos/1205301/pexels-photo-1205301.jpeg',
-  clouds: 'https://images.pexels.com/photos/2114014/pexels-photo-2114014.jpeg',
-  specular: 'https://images.pexels.com/photos/1205301/pexels-photo-1205301.jpeg'
+  day: 'https://images.pexels.com/photos/87651/earth-blue-planet-globe-planet-87651.jpeg',
+  night: 'https://images.pexels.com/photos/355935/pexels-photo-355935.jpeg',
+  clouds: 'https://images.pexels.com/photos/2114014/pexels-photo-2114014.jpeg'
 };
 
 // Earth component with atmosphere
@@ -23,10 +22,8 @@ const Earth = ({ isDark }: { isDark: boolean }) => {
   // Use useTexture hook with error handling
   const textures = useTexture(
     {
-      earthDayMap: TEXTURE_URLS.day,
-      bumpMap: TEXTURE_URLS.bump,
-      cloudsMap: TEXTURE_URLS.clouds,
-      specularMap: TEXTURE_URLS.specular
+      earthMap: isDark ? TEXTURE_URLS.night : TEXTURE_URLS.day,
+      cloudsMap: TEXTURE_URLS.clouds
     },
     (loaded) => {
       setTexturesLoaded(true);
@@ -74,13 +71,9 @@ const Earth = ({ isDark }: { isDark: boolean }) => {
       <mesh ref={earthRef}>
         <sphereGeometry args={[2, 64, 64]} />
         <meshPhongMaterial
-          map={textures.earthDayMap}
-          bumpMap={textures.bumpMap}
-          bumpScale={0.05}
-          specularMap={textures.specularMap}
-          specular={new THREE.Color(isDark ? '#ffffff' : '#909090')}
-          shininess={isDark ? 10 : 5}
-          color={isDark ? '#666666' : '#ffffff'}
+          map={textures.earthMap}
+          shininess={isDark ? 15 : 10}
+          specular={new THREE.Color(isDark ? '#334155' : '#94A3B8')}
         />
       </mesh>
       
@@ -90,7 +83,7 @@ const Earth = ({ isDark }: { isDark: boolean }) => {
         <meshPhongMaterial
           map={textures.cloudsMap}
           transparent={true}
-          opacity={isDark ? 0.3 : 0.4}
+          opacity={isDark ? 0.2 : 0.3}
           depthWrite={false}
         />
       </mesh>
@@ -101,7 +94,7 @@ const Earth = ({ isDark }: { isDark: boolean }) => {
         <meshPhongMaterial
           transparent={true}
           opacity={0.2}
-          color={isDark ? '#4B5563' : '#60A5FA'}
+          color={isDark ? '#1E293B' : '#3B82F6'}
           side={THREE.BackSide}
           blending={THREE.AdditiveBlending} />
       </mesh>
@@ -116,29 +109,39 @@ const Scene = () => {
 
   return (
     <>
-      {/* Enhanced dynamic lighting */}
-      <ambientLight intensity={isDark ? 0.05 : 0.3} />
+      {/* Dynamic lighting based on theme */}
+      <ambientLight intensity={isDark ? 0.1 : 0.4} />
       <pointLight 
         position={[10, 5, 10]} 
-        intensity={isDark ? 0.8 : 2}
-        color={isDark ? '#94A3B8' : '#FCD34D'}
+        intensity={isDark ? 1 : 2}
+        color={isDark ? '#CBD5E1' : '#FCD34D'}
       />
       
-      {/* Enhanced starry background */}
+      {/* Dense starfield with theme-based adjustments */}
       <Stars 
-        radius={100} 
-        depth={50} 
-        count={isDark ? 7000 : 3000} 
-        factor={4} 
-        saturation={isDark ? 0.5 : 0} 
+        radius={300} 
+        depth={100} 
+        count={isDark ? 10000 : 5000} 
+        factor={isDark ? 6 : 4} 
+        saturation={isDark ? 1 : 0.5} 
         fade={true}
-        speed={0.3}
+        speed={0.5}
+      />
+      <Stars 
+        radius={100}
+        depth={80}
+        count={isDark ? 8000 : 4000}
+        factor={4} 
+        saturation={isDark ? 0.8 : 0.3}
+        fade={true}
+        speed={0.2}
       />
       
       {/* Scene environment */}
-      <Environment preset={isDark ? "night" : "sunset"} />
+      <Environment preset={isDark ? "warehouse" : "sunset"} />
       
       <Earth isDark={isDark} />
+      <Preload all />
     </>
   );
 };
@@ -154,6 +157,7 @@ const ThreeScene: React.FC = () => {
       style={{ 
         opacity: 0.8,
         transition: 'opacity 0.5s ease-in-out',
+        background: theme.mode === 'dark' ? 'radial-gradient(circle at center, #1E293B 0%, #0F172A 100%)' : 'radial-gradient(circle at center, #BFDBFE 0%, #F8FAFC 100%)'
       }}
     >
       <Canvas
@@ -166,12 +170,12 @@ const ThreeScene: React.FC = () => {
         gl={{ 
           antialias: true,
           alpha: true,
-          logarithmicDepthBuffer: true
+          logarithmicDepthBuffer: true,
+          powerPreference: "high-performance"
         }}
         style={{ 
           position: 'absolute',
-          pointerEvents: 'none',
-          background: theme.mode === 'dark' ? '#0F172A' : '#F8FAFC'
+          pointerEvents: 'none'
         }}
       >
         <Scene />
