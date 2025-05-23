@@ -159,30 +159,30 @@ const Scene = () => {
   const calculateCameraPosition = (progress: number): [number, number, number] => {
     if (progress < 0.3) {
       // Initial phase: On Earth, looking at rocket
-      const t = progress / 0.3;
+      const t = THREE.MathUtils.smoothstep(progress, 0, 0.3);
       const curve = new THREE.CatmullRomCurve3([
         new THREE.Vector3(3, 1, 8),
-        new THREE.Vector3(4, 2, 10),
+        new THREE.Vector3(4, 2, 9),
         new THREE.Vector3(5, 3, 12)
       ]);
       const point = curve.getPoint(t);
       return [point.x, point.y, point.z];
     } else if (progress < 0.7) {
       // Middle phase: Following rocket through space
-      const t = (progress - 0.3) / 0.4;
+      const t = THREE.MathUtils.smoothstep((progress - 0.3), 0, 0.4);
       const curve = new THREE.CatmullRomCurve3([
         new THREE.Vector3(5, 3, 12),
-        new THREE.Vector3(8, 15, 8),
+        new THREE.Vector3(7, 15, 6),
         new THREE.Vector3(10, 25, 5)
       ]);
       const point = curve.getPoint(t);
       return [point.x, point.y, point.z];
     } else {
       // Final phase: Approaching moon
-      const t = (progress - 0.7) / 0.3;
+      const t = THREE.MathUtils.smoothstep((progress - 0.7), 0, 0.3);
       const curve = new THREE.CatmullRomCurve3([
         new THREE.Vector3(10, 25, 5),
-        new THREE.Vector3(8, 28, 3),
+        new THREE.Vector3(8, 28, 2),
         new THREE.Vector3(6, 30, 0)
       ]);
       const point = curve.getPoint(t);
@@ -193,15 +193,15 @@ const Scene = () => {
   const calculateRocketPosition = (progress: number): [number, number, number] => {
     if (progress < 0.3) {
       // On Earth's surface
-      const t = progress / 0.3;
+      const t = THREE.MathUtils.smoothstep(progress, 0, 0.3);
       return [
         THREE.MathUtils.lerp(0, 1, t),
-        THREE.MathUtils.lerp(2.1, 4, t), // Start slightly above Earth's surface
+        THREE.MathUtils.lerp(2.1, 4, t),
         THREE.MathUtils.lerp(0, 3, t)
       ];
     } else if (progress < 0.7) {
       // Space journey
-      const t = (progress - 0.3) / 0.4;
+      const t = THREE.MathUtils.smoothstep((progress - 0.3), 0, 0.4);
       return [
         THREE.MathUtils.lerp(1, 3, t),
         THREE.MathUtils.lerp(4, 20, t),
@@ -209,7 +209,7 @@ const Scene = () => {
       ];
     } else {
       // Moon approach
-      const t = (progress - 0.7) / 0.3;
+      const t = THREE.MathUtils.smoothstep((progress - 0.7), 0, 0.3);
       return [
         THREE.MathUtils.lerp(3, 4, t),
         THREE.MathUtils.lerp(20, 25, t),
@@ -221,7 +221,7 @@ const Scene = () => {
   useFrame(() => {
     if (!isMounted) return;
     
-    const lerpFactor = 0.05; // Smoother transition
+    const lerpFactor = 0.03; // Reduced for smoother movement
 
     // Calculate camera and rocket positions
     const [camX, camY, camZ] = calculateCameraPosition(scrollProgress);
@@ -249,16 +249,12 @@ const Scene = () => {
       <ScrollControls pages={3} damping={0.2}>
         <Scroll onScroll={onScroll}>
           <Stars radius={100} depth={50} count={5000} factor={4} fade speed={1} />
-          
+          {/* Reduced group nesting for better performance */}
           <group position={earthPosition}>
             <Earth scale={2.5} />
-          </group>
-          
-          <group position={moonPosition}>
             <Moon scale={0.6} />
+            <Rocket position={calculateRocketPosition(scrollProgress)} />
           </group>
-
-          <Rocket position={calculateRocketPosition(scrollProgress)} />
           
           <ambientLight intensity={0.5} />
           <pointLight position={[10, 10, 10]} intensity={2} />
