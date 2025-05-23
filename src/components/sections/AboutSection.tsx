@@ -8,6 +8,10 @@ const AboutSection: React.FC = () => {
   const { theme } = useTheme();
   const { name, title, bio, photo, socialLinks } = portfolioData.personal;
   
+  const handleSocialClick = (url: string) => {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+  
   return (
     <section 
       id="about" 
@@ -58,11 +62,9 @@ const AboutSection: React.FC = () => {
             
             <div className="flex space-x-4">
               {socialLinks.github && (
-                <a 
-                  href={socialLinks.github} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="p-3 rounded-full transition-all duration-300 hover:scale-110"
+                <button 
+                  onClick={() => handleSocialClick(socialLinks.github)}
+                  className="p-3 rounded-full transition-all duration-300 hover:scale-110 cursor-pointer"
                   style={{ 
                     backgroundColor: theme.colors.primary,
                     color: 'white'
@@ -70,15 +72,13 @@ const AboutSection: React.FC = () => {
                   aria-label="GitHub"
                 >
                   <GitHub size={24} />
-                </a>
+                </button>
               )}
               
               {socialLinks.linkedin && (
-                <a 
-                  href={socialLinks.linkedin} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="p-3 rounded-full transition-all duration-300 hover:scale-110"
+                <button 
+                  onClick={() => handleSocialClick(socialLinks.linkedin)}
+                  className="p-3 rounded-full transition-all duration-300 hover:scale-110 cursor-pointer"
                   style={{ 
                     backgroundColor: theme.colors.primary,
                     color: 'white'
@@ -86,15 +86,13 @@ const AboutSection: React.FC = () => {
                   aria-label="LinkedIn"
                 >
                   <Linkedin size={24} />
-                </a>
+                </button>
               )}
               
               {socialLinks.twitter && (
-                <a 
-                  href={socialLinks.twitter} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="p-3 rounded-full transition-all duration-300 hover:scale-110"
+                <button 
+                  onClick={() => handleSocialClick(socialLinks.twitter)}
+                  className="p-3 rounded-full transition-all duration-300 hover:scale-110 cursor-pointer"
                   style={{ 
                     backgroundColor: theme.colors.primary,
                     color: 'white'
@@ -102,15 +100,13 @@ const AboutSection: React.FC = () => {
                   aria-label="Twitter"
                 >
                   <Twitter size={24} />
-                </a>
+                </button>
               )}
               
               {socialLinks.website && (
-                <a 
-                  href={socialLinks.website} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="p-3 rounded-full transition-all duration-300 hover:scale-110"
+                <button 
+                  onClick={() => handleSocialClick(socialLinks.website)}
+                  className="p-3 rounded-full transition-all duration-300 hover:scale-110 cursor-pointer"
                   style={{ 
                     backgroundColor: theme.colors.primary,
                     color: 'white'
@@ -118,7 +114,7 @@ const AboutSection: React.FC = () => {
                   aria-label="Website"
                 >
                   <Globe size={24} />
-                </a>
+                </button>
               )}
             </div>
           </motion.div>

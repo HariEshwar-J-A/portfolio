@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../hooks/useTheme';
 import { portfolioData } from '../../data/portfolioData';
@@ -8,8 +8,27 @@ const SkillsSection: React.FC = () => {
   const { theme } = useTheme();
   const { skills } = portfolioData;
   const chartRef = useRef<HTMLDivElement>(null);
+  const [hasAnimated, setHasAnimated] = useState(false);
   
   useEffect(() => {
+    if (!chartRef.current || hasAnimated) return;
+    
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          createChart();
+          setHasAnimated(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    
+    observer.observe(chartRef.current);
+    return () => observer.disconnect();
+  }, [hasAnimated, theme.mode]);
+  
+  const createChart = () => {
     if (!chartRef.current) return;
     
     // Clear previous chart
@@ -106,8 +125,7 @@ const SkillsSection: React.FC = () => {
         .delay((d, i) => i * 100 + 300)
         .style('opacity', 1)
         .text(d => `${d.level}%`);
-    
-  }, [skills, theme]);
+  };
   
   return (
     <section 

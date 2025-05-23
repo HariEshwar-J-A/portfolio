@@ -9,15 +9,21 @@ const ProjectsSection: React.FC = () => {
   const { projects } = portfolioData;
   const [filter, setFilter] = useState<string | null>(null);
   
-  // Get unique technology tags
   const allTechnologies = Array.from(
     new Set(projects.flatMap(project => project.technologies))
   );
   
-  // Filter projects based on selected technology
   const filteredProjects = filter
     ? projects.filter(project => project.technologies.includes(filter))
     : projects;
+    
+  const handleTechFilter = (tech: string | null) => {
+    setFilter(tech);
+  };
+  
+  const handleProjectLink = (url: string) => {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
   
   return (
     <section 
@@ -41,7 +47,7 @@ const ProjectsSection: React.FC = () => {
         
         <div className="flex flex-wrap justify-center mb-8 gap-2">
           <button
-            onClick={() => setFilter(null)}
+            onClick={() => handleTechFilter(null)}
             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
               filter === null
                 ? 'text-white'
@@ -58,7 +64,7 @@ const ProjectsSection: React.FC = () => {
           {allTechnologies.map(tech => (
             <button
               key={tech}
-              onClick={() => setFilter(tech)}
+              onClick={() => handleTechFilter(tech)}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                 filter === tech
                   ? 'text-white'
@@ -115,14 +121,15 @@ const ProjectsSection: React.FC = () => {
                   
                   <div className="flex flex-wrap gap-2 mb-4">
                     {project.technologies.map(tech => (
-                      <span
+                      <button
                         key={tech}
-                        className={`px-2 py-1 rounded text-xs ${
+                        onClick={() => handleTechFilter(tech)}
+                        className={`px-2 py-1 rounded text-xs transition-colors hover:bg-opacity-80 ${
                           theme.mode === 'dark' ? 'bg-slate-700' : 'bg-slate-200'
                         }`}
                       >
                         {tech}
-                      </span>
+                      </button>
                     ))}
                   </div>
                 </div>
@@ -131,29 +138,25 @@ const ProjectsSection: React.FC = () => {
                   theme.mode === 'dark' ? 'border-t border-slate-700' : 'border-t border-slate-200'
                 }`}>
                   {project.demoLink && (
-                    <a 
-                      href={project.demoLink} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
+                    <button 
+                      onClick={() => handleProjectLink(project.demoLink!)}
                       className="flex items-center transition-colors hover:text-primary"
                       style={{ color: theme.colors.primary }}
                     >
                       <ExternalLink size={16} className="mr-1" />
                       Demo
-                    </a>
+                    </button>
                   )}
                   
                   {project.sourceLink && (
-                    <a 
-                      href={project.sourceLink} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
+                    <button 
+                      onClick={() => handleProjectLink(project.sourceLink!)}
                       className="flex items-center transition-colors hover:text-primary"
                       style={{ color: theme.colors.primary }}
                     >
                       <Github size={16} className="mr-1" />
                       Source
-                    </a>
+                    </button>
                   )}
                 </div>
               </motion.div>

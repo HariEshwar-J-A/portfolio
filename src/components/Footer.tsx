@@ -9,6 +9,10 @@ const Footer: React.FC = () => {
   
   const year = new Date().getFullYear();
   
+  const handleSocialClick = (url: string) => {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+  
   return (
     <footer 
       className={`py-8 mt-12 border-t ${
@@ -27,55 +31,47 @@ const Footer: React.FC = () => {
           
           <div className="flex space-x-4">
             {socialLinks.github && (
-              <a 
-                href={socialLinks.github} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className={`p-2 rounded-full transition-colors hover:text-${theme.colors.primary}`}
+              <button 
+                onClick={() => handleSocialClick(socialLinks.github)}
+                className={`p-2 rounded-full transition-colors hover:text-${theme.colors.primary} cursor-pointer`}
                 style={{ color: theme.mode === 'dark' ? '#fff' : '#0F172A' }}
                 aria-label="GitHub"
               >
                 <GitHub size={20} />
-              </a>
+              </button>
             )}
             
             {socialLinks.linkedin && (
-              <a 
-                href={socialLinks.linkedin} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className={`p-2 rounded-full transition-colors hover:text-${theme.colors.primary}`}
+              <button 
+                onClick={() => handleSocialClick(socialLinks.linkedin)}
+                className={`p-2 rounded-full transition-colors hover:text-${theme.colors.primary} cursor-pointer`}
                 style={{ color: theme.mode === 'dark' ? '#fff' : '#0F172A' }}
                 aria-label="LinkedIn"
               >
                 <Linkedin size={20} />
-              </a>
+              </button>
             )}
             
             {socialLinks.twitter && (
-              <a 
-                href={socialLinks.twitter} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className={`p-2 rounded-full transition-colors hover:text-${theme.colors.primary}`}
+              <button 
+                onClick={() => handleSocialClick(socialLinks.twitter)}
+                className={`p-2 rounded-full transition-colors hover:text-${theme.colors.primary} cursor-pointer`}
                 style={{ color: theme.mode === 'dark' ? '#fff' : '#0F172A' }}
                 aria-label="Twitter"
               >
                 <Twitter size={20} />
-              </a>
+              </button>
             )}
             
             {socialLinks.website && (
-              <a 
-                href={socialLinks.website} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className={`p-2 rounded-full transition-colors hover:text-${theme.colors.primary}`}
+              <button 
+                onClick={() => handleSocialClick(socialLinks.website)}
+                className={`p-2 rounded-full transition-colors hover:text-${theme.colors.primary} cursor-pointer`}
                 style={{ color: theme.mode === 'dark' ? '#fff' : '#0F172A' }}
                 aria-label="Website"
               >
                 <Globe size={20} />
-              </a>
+              </button>
             )}
           </div>
         </div>

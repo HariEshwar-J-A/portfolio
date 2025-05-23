@@ -36,7 +36,7 @@ const AchievementsSection: React.FC = () => {
         </motion.div>
         
         <div className="max-w-4xl mx-auto">
-          <div className="relative space-y-8 before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b" style={{ backgroundImage: `linear-gradient(${theme.colors.primary}, ${theme.colors.secondary})` }}>
+          <div className="relative space-y-12 before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b" style={{ backgroundImage: `linear-gradient(${theme.colors.primary}, ${theme.colors.secondary})` }}>
             {achievements.map((achievement, index) => (
               <motion.div
                 key={achievement.title}
@@ -49,14 +49,14 @@ const AchievementsSection: React.FC = () => {
                   {getIcon(achievement.title)}
                 </div>
                 
-                <div className={`w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-lg shadow-lg ${
+                <div className={`w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-8 rounded-lg shadow-lg ${
                   theme.mode === 'dark' ? 'bg-slate-700' : 'bg-white'
                 }`}>
-                  <div className="flex items-center justify-between space-x-2 mb-1">
-                    <h3 className="text-lg font-bold">{achievement.title}</h3>
+                  <div className="flex items-center justify-between space-x-2 mb-3">
+                    <h3 className="text-xl font-bold">{achievement.title}</h3>
                     <time className="text-sm" style={{ color: theme.colors.primary }}>{achievement.date}</time>
                   </div>
-                  <p>{achievement.description}</p>
+                  <p className="text-base leading-relaxed">{achievement.description}</p>
                 </div>
               </motion.div>
             ))}
