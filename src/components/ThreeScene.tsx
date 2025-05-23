@@ -161,9 +161,9 @@ const Scene = () => {
       // Initial phase: On Earth, looking at rocket
       const t = progress / 0.3;
       const curve = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(5, 2, 10),
-        new THREE.Vector3(8, 4, 12),
-        new THREE.Vector3(10, 5, 15)
+        new THREE.Vector3(3, 1, 8),
+        new THREE.Vector3(4, 2, 10),
+        new THREE.Vector3(5, 3, 12)
       ]);
       const point = curve.getPoint(t);
       return [point.x, point.y, point.z];
@@ -171,9 +171,9 @@ const Scene = () => {
       // Middle phase: Following rocket through space
       const t = (progress - 0.3) / 0.4;
       const curve = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(10, 5, 15),
-        new THREE.Vector3(12, 12, 10),
-        new THREE.Vector3(15, 20, 5)
+        new THREE.Vector3(5, 3, 12),
+        new THREE.Vector3(8, 15, 8),
+        new THREE.Vector3(10, 25, 5)
       ]);
       const point = curve.getPoint(t);
       return [point.x, point.y, point.z];
@@ -181,9 +181,9 @@ const Scene = () => {
       // Final phase: Approaching moon
       const t = (progress - 0.7) / 0.3;
       const curve = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(15, 20, 5),
-        new THREE.Vector3(12, 22, 3),
-        new THREE.Vector3(8, 25, 0)
+        new THREE.Vector3(10, 25, 5),
+        new THREE.Vector3(8, 28, 3),
+        new THREE.Vector3(6, 30, 0)
       ]);
       const point = curve.getPoint(t);
       return [point.x, point.y, point.z];
@@ -193,26 +193,27 @@ const Scene = () => {
   const calculateRocketPosition = (progress: number): [number, number, number] => {
     if (progress < 0.3) {
       // On Earth's surface
+      const t = progress / 0.3;
       return [
-        THREE.MathUtils.lerp(0, 2, progress / 0.3),
-        THREE.MathUtils.lerp(1, 3, progress / 0.3),
-        THREE.MathUtils.lerp(0, 5, progress / 0.3)
+        THREE.MathUtils.lerp(0, 1, t),
+        THREE.MathUtils.lerp(2.1, 4, t), // Start slightly above Earth's surface
+        THREE.MathUtils.lerp(0, 3, t)
       ];
     } else if (progress < 0.7) {
       // Space journey
       const t = (progress - 0.3) / 0.4;
       return [
-        THREE.MathUtils.lerp(2, 5, t),
-        THREE.MathUtils.lerp(3, 18, t),
-        THREE.MathUtils.lerp(5, 0, t)
+        THREE.MathUtils.lerp(1, 3, t),
+        THREE.MathUtils.lerp(4, 20, t),
+        THREE.MathUtils.lerp(3, -2, t)
       ];
     } else {
       // Moon approach
       const t = (progress - 0.7) / 0.3;
       return [
-        THREE.MathUtils.lerp(5, 5, t),
-        THREE.MathUtils.lerp(18, 22, t),
-        THREE.MathUtils.lerp(0, -3, t)
+        THREE.MathUtils.lerp(3, 4, t),
+        THREE.MathUtils.lerp(20, 25, t),
+        THREE.MathUtils.lerp(-2, -4, t)
       ];
     }
   };
@@ -240,32 +241,32 @@ const Scene = () => {
   }, []);
 
   const moonPosition = useMemo(() => {
-    return [5, 25, -5] as [number, number, number];
+    return [4, 25, -5] as [number, number, number];
   }, []);
 
   return (
     <>
       <ScrollControls pages={3} damping={0.2}>
         <Scroll onScroll={onScroll}>
-          <Stars radius={300} depth={100} count={10000} factor={6} fade speed={1.5} />
+          <Stars radius={100} depth={50} count={5000} factor={4} fade speed={1} />
           
           <group position={earthPosition}>
-            <Earth scale={2} />
+            <Earth scale={2.5} />
           </group>
           
           <group position={moonPosition}>
-            <Moon />
+            <Moon scale={0.6} />
           </group>
 
           <Rocket position={calculateRocketPosition(scrollProgress)} />
           
           <ambientLight intensity={0.5} />
-          <pointLight position={[10, 10, 10]} intensity={1.5} />
+          <pointLight position={[10, 10, 10]} intensity={2} />
           <pointLight position={[-10, -10, -10]} intensity={0.5} />
           <Environment preset="night" />
           
           {/* Atmospheric effects */}
-          <Cloud opacity={0.3} speed={0.3} width={30} depth={2} segments={30} />
+          <Cloud opacity={0.2} speed={0.2} width={20} depth={1.5} segments={20} />
         </Scroll>
       </ScrollControls>
     </>
@@ -286,7 +287,7 @@ const ThreeScene: React.FC = () => {
       }}
     >
       <Canvas 
-        camera={{ position: [0, 0, 10], fov: 75 }}
+        camera={{ position: [3, 1, 8], fov: 60 }}
         gl={{ antialias: true }}
         linear
         style={{ 
