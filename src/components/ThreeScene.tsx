@@ -1,8 +1,16 @@
 import React, { useRef, useEffect, useState, useMemo } from 'react';
 import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
-import { Stars, Environment } from '@react-three/drei';
+import { Stars, Environment, useTexture } from '@react-three/drei';
 import { useTheme } from '../hooks/useTheme';
 import * as THREE from 'three';
+
+// Fallback texture URLs that are known to work
+const TEXTURE_URLS = {
+  day: 'https://images.pexels.com/photos/1169754/pexels-photo-1169754.jpeg',
+  bump: 'https://images.pexels.com/photos/1205301/pexels-photo-1205301.jpeg',
+  clouds: 'https://images.pexels.com/photos/2114014/pexels-photo-2114014.jpeg',
+  specular: 'https://images.pexels.com/photos/1205301/pexels-photo-1205301.jpeg'
+};
 
 // Earth component with atmosphere
 const Earth = ({ isDark }: { isDark: boolean }) => {
@@ -10,14 +18,24 @@ const Earth = ({ isDark }: { isDark: boolean }) => {
   const cloudsRef = useRef<THREE.Mesh>(null);
   const atmosphereRef = useRef<THREE.Mesh>(null);
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
+  const [texturesLoaded, setTexturesLoaded] = useState(false);
   
-  // Load Earth textures - using NASA's public domain textures
-  const [earthDayMap, bumpMap, cloudsMap, specularMap] = useLoader(THREE.TextureLoader, [
-    'https://svs.gsfc.nasa.gov/vis/a000000/a002900/a002915/bluemarble-2048.png',
-    'https://svs.gsfc.nasa.gov/vis/a000000/a004500/a004536/elevation.jpg',
-    'https://eoimages.gsfc.nasa.gov/images/imagerecords/57000/57747/cloud_combined_2048.jpg',
-    'https://svs.gsfc.nasa.gov/vis/a000000/a004700/a004720/land_ocean_ice_2048.png'
-  ]);
+  // Use useTexture hook with error handling
+  const textures = useTexture(
+    {
+      earthDayMap: TEXTURE_URLS.day,
+      bumpMap: TEXTURE_URLS.bump,
+      cloudsMap: TEXTURE_URLS.clouds,
+      specularMap: TEXTURE_URLS.specular
+    },
+    (loaded) => {
+      setTexturesLoaded(true);
+    },
+    (error) => {
+      console.error('Error loading textures:', error);
+      setTexturesLoaded(true); // Still set to true to render with fallback materials
+    }
+  );
 
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
@@ -46,16 +64,20 @@ const Earth = ({ isDark }: { isDark: boolean }) => {
     }
   });
 
+  if (!texturesLoaded) {
+    return null; // Don't render until textures are loaded or failed
+  }
+
   return (
     <group>
       {/* Earth base */}
       <mesh ref={earthRef}>
         <sphereGeometry args={[2, 64, 64]} />
         <meshPhongMaterial
-          map={earthDayMap}
-          bumpMap={bumpMap}
+          map={textures.earthDayMap}
+          bumpMap={textures.bumpMap}
           bumpScale={0.05}
-          specularMap={specularMap}
+          specularMap={textures.specularMap}
           specular={new THREE.Color(isDark ? '#ffffff' : '#909090')}
           shininess={isDark ? 10 : 5}
           color={isDark ? '#666666' : '#ffffff'}
@@ -66,7 +88,7 @@ const Earth = ({ isDark }: { isDark: boolean }) => {
       <mesh ref={cloudsRef} scale={1.003}>
         <sphereGeometry args={[2, 64, 64]} />
         <meshPhongMaterial
-          map={cloudsMap}
+          map={textures.cloudsMap}
           transparent={true}
           opacity={isDark ? 0.3 : 0.4}
           depthWrite={false}
