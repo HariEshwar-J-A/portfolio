@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, useMemo } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
 import { 
   Sphere, 
   Stars, 
@@ -7,11 +7,11 @@ import {
   Scroll,
   Environment,
   Cloud,
-  Trail,
-  useTexture
+  Trail
 } from '@react-three/drei';
 import { useTheme } from '../hooks/useTheme';
 import * as THREE from 'three';
+import { useInView } from 'framer-motion';
 
 // Rocket component
 const Rocket = ({ position }: { position: [number, number, number] }) => {
@@ -76,11 +76,12 @@ const Earth = ({ scale = 1 }) => {
   const earthRef = useRef<THREE.Mesh>(null);
   const cloudsRef = useRef<THREE.Mesh>(null);
   
-  const textures = useTexture({
-    map: 'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_atmos_2048.jpg',
-    bumpMap: 'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_normal_2048.jpg',
-    cloudsMap: 'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_clouds_1024.png',
-  });
+  // Load textures only when needed
+  const [map, bumpMap, cloudsMap] = useLoader(THREE.TextureLoader, [
+    'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_atmos_2048.jpg',
+    'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_normal_2048.jpg',
+    'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_clouds_1024.png'
+  ]);
 
   useFrame(() => {
     if (earthRef.current) {
@@ -95,8 +96,8 @@ const Earth = ({ scale = 1 }) => {
     <group scale={scale}>
       <Sphere ref={earthRef} args={[1, 64, 64]}>
         <meshPhongMaterial
-          map={textures.map}
-          bumpMap={textures.bumpMap}
+          map={map}
+          bumpMap={bumpMap}
           bumpScale={0.05}
         />
       </Sphere>
@@ -122,6 +123,9 @@ const Earth = ({ scale = 1 }) => {
 // Moon component
 const Moon = ({ scale = 0.27 }) => {
   const moonRef = useRef<THREE.Mesh>(null);
+  const [moonTexture] = useLoader(THREE.TextureLoader, [
+    'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/moon_1024.jpg'
+  ]);
 
   useFrame(() => {
     if (moonRef.current) {
@@ -132,9 +136,9 @@ const Moon = ({ scale = 0.27 }) => {
   return (
     <Sphere ref={moonRef} args={[1, 64, 64]} scale={scale}>
       <meshStandardMaterial
-        map={new THREE.TextureLoader().load('https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/moon_1024.jpg')}
-        roughnessMap={new THREE.TextureLoader().load('https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/moon_1024.jpg')}
-        bumpMap={new THREE.TextureLoader().load('https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/moon_1024.jpg')}
+        map={moonTexture}
+        roughnessMap={moonTexture}
+        bumpMap={moonTexture}
         bumpScale={0.04}
       />
     </Sphere>
@@ -272,29 +276,36 @@ const Scene = () => {
 const ThreeScene: React.FC = () => {
   const { theme } = useTheme();
   const containerRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(containerRef);
 
   return (
     <div 
       ref={containerRef}
       className="fixed top-0 left-0 w-full h-full pointer-events-none z-0"
       style={{ 
-        opacity: 0.6,
+        opacity: isInView ? 0.6 : 0,
         transition: 'opacity 0.5s ease-in-out',
       }}
     >
-      <Canvas 
-        camera={{ position: [3, 1, 8], fov: 60 }}
-        gl={{ antialias: true }}
-        linear
-        style={{ 
-          position: 'absolute',
-          pointerEvents: 'none'
-        }}
-        frameloop="always"
-        dpr={window.devicePixelRatio}
-      >
-        <Scene />
-      </Canvas>
+      {isInView && (
+        <Canvas 
+          camera={{ position: [3, 1, 8], fov: 60 }}
+          gl={{ 
+            antialias: true,
+            powerPreference: "high-performance",
+            precision: "highp"
+          }}
+          linear
+          style={{ 
+            position: 'absolute',
+            pointerEvents: 'none'
+          }}
+          frameloop="demand"
+          dpr={Math.min(2, window.devicePixelRatio)}
+        >
+          <Scene />
+        </Canvas>
+      )}
     </div>
   );
 };
