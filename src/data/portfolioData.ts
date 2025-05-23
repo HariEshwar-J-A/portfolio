@@ -190,8 +190,8 @@ export const WorkData: WorkExperience[] = [
   {
     company: "Zoho Corporation",
     position: "Backend Developer - Intern",
-    startDate: "May-2020",
-    endDate: "Jun-2020",
+    startDate: "May-2019",
+    endDate: "Jun-2019",
     description:
       "Contributed to backend development for Zoho Assist, quickly adapting to new technologies and agile workflows.",
     achievements: [
