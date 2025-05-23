@@ -1,104 +1,203 @@
 import React, { useRef, useEffect, useState, useMemo } from 'react';
 import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
-import { 
-  Sphere, 
-  Stars, 
-  ScrollControls,
-  Scroll,
-  Environment,
-  Cloud,
-  Trail
-} from '@react-three/drei';
+import { Points, PointMaterial } from '@react-three/drei';
 import { useTheme } from '../hooks/useTheme';
 import * as THREE from 'three';
-import { useInView } from 'framer-motion';
+import { useSpring, animated } from '@react-spring/three';
 
-// Rocket component
-const Rocket = ({ position }: { position: [number, number, number] }) => {
-  const rocketRef = useRef<THREE.Group>(null);
-  const flameRef = useRef<THREE.Group>(null);
-  
-  const flameColors = useMemo(() => ({
-    primary: new THREE.Color('#ff4400'),
-    secondary: new THREE.Color('#ff8800')
-  }), []);
-  
-  useFrame(({ clock }) => {
-    if (rocketRef.current) {
-      // Smoother rocket movement
-      rocketRef.current.rotation.z = Math.sin(clock.getElapsedTime()) * 0.05;
-      rocketRef.current.rotation.x = Math.cos(clock.getElapsedTime() * 0.5) * 0.02;
-    }
-    if (flameRef.current) {
-      // More dynamic flame animation
-      flameRef.current.scale.y = 1 + Math.sin(clock.getElapsedTime() * 20) * 0.3;
-      flameRef.current.scale.x = 1 + Math.cos(clock.getElapsedTime() * 15) * 0.1;
+// Attractor parameters
+const LORENZ_PARAMS = { rho: 28, sigma: 10, beta: 8 / 3 };
+const PARTICLE_COUNT = 50000;
+const PARTICLE_SIZE = 0.015;
+
+// Generate initial particle positions
+function generateParticles() {
+  const positions = new Float32Array(PARTICLE_COUNT * 3);
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
+    const i3 = i * 3;
+    positions[i3] = (Math.random() - 0.5) * 20;
+    positions[i3 + 1] = (Math.random() - 0.5) * 20;
+    positions[i3 + 2] = (Math.random() - 0.5) * 20;
+  }
+  return positions;
+}
+
+// Lorenz attractor function
+function updateParticles(positions: Float32Array, dt: number) {
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
+    const i3 = i * 3;
+    const x = positions[i3];
+    const y = positions[i3 + 1];
+    const z = positions[i3 + 2];
+
+    positions[i3] += (LORENZ_PARAMS.sigma * (y - x)) * dt;
+    positions[i3 + 1] += (x * (LORENZ_PARAMS.rho - z) - y) * dt;
+    positions[i3 + 2] += (x * y - LORENZ_PARAMS.beta * z) * dt;
+  }
+}
+
+// Particles component
+const ParticleSystem = () => {
+  const { theme } = useTheme();
+  const points = useRef<THREE.Points>(null);
+  const [positions] = useState(() => generateParticles());
+  const [mouse, setMouse] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleMouseMove = (event: MouseEvent) => {
+      setMouse({
+        x: (event.clientX / window.innerWidth) * 2 - 1,
+        y: -(event.clientY / window.innerHeight) * 2 + 1
+      });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  const { rotation } = useSpring({
+    rotation: [mouse.y * Math.PI * 0.1, mouse.x * Math.PI * 0.1, 0],
+    config: { mass: 1, tension: 170, friction: 26 }
+  });
+
+  useFrame((state, dt) => {
+    if (!points.current) return;
+    updateParticles(positions, dt * 0.1);
+    points.current.geometry.attributes.position.needsUpdate = true;
+  });
+
+  return (
+    <animated.group rotation={rotation}>
+      <Points ref={points} positions={positions} stride={3}>
+        <PointMaterial
+          transparent
+          vertexColors
+          size={PARTICLE_SIZE}
+          sizeAttenuation={true}
+          depthWrite={false}
+          blending={THREE.AdditiveBlending}
+          color={theme.mode === 'dark' ? '#334155' : '#f1f5f9'}
+        />
+      </Points>
+    </animated.group>
+  );
+};
+
+// CelestialBody component
+const CelestialBody = ({ isDark }: { isDark: boolean }) => {
+  const meshRef = useRef<THREE.Mesh>(null);
+  const { clock } = useThree();
+
+  useFrame(() => {
+    if (meshRef.current) {
+      meshRef.current.rotation.y = clock.getElapsedTime() * 0.1;
     }
   });
-  
+
   return (
-    <group ref={rocketRef} position={position}>
-      <Trail
-        width={2}
-        length={8}
-        color={'#ffffff'}
-        attenuation={(t) => Math.pow(t, 1.5)}
-      >
-      {/* Main body */}
-      <mesh position={[0, 0, 0]}>
-        <cylinderGeometry args={[0.5, 0.8, 4, 32]} />
-        <meshPhysicalMaterial 
-          color="#ffffff" 
-          metalness={0.9} 
-          roughness={0.1}
-          clearcoat={1}
-          clearcoatRoughness={0.1} 
-        />
-      </mesh>
-      </Trail>
-      {/* Nose cone */}
-      <mesh position={[0, 2.5, 0]}>
-        <coneGeometry args={[0.5, 1, 32]} />
-        <meshStandardMaterial color="#ffffff" metalness={0.9} roughness={0.1} />
-      </mesh>
-      {/* Rocket flame */}
-      <group ref={flameRef} position={[0, -2, 0]}>
-        <mesh>
-          <coneGeometry args={[0.4, 2, 32]} />
-          <meshBasicMaterial color={flameColors.primary} transparent opacity={0.9} />
-        </mesh>
-        <mesh position={[0, -0.5, 0]}>
-          <coneGeometry args={[0.2, 1, 32]} />
-          <meshBasicMaterial color={flameColors.secondary} transparent opacity={0.7} />
-        </mesh>
-      </group>
-      {/* Fins */}
-      {[0, Math.PI * 0.5, Math.PI, Math.PI * 1.5].map((rotation, i) => (
-        <mesh key={i} position={[0, -1.5, 0]} rotation={[0, rotation, 0]}>
-          <boxGeometry args={[0.1, 1, 1]} />
-          <meshStandardMaterial color="#ff0000" metalness={0.6} roughness={0.3} />
+    <mesh ref={meshRef}>
+      <sphereGeometry args={[2, 64, 64]} />
+      <meshStandardMaterial
+        color={isDark ? '#f1f5f9' : '#fbbf24'}
+        emissive={isDark ? '#94a3b8' : '#fef3c7'}
+        emissiveIntensity={0.5}
+        roughness={0.7}
+        metalness={0.3}
+      />
+    </mesh>
+  );
+};
+
+// Orbiting planets
+const Planets = ({ isDark }: { isDark: boolean }) => {
+  const group = useRef<THREE.Group>(null);
+  const planets = useMemo(() => {
+    return Array.from({ length: 5 }).map((_, i) => ({
+      radius: (i + 2) * 1.5,
+      speed: 0.2 / (i + 1),
+      size: 0.2 - i * 0.02,
+      color: isDark ? '#94a3b8' : '#fbbf24'
+    }));
+  }, [isDark]);
+
+  useFrame(({ clock }) => {
+    if (!group.current) return;
+    planets.forEach((planet, i) => {
+      const child = group.current!.children[i];
+      const angle = clock.getElapsedTime() * planet.speed;
+      child.position.x = Math.cos(angle) * planet.radius;
+      child.position.z = Math.sin(angle) * planet.radius;
+    });
+  });
+
+  return (
+    <group ref={group}>
+      {planets.map((planet, i) => (
+        <mesh key={i} position={[planet.radius, 0, 0]}>
+          <sphereGeometry args={[planet.size, 32, 32]} />
+          <meshStandardMaterial
+            color={planet.color}
+            roughness={0.7}
+            metalness={0.3}
+          />
         </mesh>
       ))}
     </group>
   );
 };
 
-// Earth component with atmosphere effect
-const Earth = ({ scale = 1 }) => {
+// Scene component
+const Scene = () => {
   const { theme } = useTheme();
-  const earthRef = useRef<THREE.Mesh>(null);
-  const cloudsRef = useRef<THREE.Mesh>(null);
-  
-  // Load textures only when needed
-  const [map, bumpMap, cloudsMap] = useLoader(THREE.TextureLoader, [
-    'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_atmos_2048.jpg',
-    'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_normal_2048.jpg',
-    'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_clouds_1024.png'
-  ]);
+  const isDark = theme.mode === 'dark';
 
-  useFrame(() => {
-    if (earthRef.current) {
-      earthRef.current.rotation.y += 0.001;
+  return (
+    <>
+      <ambientLight intensity={0.5} />
+      <pointLight position={[10, 10, 10]} intensity={1} />
+      <ParticleSystem />
+      <CelestialBody isDark={isDark} />
+      <Planets isDark={isDark} />
+    </>
+  );
+};
+
+const ThreeScene: React.FC = () => {
+  const { theme } = useTheme();
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  return (
+    <div 
+      ref={containerRef}
+      className="fixed top-0 left-0 w-full h-full pointer-events-none z-0"
+      style={{ 
+        opacity: 0.8,
+        transition: 'opacity 0.5s ease-in-out',
+      }}
+    >
+      <Canvas
+        camera={{ 
+          position: [0, 0, 20],
+          fov: 60,
+          near: 0.1,
+          far: 1000
+        }}
+        gl={{ 
+          antialias: true,
+          alpha: true
+        }}
+        style={{ 
+          position: 'absolute',
+          pointerEvents: 'none'
+        }}
+      >
+        <Scene />
+      </Canvas>
+    </div>
+  );
+};
+
+export default ThreeScene;
     }
     if (cloudsRef.current) {
       cloudsRef.current.rotation.y += 0.0015;
