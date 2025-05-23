@@ -96,12 +96,19 @@ const Astronaut = ({ position }: { position: [number, number, number] }) => {
 // Scene component that handles animations
 const Scene = () => {
   const { theme } = useTheme();
+  const [isMounted, setIsMounted] = useState(false);
   const scroll = useScroll();
   const { camera } = useThree();
   const [animationProgress, setAnimationProgress] = useState(0);
 
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   useFrame(() => {
-    const scrollOffset = scroll.offset;
+    if (!isMounted || !scroll) return;
+    
+    const scrollOffset = scroll.offset || 0;
     setAnimationProgress(scrollOffset);
 
     // Camera movement based on scroll
