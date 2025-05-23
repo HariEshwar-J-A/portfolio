@@ -48,10 +48,10 @@ const Earth = ({ isDark }: { isDark: boolean }) => {
 
   useFrame(({ clock }) => {
     if (earthRef.current) {
-      earthRef.current.rotation.y = clock.getElapsedTime() * 0.1;
+      earthRef.current.rotation.y = clock.getElapsedTime() * 0.5;
       // Subtle tilt based on mouse position
-      earthRef.current.rotation.x = mouse.y * 0.1;
-      earthRef.current.rotation.z = mouse.x * 0.1;
+      earthRef.current.rotation.x = mouse.y * 0.5;
+      earthRef.current.rotation.z = mouse.x * 0.5;
     }
     if (cloudsRef.current) {
       cloudsRef.current.rotation.y = clock.getElapsedTime() * 0.12;
