@@ -3,7 +3,8 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { 
   Sphere, 
   Stars, 
-  useScroll,
+  ScrollControls,
+  Scroll,
   Environment,
   Cloud
 } from '@react-three/drei';
@@ -100,10 +101,13 @@ const Moon = ({ scale = 0.27 }) => {
 // Scene component that handles animations
 const Scene = () => {
   const [isMounted, setIsMounted] = useState(false);
-  const [smoothScroll, setSmoothScroll] = useState(0);
-  const scroll = useScroll();
+  const [scrollProgress, setScrollProgress] = useState(0);
   const { camera } = useThree();
   const rocketRef = useRef<THREE.Group>(null);
+
+  const onScroll = (e: { scroll: { current: number } }) => {
+    setScrollProgress(e.scroll.current);
+  };
 
   useEffect(() => {
     setIsMounted(true);
@@ -164,17 +168,13 @@ const Scene = () => {
   };
 
   useFrame(() => {
-    if (!isMounted || !scroll) return;
+    if (!isMounted) return;
     
-    // Smooth lerp for scroll animation
-    const scrollOffset = scroll.offset;
     const lerpFactor = 0.05; // Smoother transition
-    const newScroll = THREE.MathUtils.lerp(smoothScroll, scrollOffset, lerpFactor);
-    setSmoothScroll(newScroll);
 
     // Calculate camera and rocket positions
-    const [camX, camY, camZ] = calculateCameraPosition(newScroll);
-    const [rocketX, rocketY, rocketZ] = calculateRocketPosition(newScroll);
+    const [camX, camY, camZ] = calculateCameraPosition(scrollProgress);
+    const [rocketX, rocketY, rocketZ] = calculateRocketPosition(scrollProgress);
     
     // Smooth camera movement
     camera.position.x = THREE.MathUtils.lerp(camera.position.x, camX, lerpFactor);
@@ -195,25 +195,29 @@ const Scene = () => {
 
   return (
     <>
-      <Stars radius={100} depth={50} count={5000} factor={4} fade speed={1} />
-      
-      <group position={earthPosition}>
-        <Earth scale={2} />
-      </group>
-      
-      <group position={moonPosition}>
-        <Moon />
-      </group>
+      <ScrollControls pages={3} damping={0.1}>
+        <Scroll onScroll={onScroll}>
+          <Stars radius={100} depth={50} count={5000} factor={4} fade speed={1} />
+          
+          <group position={earthPosition}>
+            <Earth scale={2} />
+          </group>
+          
+          <group position={moonPosition}>
+            <Moon />
+          </group>
 
-      <Rocket position={calculateRocketPosition(smoothScroll)} />
-      
-      <ambientLight intensity={0.5} />
-      <pointLight position={[10, 10, 10]} intensity={1} />
-      <pointLight position={[-10, -10, -10]} intensity={0.5} />
-      <Environment preset="sunset" />
-      
-      {/* Atmospheric effects */}
-      <Cloud opacity={0.5} speed={0.4} width={20} depth={1.5} segments={20} />
+          <Rocket position={calculateRocketPosition(scrollProgress)} />
+          
+          <ambientLight intensity={0.5} />
+          <pointLight position={[10, 10, 10]} intensity={1} />
+          <pointLight position={[-10, -10, -10]} intensity={0.5} />
+          <Environment preset="sunset" />
+          
+          {/* Atmospheric effects */}
+          <Cloud opacity={0.5} speed={0.4} width={20} depth={1.5} segments={20} />
+        </Scroll>
+      </ScrollControls>
     </>
   );
 };
@@ -234,12 +238,13 @@ const ThreeScene: React.FC = () => {
       <Canvas 
         camera={{ position: [0, 0, 10], fov: 75 }}
         gl={{ antialias: true }}
+        linear
         style={{ 
           position: 'absolute',
           pointerEvents: 'none'
         }}
         frameloop="always"
-        dpr={[1, 2]}
+        dpr={window.devicePixelRatio}
       >
         <Scene />
       </Canvas>
