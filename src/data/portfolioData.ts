@@ -332,9 +332,9 @@ export const portfolioData: PortfolioData = {
   contact: {
     email: "harieshwarja.official@gmail.com",
     location: "Hamilton, ON",
-    emailjsServiceId: "service_2qr58y5",
-    emailjsTemplateId: "template_1yd9gkf",
-    emailjsUserId: "jO7NqM-PEdT31xvaL",
+    emailjsServiceId: import.meta.env.VITE_EMAILJS_SERVICE_ID,
+    emailjsTemplateId: import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+    emailjsUserId: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
   },
   colors: {
     primary: "#3B82F6",
