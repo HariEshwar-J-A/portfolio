@@ -19,7 +19,7 @@ const AppContent: React.FC = () => {
   
   // Set document title
   useEffect(() => {
-    document.title = 'John Doe | Portfolio';
+    document.title = 'Harieshwar J A | Portfolio';
   }, []);
   
   // Set theme color on body
