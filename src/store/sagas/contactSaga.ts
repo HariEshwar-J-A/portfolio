@@ -28,8 +28,8 @@ function sendEmail(params: EmailParams) {
 
 function* handleSubmitForm(action: ReturnType<typeof submitForm>) {
   try {
-    const state = select((state: any) => state.contact.form);
-    console.log(action);
+    const state = yield select((state: any) => state.contact.form);
+    console.log(state);
     yield call(sendEmail, state);
     yield put(submitSuccess());
   } catch (error) {
