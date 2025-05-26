@@ -14,9 +14,8 @@ function sendEmail() {
   params = yield select((state) => state.contact.form);
   console.log(params);
   const templateParams = {
-    to_name: 'Admin',
-    from_name: params.name,
-    reply_to: params.email,
+    name: params.name,
+    email: params.email,
     subject: params.subject,
     message: params.message
   };
