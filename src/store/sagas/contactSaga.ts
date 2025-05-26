@@ -17,7 +17,6 @@ function sendEmail(params: EmailParams) {
     emailjsServiceId,
     emailjsTemplateId,
     params,
-    emailjsUserId
   );
 }
 
