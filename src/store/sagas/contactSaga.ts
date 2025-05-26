@@ -13,11 +13,10 @@ interface EmailParams {
 
 function sendEmail(params: EmailParams) {
   const templateParams = {
-    from_name: params.name,
-    from_email: params.email,
     subject: params.subject,
     message: params.message,
-    to_email: portfolioData.contact.email, // Add recipient's email from portfolio data
+    name: params.name,
+    email: params.email,
   };
 
   return emailjs.send(
