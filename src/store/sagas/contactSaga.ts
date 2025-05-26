@@ -12,6 +12,7 @@ interface EmailParams {
 }
 
 function sendEmail(params: EmailParams) {
+  console.log(params);
   const templateParams = {
     subject: params.subject,
     message: params.message,
