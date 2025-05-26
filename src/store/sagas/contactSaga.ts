@@ -11,7 +11,7 @@ interface EmailParams {
 }
 
 function sendEmail(params: EmailParams) {
-  const { emailjsServiceId, emailjsTemplateId, emailjsUserId } = portfolioData.contact;
+  const { emailjsServiceId, emailjsTemplateId } = portfolioData.contact;
   
   return emailjs.send(
     emailjsServiceId,
