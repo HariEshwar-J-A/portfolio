@@ -39,29 +39,27 @@ const AchievementsSection: React.FC = () => {
         <div className="max-w-4xl mx-auto relative">
           {/* Timeline Line */}
           <div 
-            className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 rounded"
+            className="absolute left-4 md:left-1/2 transform md:-translate-x-1/2 h-full w-1 rounded"
             style={{ 
               background: `linear-gradient(to bottom, ${theme.colors.primary}, ${theme.colors.secondary})` 
             }}
           ></div>
           
           {/* Achievement Items */}
-          <div className="relative space-y-16">
+          <div className="relative space-y-8">
             {achievements.map((achievement, index) => (
               <motion.div
                 key={achievement.title}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
+                initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.2 }}
-                className={`flex items-center ${
-                  index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'
-                }`}
+                className="flex items-center"
                 onHoverStart={() => setSelectedAchievement(index)}
                 onHoverEnd={() => setSelectedAchievement(null)}
               >
                 {/* Timeline Node */}
                 <motion.div 
-                  className="absolute left-1/2 transform -translate-x-1/2 w-6 h-6 rounded-full border-4"
+                  className="absolute left-4 md:left-1/2 transform md:-translate-x-1/2 w-6 h-6 rounded-full border-4"
                   style={{ 
                     backgroundColor: theme.mode === 'dark' ? theme.colors.dark.surface : theme.colors.light.surface,
                     borderColor: selectedAchievement === index ? theme.colors.accent : theme.colors.primary
@@ -75,7 +73,7 @@ const AchievementsSection: React.FC = () => {
                 
                 {/* Achievement Content */}
                 <motion.div 
-                  className={`w-5/12 ${index % 2 === 0 ? 'pr-8 text-right' : 'pl-8'}`}
+                  className="pl-12 md:pl-8 w-full md:w-5/12 ml-auto"
                   whileHover={{ scale: 1.05 }}
                 >
                   <motion.div
@@ -89,7 +87,7 @@ const AchievementsSection: React.FC = () => {
                     }}
                   >
                     <div className="flex items-center justify-between mb-4">
-                      <div className={`flex items-center ${index % 2 === 0 ? 'flex-row-reverse' : 'flex-row'} gap-2`}>
+                      <div className="flex items-center gap-2">
                         <motion.div
                           whileHover={{ rotate: 360 }}
                           transition={{ duration: 0.5 }}
