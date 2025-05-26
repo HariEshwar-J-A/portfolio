@@ -15,9 +15,8 @@ function* handleSubmitForm(action: ReturnType<typeof submitForm>) {
     const formData: EmailParams = yield select((state: any) => state.contact.form);
     
     const templateParams = {
-      to_name: 'Admin',
-      from_name: formData.name,
-      from_email: formData.email,
+      name: formData.name,
+      email: formData.email,
       subject: formData.subject,
       message: formData.message,
     };
