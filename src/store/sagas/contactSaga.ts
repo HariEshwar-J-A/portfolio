@@ -30,7 +30,9 @@ function sendEmail(params: EmailParams) {
 function* handleSubmitForm(action: ReturnType<typeof submitForm>) {
   try {
     const state = yield select((state: any) => state.contact.form);
-    yield call(sendEmail, state);
+    yield call(sendEmail, {
+      ...state
+    });
     yield put(submitSuccess());
   } catch (error) {
     yield put(submitFailure(error instanceof Error ? error.message : 'An error occurred'));
