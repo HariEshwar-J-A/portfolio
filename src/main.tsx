@@ -7,12 +7,8 @@ import './index.css';
 import emailjs from 'emailjs-com';
 import { portfolioData } from './data/portfolioData.ts';
 
-// Initialize EmailJS with user ID
-// In a real app, you would want to properly set up environment variables
-emailjs.init(portfolioData.contact.emailjsUserId);
-
 emailjs.init({
-  publicKey: 'EMAILJS_PUBLIC_KEY',
+  publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
   // Do not allow headless browsers
   blockHeadless: true,
   blockList: {
