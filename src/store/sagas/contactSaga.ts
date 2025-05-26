@@ -31,8 +31,7 @@ function* handleSubmitForm(action: ReturnType<typeof submitForm>) {
   try {
     const state = yield select((state: any) => state.contact.form);
     yield call(sendEmail, {
-      ...state,
-      to_email: portfolioData.contact.email,
+      ...state
     });
     yield put(submitSuccess());
   } catch (error) {
