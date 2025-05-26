@@ -29,7 +29,7 @@ function sendEmail(params: EmailParams) {
 function* handleSubmitForm(action: ReturnType<typeof submitForm>) {
   try {
     const localState = yield select((state: any) => state.contact.form);
-    console.log(localState);
+    console.log(yield localState);
     yield call(sendEmail, localState);
     yield put(submitSuccess());
   } catch (error) {
