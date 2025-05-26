@@ -8,13 +8,22 @@ interface EmailParams {
   email: string;
   subject: string;
   message: string;
+  to_email: string;
 }
 
 function sendEmail(params: EmailParams) {
+  const templateParams = {
+    from_name: params.name,
+    from_email: params.email,
+    subject: params.subject,
+    message: params.message,
+    to_email: portfolioData.contact.email, // Add recipient's email from portfolio data
+  };
+
   return emailjs.send(
     import.meta.env.VITE_EMAILJS_SERVICE_ID,
     import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-    params,
+    templateParams,
     import.meta.env.VITE_EMAILJS_PUBLIC_KEY
   );
 }
@@ -22,7 +31,10 @@ function sendEmail(params: EmailParams) {
 function* handleSubmitForm(action: ReturnType<typeof submitForm>) {
   try {
     const state = yield select((state: any) => state.contact.form);
-    yield call(sendEmail, state);
+    yield call(sendEmail, {
+      ...state,
+      to_email: portfolioData.contact.email,
+    });
     yield put(submitSuccess());
   } catch (error) {
     yield put(submitFailure(error instanceof Error ? error.message : 'An error occurred'));
