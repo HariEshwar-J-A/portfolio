@@ -12,10 +12,11 @@ interface EmailParams {
 
 function sendEmail(params: EmailParams) {
   const templateParams = {
+    to_name: 'Admin',
     from_name: params.name,
-    from_email: params.email,
+    reply_to: params.email,
     subject: params.subject,
-    message: params.message,
+    message: params.message
   };
 
   return emailjs.send(
