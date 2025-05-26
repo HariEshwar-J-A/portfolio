@@ -243,7 +243,7 @@ export const portfolioData: PortfolioData = {
     name: "Harieshwar J A",
     title: "Full Stack Developer",
     bio: "Passionate developer with expertise in React, Node.js, and cloud technologies. Currently focused on building scalable web applications and exploring new technologies.",
-    photo: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg",
+    photo: "https://media.licdn.com/dms/image/v2/D5635AQGcycI5KI32pQ/profile-framedphoto-shrink_200_200/profile-framedphoto-shrink_200_200/0/1733424989292?e=1748872800&v=beta&t=zEbVu-ApNIAk7KQbnJup2RnpeVD2MwEGybcVk8cf6UI",
     socialLinks: {
       github: "https://github.com/HariEshwar-J-A",
       linkedin: "https://www.linkedin.com/in/harieshwar-j-a/",
