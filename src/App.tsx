@@ -3,7 +3,6 @@ import { Provider } from 'react-redux';
 import { store } from './store/store';
 import { useTheme } from './hooks/useTheme';
 import { useScroll } from './hooks/useScroll';
-import ThreeScene from './components/ThreeScene';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import AboutSection from './components/sections/AboutSection';
@@ -30,7 +29,6 @@ const AppContent: React.FC = () => {
   
   return (
     <div className={theme.mode === 'dark' ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}>
-      <ThreeScene />
       <Header />
       
       <main>

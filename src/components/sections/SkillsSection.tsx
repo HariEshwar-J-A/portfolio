@@ -83,6 +83,16 @@ const SkillsSection: React.FC = () => {
         .style('font-size', '12px')
         .style('fill', theme.mode === 'dark' ? '#fff' : '#000');
     
+    // Add grid lines
+    svg.append('g')
+      .attr('class', 'grid')
+      .call(d3.axisLeft(y)
+        .tickSize(-width)
+        .tickFormat(() => '')
+      )
+      .style('stroke', theme.mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)')
+      .style('stroke-dasharray', '2,2');
+    
     // Add title
     svg.append('text')
       .attr('x', width / 2)

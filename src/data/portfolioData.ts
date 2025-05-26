@@ -117,7 +117,7 @@ export const WorkData: WorkExperience[] = [
       "Deployed and maintained scalable, cloud-hosted applications with 99.9% uptime.",
     ],
     logo: "https://yourdomain.com/path-to-freelance-logo.png",
-    location: "Hamilton, Ontario",
+    location: "Hamilton, Canada",
   },
   {
     company: "SOTI Inc.",
@@ -243,7 +243,7 @@ export const portfolioData: PortfolioData = {
     name: "Harieshwar J A",
     title: "Full Stack Developer",
     bio: "Passionate developer with expertise in React, Node.js, and cloud technologies. Currently focused on building scalable web applications and exploring new technologies.",
-    photo: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg",
+    photo: "/profile-picture.jpg",
     socialLinks: {
       github: "https://github.com/HariEshwar-J-A",
       linkedin: "https://www.linkedin.com/in/harieshwar-j-a/",
@@ -332,9 +332,9 @@ export const portfolioData: PortfolioData = {
   contact: {
     email: "harieshwarja.official@gmail.com",
     location: "Hamilton, ON",
-    emailjsServiceId: "service_id",
-    emailjsTemplateId: "template_id",
-    emailjsUserId: "user_id",
+    emailjsServiceId: import.meta.env.VITE_EMAILJS_SERVICE_ID,
+    emailjsTemplateId: import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+    emailjsUserId: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
   },
   colors: {
     primary: "#3B82F6",

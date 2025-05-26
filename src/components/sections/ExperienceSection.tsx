@@ -265,7 +265,8 @@ const ExperienceSection: React.FC = () => {
                   showland: true,
                   center: { lon: 0, lat: 20 },
                   projection: {
-                    scale: 1.5
+                    scale: 1.5,
+                    type: "mercator",
                   },
                   landcolor: theme.mode === 'dark' ? 'rgb(30, 41, 59)' : 'rgb(243, 244, 246)',
                   showocean: true,
@@ -275,9 +276,6 @@ const ExperienceSection: React.FC = () => {
                   showframe: false,
                   showcoastlines: true,
                   coastlinecolor: theme.mode === 'dark' ? 'rgb(71, 85, 105)' : 'rgb(148, 163, 184)',
-                  projection: {
-                    type: 'mercator'
-                  }
                 },
                 hoverlabel: {
                   bgcolor: theme.mode === 'dark' ? 'rgba(30, 41, 59, 0.95)' : 'rgba(255, 255, 255, 0.95)',
