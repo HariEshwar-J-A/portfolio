@@ -344,8 +344,8 @@ export const portfolioData: PortfolioData = {
     warning: "#F59E0B",
     error: "#EF4444",
     dark: {
-      background: "#1A0F0F",
-      surface: "#2D1F1F",
+      background: "#2A1515",
+      surface: "#3D2020",
       text: "#F5E6E6",
     },
     light: {
