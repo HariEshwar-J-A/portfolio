@@ -10,8 +10,8 @@ interface EmailParams {
   message: string;
 }
 
-function sendEmail() {
-  params = yield select((state) => state.contact.form);
+function* sendEmail() {
+  const params = yield select((state) => state.contact.form);
   console.log(params);
   const templateParams = {
     name: params.name,
