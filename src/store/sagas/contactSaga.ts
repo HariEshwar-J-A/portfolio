@@ -1,6 +1,6 @@
 import { takeLatest, call, put, select } from 'redux-saga/effects';
 import { submitForm, submitSuccess, submitFailure } from '../slices/contactSlice';
-import emailjs from 'emailjs-com';
+import emailjs from '@emailjs/browser';
 import { portfolioData } from '../../data/portfolioData';
 
 interface EmailParams {
@@ -11,12 +11,11 @@ interface EmailParams {
 }
 
 function sendEmail(params: EmailParams) {
-  const { emailjsServiceId, emailjsTemplateId } = portfolioData.contact;
-  
   return emailjs.send(
     import.meta.env.VITE_EMAILJS_SERVICE_ID,
     import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-    params
+    params,
+    import.meta.env.VITE_EMAILJS_PUBLIC_KEY
   );
 }
 
