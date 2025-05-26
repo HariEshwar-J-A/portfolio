@@ -333,7 +333,7 @@ export const portfolioData: PortfolioData = {
     email: "harieshwarja.official@gmail.com",
     location: "Hamilton, ON",
     emailjsServiceId: "service_2qr58y5",
-    emailjsTemplateId: "template_ucqtcrg",
+    emailjsTemplateId: "template_1yd9gkf",
     emailjsUserId: "jO7NqM-PEdT31xvaL",
   },
   colors: {
