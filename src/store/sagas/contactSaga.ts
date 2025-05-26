@@ -1,4 +1,4 @@
-import { takeLatest, call, put, select } from 'redux-saga/effects';
+import { takeLatest, call, put, select, fork } from 'redux-saga/effects';
 import { submitForm, submitSuccess, submitFailure } from '../slices/contactSlice';
 import emailjs from '@emailjs/browser';
 import { portfolioData } from '../../data/portfolioData';
@@ -10,7 +10,9 @@ interface EmailParams {
   message: string;
 }
 
-function sendEmail(params: EmailParams) {
+function sendEmail() {
+  params = yield select((state) => state.contact.form);
+  console.log(params);
   const templateParams = {
     to_name: 'Admin',
     from_name: params.name,
@@ -28,9 +30,8 @@ function sendEmail(params: EmailParams) {
 
 function* handleSubmitForm(action: ReturnType<typeof submitForm>) {
   try {
-    const localState = yield select((state: any) => state.contact.form);
-    console.log(localState.next());
-    yield call(sendEmail, localState);
+    // const localState = yield select((state: any) => state.contact.form);
+    yield fork(sendEmail);
     yield put(submitSuccess());
   } catch (error) {
     yield put(submitFailure(error instanceof Error ? error.message : 'An error occurred'));
