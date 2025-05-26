@@ -334,7 +334,7 @@ export const portfolioData: PortfolioData = {
     location: "Hamilton, ON",
     emailjsServiceId: "service_2qr58y5",
     emailjsTemplateId: "template_ucqtcrg",
-    emailjsUserId: "user_id",
+    emailjsUserId: "jO7NqM-PEdT31xvaL",
   },
   colors: {
     primary: "#3B82F6",
