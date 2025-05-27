@@ -116,7 +116,7 @@ export const WorkData: WorkExperience[] = [
       "Built an AI-powered chatbot using the OpenAI API and Next.js, boosting customer engagement by 30%.",
       "Deployed and maintained scalable, cloud-hosted applications with 99.9% uptime.",
     ],
-    logo: "https://yourdomain.com/path-to-freelance-logo.png",
+    logo: "https://images.pexels.com/photos/1181671/pexels-photo-1181671.jpeg",
     location: "Hamilton, Canada",
   },
   {
@@ -131,7 +131,7 @@ export const WorkData: WorkExperience[] = [
       "Automated PowerShell-based reindexing scripts for JFrog Xray vulnerability scans, reducing manual effort by 40%.",
       "Improved BDD testing frameworks by resolving Angular.js & .NET UI issues, increasing usability and system efficiency.",
     ],
-    logo: "https://upload.wikimedia.org/wikipedia/en/thumb/2/29/SOTI_logo.svg/1200px-SOTI_logo.svg.png",
+    logo: "https://upload.wikimedia.org/wikipedia/en/2/29/SOTI_logo.svg",
     location: "Mississauga, Canada",
     website: "https://www.soti.net"
   },
@@ -153,7 +153,7 @@ export const WorkData: WorkExperience[] = [
       "Engaged in external product discussions to deepen customer insights, converting one-year contracts into long-term engagements.",
       "Received two 'Star Soliton' awards, recognizing exceptional hard work and significant value addition.",
     ],
-    logo: "https://1414g3edy9az5.cdn.shift8web.com/wp-content/uploads/2023/01/Soliton-Logo.png",
+    logo: "https://media.licdn.com/dms/image/C560BAQGXNxr5tqe8_g/company-logo_200_200/0/1630637434288?e=2147483647&v=beta&t=_5RBN-axvqD9MKvUiQxGSWV-r8jC0g-lBhV-EoVLc-c",
     location: "Bangalore, India",
     website: "https://www.solitontech.com"
   },
@@ -174,7 +174,7 @@ export const WorkData: WorkExperience[] = [
       "Initiated and led career preparedness training for college students under the Corporate Social Responsibility banner, including material development and stakeholder coordination.",
       "Coordinated festive company events to foster cross-team connectivity and boost organizational morale.",
     ],
-    logo: "https://1414g3edy9az5.cdn.shift8web.com/wp-content/uploads/2023/01/Soliton-Logo.png",
+    logo: "https://media.licdn.com/dms/image/C560BAQGXNxr5tqe8_g/company-logo_200_200/0/1630637434288?e=2147483647&v=beta&t=_5RBN-axvqD9MKvUiQxGSWV-r8jC0g-lBhV-EoVLc-c",
     location: "Bangalore, India",
     website: "https://www.solitontech.com"
   },
@@ -188,7 +188,7 @@ export const WorkData: WorkExperience[] = [
     achievements: [
       "Trained in LabVIEW and developed real-time applications such as a virtual calculator, flight ticket booking system, and ATM, which exceeded expectations and secured a full-time role.",
     ],
-    logo: "https://1414g3edy9az5.cdn.shift8web.com/wp-content/uploads/2023/01/Soliton-Logo.png",
+    logo: "https://media.licdn.com/dms/image/C560BAQGXNxr5tqe8_g/company-logo_200_200/0/1630637434288?e=2147483647&v=beta&t=_5RBN-axvqD9MKvUiQxGSWV-r8jC0g-lBhV-EoVLc-c",
     location: "Bangalore, India",
     website: "https://www.solitontech.com"
   },
@@ -202,7 +202,7 @@ export const WorkData: WorkExperience[] = [
     achievements: [
       "Earned recognition for rapid learning and impactful contributions while developing core Java backend modules.",
     ],
-    logo: "https://1414g3edy9az5.cdn.shift8web.com/wp-content/uploads/2023/01/Soliton-Logo.png",
+    logo: "https://www.zoho.com/branding/images/zoho-logo.png",
     location: "Chennai, India",
     website: "https://www.zoho.com"
   },
@@ -259,7 +259,7 @@ export const portfolioData: PortfolioData = {
       startDate: "2023",
       endDate: "2025",
       description: "Specializing in automation and software solutions",
-      logo: "https://images.pexels.com/photos/5553050/pexels-photo-5553050.jpeg",
+      logo: "https://www.mcmaster.ca/opr/html/opr/mcmaster_brand/main/downloads/McMaster_logo_colour.png",
       location: "Hamilton, ON, Canada",
       gpa: "3.9/4.0",
     },
@@ -269,7 +269,7 @@ export const portfolioData: PortfolioData = {
       field: "Electrical and Electronics Engineering",
       startDate: "2016",
       endDate: "2020",
-      logo: "https://images.pexels.com/photos/159490/yale-university-landscape-universities-schools-159490.jpeg",
+      logo: "https://upload.wikimedia.org/wikipedia/en/thumb/3/3a/Anna_University_Logo.svg/1200px-Anna_University_Logo.svg.png",
       location: "Thiruvallur, India",
       gpa: "8.57/10.0",
     },
@@ -281,8 +281,7 @@ export const portfolioData: PortfolioData = {
       description:
         "Real-time weather monitoring application with support for major cities worldwide. Features include current conditions, forecasts, and interactive weather maps.",
       technologies: ["HTML5", "CSS3", "JavaScript", "NodeJS", "Weather API"],
-      image:
-        "https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg",
+      image: "https://images.pexels.com/photos/2448749/pexels-photo-2448749.jpeg",
       demoLink: "https://harieshwar-j-a.github.io/hari.github.io/",
       sourceLink: "https://github.com/HariEshwar-J-A/hari.github.io",
       featured: true,
@@ -302,8 +301,7 @@ export const portfolioData: PortfolioData = {
       description:
         "Real-time chat application demonstrating WebSocket capabilities. Features include instant messaging, user presence, and message history.",
       technologies: ["HTML5", "CSS3", "JavaScript", "NodeJS", "Web Sockets"],
-      image:
-        "https://images.pexels.com/photos/1111368/pexels-photo-1111368.jpeg",
+      image: "https://images.pexels.com/photos/4126743/pexels-photo-4126743.jpeg",
       demoLink: "https://chat-box-web.glitch.me/",
       sourceLink: "https://glitch.com/~chat-box-web",
       featured: false,
