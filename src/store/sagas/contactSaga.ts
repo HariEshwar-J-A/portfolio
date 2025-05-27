@@ -16,11 +16,10 @@ function* handleSubmitForm() {
     const { emailjsServiceId, emailjsTemplateId, emailjsUserId } = portfolioData.contact;
     
     const templateParams = {
-      from_name: formData.name,
-      from_email: formData.email,
+      name: formData.name,
+      email: formData.email,
       subject: formData.subject,
       message: formData.message,
-      to_name: 'Harieshwar',
     };
 
     yield call(
