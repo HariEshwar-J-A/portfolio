@@ -1,49 +1,11 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
-import { imagePresets } from 'vite-plugin-image-presets';
-import critical from 'vite-plugin-critical';
 import splitVend from 'vite-plugin-splitvend';
 
 export default defineConfig({
   plugins: [
     react(),
-    imagePresets({
-      thumbnail: {
-        resize: {
-          width: 300,
-          height: 300,
-          fit: 'cover',
-        },
-        format: 'webp',
-        quality: 80,
-      },
-      hero: {
-        resize: {
-          width: 1200,
-          height: 800,
-          fit: 'cover',
-        },
-        format: ['avif', 'webp'],
-        quality: 90,
-      },
-    }),
-    critical({
-      criticalCSS: {
-        base: 'dist/',
-        inline: true,
-        dimensions: [
-          {
-            height: 900,
-            width: 375,
-          },
-          {
-            height: 900,
-            width: 1200,
-          },
-        ],
-      },
-    }),
     splitVend(),
   ],
   build: {
