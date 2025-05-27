@@ -33,7 +33,7 @@ const Footer: React.FC = () => {
             {socialLinks.github && (
               <button 
                 onClick={() => handleSocialClick(socialLinks.github)}
-                className={`p-2 rounded-full transition-colors hover:text-${theme.colors.primary} cursor-pointer`}
+                className={`p-2 rounded-full transition-colors hover:text-primary-700 cursor-pointer`}
                 style={{ color: theme.mode === 'dark' ? '#fff' : '#0F172A' }}
                 aria-label="GitHub"
               >
@@ -44,7 +44,7 @@ const Footer: React.FC = () => {
             {socialLinks.linkedin && (
               <button 
                 onClick={() => handleSocialClick(socialLinks.linkedin)}
-                className={`p-2 rounded-full transition-colors hover:text-${theme.colors.primary} cursor-pointer`}
+                className={`p-2 rounded-full transition-colors hover:text-primary-700 cursor-pointer`}
                 style={{ color: theme.mode === 'dark' ? '#fff' : '#0F172A' }}
                 aria-label="LinkedIn"
               >
@@ -55,7 +55,7 @@ const Footer: React.FC = () => {
             {socialLinks.twitter && (
               <button 
                 onClick={() => handleSocialClick(socialLinks.twitter)}
-                className={`p-2 rounded-full transition-colors hover:text-${theme.colors.primary} cursor-pointer`}
+                className={`p-2 rounded-full transition-colors hover:text-primary-700 cursor-pointer`}
                 style={{ color: theme.mode === 'dark' ? '#fff' : '#0F172A' }}
                 aria-label="Twitter"
               >
@@ -66,7 +66,7 @@ const Footer: React.FC = () => {
             {socialLinks.website && (
               <button 
                 onClick={() => handleSocialClick(socialLinks.website)}
-                className={`p-2 rounded-full transition-colors hover:text-${theme.colors.primary} cursor-pointer`}
+                className={`p-2 rounded-full transition-colors hover:text-primary-700 cursor-pointer`}
                 style={{ color: theme.mode === 'dark' ? '#fff' : '#0F172A' }}
                 aria-label="Website"
               >

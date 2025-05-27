@@ -35,7 +35,7 @@ const Header: React.FC = () => {
       }`}
     >
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-        <div className="text-2xl font-bold" style={{ color: theme.colors.primary }}>
+        <div className="text-2xl font-bold" style={{ color: theme.colors.primary700 }}>
           Portfolio
         </div>
         
@@ -47,11 +47,11 @@ const Header: React.FC = () => {
               onClick={() => handleNavigation(section)}
               className={`text-base font-medium capitalize transition-colors ${
                 activeSection === section
-                  ? `text-${theme.colors.primary}`
+                  ? `text-primary-700`
                   : theme.mode === 'dark' ? 'text-slate-300 hover:text-white' : 'text-slate-700 hover:text-black'
               }`}
               style={{ 
-                color: activeSection === section ? theme.colors.primary : undefined 
+                color: activeSection === section ? theme.colors.primary700 : undefined 
               }}
             >
               {section}
@@ -89,6 +89,7 @@ const Header: React.FC = () => {
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="p-2 rounded-full transition-colors"
             aria-label="Toggle mobile menu"
+            aria-expanded={isMobileMenuOpen}
           >
             {isMobileMenuOpen ? (
               <X size={24} className={theme.mode === 'dark' ? 'text-white' : 'text-slate-900'} />
@@ -105,6 +106,8 @@ const Header: React.FC = () => {
           className={`md:hidden absolute w-full py-4 px-6 shadow-lg ${
             theme.mode === 'dark' ? 'bg-slate-800' : 'bg-white'
           }`}
+          role="menu"
+          aria-label="Mobile navigation menu"
         >
           <nav className="flex flex-col space-y-4">
             {sections.map((section) => (
@@ -113,12 +116,13 @@ const Header: React.FC = () => {
                 onClick={() => handleNavigation(section)}
                 className={`text-base font-medium capitalize transition-colors ${
                   activeSection === section
-                    ? `text-${theme.colors.primary}`
+                    ? `text-primary-700`
                     : theme.mode === 'dark' ? 'text-slate-300 hover:text-white' : 'text-slate-700 hover:text-black'
                 }`}
                 style={{ 
-                  color: activeSection === section ? theme.colors.primary : undefined 
+                  color: activeSection === section ? theme.colors.primary700 : undefined 
                 }}
+                role="menuitem"
               >
                 {section}
               </button>

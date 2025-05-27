@@ -4,9 +4,6 @@ import { resolve } from 'path';
 
 export default defineConfig({
   plugins: [react()],
-  optimizeDeps: {
-    exclude: ['lucide-react'],
-  },
   build: {
     assetsDir: 'assets',
     rollupOptions: {
@@ -14,6 +11,13 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html'),
       },
       output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom'],
+          'redux-vendor': ['@reduxjs/toolkit', 'react-redux', 'redux-saga'],
+          'ui-vendor': ['@mui/material', '@emotion/react', '@emotion/styled'],
+          'visualization': ['d3', 'plotly.js', 'react-plotly.js'],
+          'animation': ['framer-motion'],
+        },
         assetFileNames: (assetInfo) => {
           if (!assetInfo.name) return 'assets/[name]-[hash][extname]';
           

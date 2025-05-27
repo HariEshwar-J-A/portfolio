@@ -41,7 +41,7 @@ const AchievementsSection: React.FC = () => {
           <div 
             className="absolute left-4 md:left-1/2 transform md:-translate-x-1/2 h-full w-1 rounded"
             style={{ 
-              background: `linear-gradient(to bottom, ${theme.colors.primary}, ${theme.colors.secondary})` 
+              background: `linear-gradient(to bottom, ${theme.colors.primary700}, ${theme.colors.secondary})` 
             }}
           ></div>
           
@@ -62,12 +62,12 @@ const AchievementsSection: React.FC = () => {
                   className="absolute left-4 md:left-1/2 transform md:-translate-x-1/2 w-6 h-6 rounded-full border-4"
                   style={{ 
                     backgroundColor: theme.mode === 'dark' ? theme.colors.dark.surface : theme.colors.light.surface,
-                    borderColor: selectedAchievement === index ? theme.colors.accent : theme.colors.primary
+                    borderColor: selectedAchievement === index ? theme.colors.accent : theme.colors.primary700
                   }}
                   whileHover={{ scale: 1.2 }}
                   animate={{
                     scale: selectedAchievement === index ? 1.2 : 1,
-                    borderColor: selectedAchievement === index ? theme.colors.accent : theme.colors.primary
+                    borderColor: selectedAchievement === index ? theme.colors.accent : theme.colors.primary700
                   }}
                 />
                 
@@ -91,7 +91,7 @@ const AchievementsSection: React.FC = () => {
                         <motion.div
                           whileHover={{ rotate: 360 }}
                           transition={{ duration: 0.5 }}
-                          style={{ color: theme.colors.primary }}
+                          style={{ color: theme.colors.primary700 }}
                         >
                           {getIcon(achievement.title)}
                         </motion.div>
@@ -114,8 +114,8 @@ const AchievementsSection: React.FC = () => {
                     
                     <div className="mt-2">
                       <span 
-                        className="text-sm"
-                        style={{ color: theme.colors.primary }}
+                        className="text-sm font-medium"
+                        style={{ color: theme.colors.primary700 }}
                       >
                         {achievement.date}
                       </span>
