@@ -116,7 +116,7 @@ export const WorkData: WorkExperience[] = [
       "Built an AI-powered chatbot using the OpenAI API and Next.js, boosting customer engagement by 30%.",
       "Deployed and maintained scalable, cloud-hosted applications with 99.9% uptime.",
     ],
-    logo: "https://images.pexels.com/photos/1181671/pexels-photo-1181671.jpeg",
+    logo: new URL(`/public/assets/images/freelance.jpg`, import.meta.url).href,
     location: "Hamilton, Canada",
   },
   {
@@ -131,13 +131,13 @@ export const WorkData: WorkExperience[] = [
       "Automated PowerShell-based reindexing scripts for JFrog Xray vulnerability scans, reducing manual effort by 40%.",
       "Improved BDD testing frameworks by resolving Angular.js & .NET UI issues, increasing usability and system efficiency.",
     ],
-    logo: "https://upload.wikimedia.org/wikipedia/en/2/29/SOTI_logo.svg",
+    logo: new URL(`/public/assets/images/soti.jpg`, import.meta.url).href,
     location: "Mississauga, Canada",
     website: "https://www.soti.net"
   },
   {
     company: "Soliton Technologies",
-    position: "Technical Project Engineer – Full Time",
+    position: "Senior Project Engineer – Full Time",
     startDate: "Jun-2022",
     endDate: "Jul-2023",
     description:
@@ -153,7 +153,7 @@ export const WorkData: WorkExperience[] = [
       "Engaged in external product discussions to deepen customer insights, converting one-year contracts into long-term engagements.",
       "Received two 'Star Soliton' awards, recognizing exceptional hard work and significant value addition.",
     ],
-    logo: "https://media.licdn.com/dms/image/C560BAQGXNxr5tqe8_g/company-logo_200_200/0/1630637434288?e=2147483647&v=beta&t=_5RBN-axvqD9MKvUiQxGSWV-r8jC0g-lBhV-EoVLc-c",
+    logo: new URL(`/public/assets/images/soliton.jpg`, import.meta.url).href,
     location: "Bangalore, India",
     website: "https://www.solitontech.com"
   },
@@ -174,7 +174,7 @@ export const WorkData: WorkExperience[] = [
       "Initiated and led career preparedness training for college students under the Corporate Social Responsibility banner, including material development and stakeholder coordination.",
       "Coordinated festive company events to foster cross-team connectivity and boost organizational morale.",
     ],
-    logo: "https://media.licdn.com/dms/image/C560BAQGXNxr5tqe8_g/company-logo_200_200/0/1630637434288?e=2147483647&v=beta&t=_5RBN-axvqD9MKvUiQxGSWV-r8jC0g-lBhV-EoVLc-c",
+    logo: new URL(`/public/assets/images/soliton.jpg`, import.meta.url).href,
     location: "Bangalore, India",
     website: "https://www.solitontech.com"
   },
@@ -188,7 +188,7 @@ export const WorkData: WorkExperience[] = [
     achievements: [
       "Trained in LabVIEW and developed real-time applications such as a virtual calculator, flight ticket booking system, and ATM, which exceeded expectations and secured a full-time role.",
     ],
-    logo: "https://media.licdn.com/dms/image/C560BAQGXNxr5tqe8_g/company-logo_200_200/0/1630637434288?e=2147483647&v=beta&t=_5RBN-axvqD9MKvUiQxGSWV-r8jC0g-lBhV-EoVLc-c",
+    logo: new URL(`/public/assets/images/soliton.jpg`, import.meta.url).href,
     location: "Bangalore, India",
     website: "https://www.solitontech.com"
   },
@@ -202,7 +202,7 @@ export const WorkData: WorkExperience[] = [
     achievements: [
       "Earned recognition for rapid learning and impactful contributions while developing core Java backend modules.",
     ],
-    logo: "https://www.zoho.com/branding/images/zoho-logo.png",
+    logo: new URL(`/public/assets/images/zoho_corp.jpg`, import.meta.url).href,
     location: "Chennai, India",
     website: "https://www.zoho.com"
   },
@@ -259,7 +259,7 @@ export const portfolioData: PortfolioData = {
       startDate: "2023",
       endDate: "2025",
       description: "Specializing in automation and software solutions",
-      logo: "https://www.mcmaster.ca/opr/html/opr/mcmaster_brand/main/downloads/McMaster_logo_colour.png",
+      logo: new URL(`/public/assets/images/mcmaster.jpg`, import.meta.url).href,
       location: "Hamilton, ON, Canada",
       gpa: "3.9/4.0",
     },
@@ -269,7 +269,7 @@ export const portfolioData: PortfolioData = {
       field: "Electrical and Electronics Engineering",
       startDate: "2016",
       endDate: "2020",
-      logo: "https://upload.wikimedia.org/wikipedia/en/thumb/3/3a/Anna_University_Logo.svg/1200px-Anna_University_Logo.svg.png",
+      logo: new URL(`/public/assets/images/anna_university.jpg`, import.meta.url).href,
       location: "Thiruvallur, India",
       gpa: "8.57/10.0",
     },
