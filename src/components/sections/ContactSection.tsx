@@ -6,7 +6,7 @@ import { Mail, Phone, MapPin, Send, AlertCircle, CheckCircle, Github as GitHub, 
 import { useDispatch, useSelector } from 'react-redux';
 import { updateForm, submitForm, resetStatus } from '../../store/slices/contactSlice';
 import { RootState } from '../../store/store';
-import { TextField, Button, Snackbar, Alert, CircularProgress } from '@mui/material';
+import { TextField, Button, Snackbar, Alert, CircularProgress, Tooltip } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 const ContactSection: React.FC = () => {
@@ -157,17 +157,19 @@ const ContactSection: React.FC = () => {
                   )}
                   
                   {personal.socialLinks.linkedin && (
-                    <button 
-                      onClick={() => handleSocialClick(personal.socialLinks.linkedin)}
-                      className="p-3 rounded-full transition-all duration-300 hover:scale-110 cursor-pointer"
-                      style={{ 
-                        backgroundColor: theme.colors.primary,
-                        color: 'white'
-                      }}
-                      aria-label="LinkedIn"
-                    >
-                      <Linkedin size={24} />
-                    </button>
+                    <Tooltip title="Connect with me on LinkedIn if email is unavailable!" arrow>
+                      <button 
+                        onClick={() => handleSocialClick(personal.socialLinks.linkedin)}
+                        className="p-3 rounded-full transition-all duration-300 hover:scale-110 cursor-pointer"
+                        style={{ 
+                          backgroundColor: theme.colors.primary,
+                          color: 'white'
+                        }}
+                        aria-label="LinkedIn"
+                      >
+                        <Linkedin size={24} />
+                      </button>
+                    </Tooltip>
                   )}
                   
                   {personal.socialLinks.website && (
@@ -183,6 +185,12 @@ const ContactSection: React.FC = () => {
                       <Globe size={24} />
                     </button>
                   )}
+                </div>
+                
+                <div className="mt-4 p-4 rounded-lg" style={{ backgroundColor: `${theme.colors.primary}15` }}>
+                  <p className="text-sm">
+                    <span className="font-medium">Note:</span> If the contact form is unavailable, please feel free to connect with me on LinkedIn for direct communication.
+                  </p>
                 </div>
               </div>
             </motion.div>
@@ -269,7 +277,13 @@ const ContactSection: React.FC = () => {
             >
               {isSuccess 
                 ? 'Your message has been sent successfully!' 
-                : `Failed to send message: ${errorMessage}`
+                : <>
+                    Failed to send message: {errorMessage}. 
+                    <br />
+                    <span className="font-semibold">
+                      Please reach out via LinkedIn if email is unavailable!
+                    </span>
+                  </>
               }
             </Alert>
           </Snackbar>

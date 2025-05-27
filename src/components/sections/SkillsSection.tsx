@@ -11,7 +11,7 @@ const SkillsSection: React.FC = () => {
   const [hasAnimated, setHasAnimated] = useState(false);
   
   useEffect(() => {
-    if (!chartRef.current || hasAnimated) return;
+    if (!chartRef.current) return;
     
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -26,7 +26,14 @@ const SkillsSection: React.FC = () => {
     
     observer.observe(chartRef.current);
     return () => observer.disconnect();
-  }, [hasAnimated, theme.mode]);
+  }, [hasAnimated]);
+
+  // Add new useEffect to handle theme changes
+  useEffect(() => {
+    if (chartRef.current && hasAnimated) {
+      createChart();
+    }
+  }, [theme.mode]);
   
   const createChart = () => {
     if (!chartRef.current) return;
@@ -118,7 +125,7 @@ const SkillsSection: React.FC = () => {
         .attr('y', d => y(d.level))
         .attr('height', d => height - y(d.level));
     
-    // Add values on top of bars
+    // Add values on top of bars with dynamic text color
     svg.selectAll('.value')
       .data(allSkills)
       .enter()
