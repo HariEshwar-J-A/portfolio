@@ -118,7 +118,7 @@ const SkillsSection: React.FC = () => {
         .attr('y', d => y(d.level))
         .attr('height', d => height - y(d.level));
     
-    // Add values on top of bars
+    // Add values on top of bars with white text in dark mode
     svg.selectAll('.value')
       .data(allSkills)
       .enter()
