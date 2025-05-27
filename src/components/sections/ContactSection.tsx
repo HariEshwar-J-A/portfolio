@@ -186,6 +186,12 @@ const ContactSection: React.FC = () => {
                     </button>
                   )}
                 </div>
+                
+                <div className="mt-4 p-4 rounded-lg" style={{ backgroundColor: `${theme.colors.primary}15` }}>
+                  <p className="text-sm">
+                    <span className="font-medium">Note:</span> If the contact form is unavailable, please feel free to connect with me on LinkedIn for direct communication.
+                  </p>
+                </div>
               </div>
             </motion.div>
             
