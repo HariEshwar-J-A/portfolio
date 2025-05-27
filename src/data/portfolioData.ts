@@ -116,7 +116,7 @@ export const WorkData: WorkExperience[] = [
       "Built an AI-powered chatbot using the OpenAI API and Next.js, boosting customer engagement by 30%.",
       "Deployed and maintained scalable, cloud-hosted applications with 99.9% uptime.",
     ],
-    logo: "https://images.pexels.com/photos/1181671/pexels-photo-1181671.jpeg",
+    logo: "/assets/images/freelance.png",
     location: "Hamilton, Canada",
   },
   {
@@ -131,7 +131,7 @@ export const WorkData: WorkExperience[] = [
       "Automated PowerShell-based reindexing scripts for JFrog Xray vulnerability scans, reducing manual effort by 40%.",
       "Improved BDD testing frameworks by resolving Angular.js & .NET UI issues, increasing usability and system efficiency.",
     ],
-    logo: "https://upload.wikimedia.org/wikipedia/en/2/29/SOTI_logo.svg",
+    logo: "/assets/images/soti.png",
     location: "Mississauga, Canada",
     website: "https://www.soti.net"
   },
@@ -153,7 +153,7 @@ export const WorkData: WorkExperience[] = [
       "Engaged in external product discussions to deepen customer insights, converting one-year contracts into long-term engagements.",
       "Received two 'Star Soliton' awards, recognizing exceptional hard work and significant value addition.",
     ],
-    logo: "https://media.licdn.com/dms/image/C560BAQGXNxr5tqe8_g/company-logo_200_200/0/1630637434288?e=2147483647&v=beta&t=_5RBN-axvqD9MKvUiQxGSWV-r8jC0g-lBhV-EoVLc-c",
+    logo: "/assets/images/soliton.png",
     location: "Bangalore, India",
     website: "https://www.solitontech.com"
   },
@@ -174,7 +174,7 @@ export const WorkData: WorkExperience[] = [
       "Initiated and led career preparedness training for college students under the Corporate Social Responsibility banner, including material development and stakeholder coordination.",
       "Coordinated festive company events to foster cross-team connectivity and boost organizational morale.",
     ],
-    logo: "https://media.licdn.com/dms/image/C560BAQGXNxr5tqe8_g/company-logo_200_200/0/1630637434288?e=2147483647&v=beta&t=_5RBN-axvqD9MKvUiQxGSWV-r8jC0g-lBhV-EoVLc-c",
+    logo: "/assets/images/soliton.png",
     location: "Bangalore, India",
     website: "https://www.solitontech.com"
   },
@@ -188,7 +188,7 @@ export const WorkData: WorkExperience[] = [
     achievements: [
       "Trained in LabVIEW and developed real-time applications such as a virtual calculator, flight ticket booking system, and ATM, which exceeded expectations and secured a full-time role.",
     ],
-    logo: "https://media.licdn.com/dms/image/C560BAQGXNxr5tqe8_g/company-logo_200_200/0/1630637434288?e=2147483647&v=beta&t=_5RBN-axvqD9MKvUiQxGSWV-r8jC0g-lBhV-EoVLc-c",
+    logo: "/assets/images/soliton.png",
     location: "Bangalore, India",
     website: "https://www.solitontech.com"
   },
@@ -202,7 +202,7 @@ export const WorkData: WorkExperience[] = [
     achievements: [
       "Earned recognition for rapid learning and impactful contributions while developing core Java backend modules.",
     ],
-    logo: "https://www.zoho.com/branding/images/zoho-logo.png",
+    logo: "/assets/images/zoho_corp.png",
     location: "Chennai, India",
     website: "https://www.zoho.com"
   },
@@ -243,7 +243,7 @@ export const portfolioData: PortfolioData = {
     name: "Harieshwar J A",
     title: "Full Stack Developer",
     bio: "Passionate developer with expertise in React, Node.js, and cloud technologies. Currently focused on building scalable web applications and exploring new technologies.",
-    photo: new URL(`/public/assets/images/profile-picture.jpg`, import.meta.url).href,
+    photo: "/assets/images/profile-picture.jpg",
     socialLinks: {
       github: "https://github.com/HariEshwar-J-A",
       linkedin: "https://www.linkedin.com/in/harieshwar-j-a/",
