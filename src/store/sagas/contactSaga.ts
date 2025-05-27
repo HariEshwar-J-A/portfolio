@@ -10,26 +10,31 @@ interface EmailParams {
   message: string;
 }
 
-function* handleSubmitForm(action: ReturnType<typeof submitForm>) {
+function* handleSubmitForm() {
   try {
     const formData: EmailParams = yield select((state: any) => state.contact.form);
+    const { emailjsServiceId, emailjsTemplateId, emailjsUserId } = portfolioData.contact;
     
     const templateParams = {
-      name: formData.name,
-      email: formData.email,
+      from_name: formData.name,
+      from_email: formData.email,
       subject: formData.subject,
       message: formData.message,
+      to_name: 'Harieshwar',
     };
 
-    yield call(emailjs.send,
-      import.meta.env.VITE_EMAILJS_SERVICE_ID,
-      import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-      templateParams
+    yield call(
+      emailjs.send,
+      emailjsServiceId,
+      emailjsTemplateId,
+      templateParams,
+      emailjsUserId
     );
     
     yield put(submitSuccess());
   } catch (error) {
-    yield put(submitFailure(error instanceof Error ? error.message : 'An error occurred'));
+    console.error('Email sending error:', error);
+    yield put(submitFailure(error instanceof Error ? error.message : 'Failed to send email'));
   }
 }
 
