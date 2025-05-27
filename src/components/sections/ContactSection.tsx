@@ -19,7 +19,7 @@ const ContactSection: React.FC = () => {
     palette: {
       mode: theme.mode,
       primary: {
-        main: theme.colors.primary,
+        main: theme.colors.primary700,
       },
       error: {
         main: theme.colors.error,
@@ -88,16 +88,16 @@ const ContactSection: React.FC = () => {
                 <div className="flex items-start">
                   <div 
                     className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 mr-4"
-                    style={{ backgroundColor: `${theme.colors.primary}20` }}
+                    style={{ backgroundColor: `${theme.colors.primary700}20` }}
                   >
-                    <Mail size={20} style={{ color: theme.colors.primary }} />
+                    <Mail size={20} style={{ color: theme.colors.primary700 }} />
                   </div>
                   <div>
                     <h4 className="font-medium mb-1">Email</h4>
                     <button 
                       onClick={handleEmailClick}
-                      className="text-primary hover:underline cursor-pointer"
-                      style={{ color: theme.colors.primary }}
+                      className="text-primary-700 hover:underline cursor-pointer font-medium"
+                      style={{ color: theme.colors.primary700 }}
                     >
                       {contact.email}
                     </button>
@@ -108,16 +108,16 @@ const ContactSection: React.FC = () => {
                   <div className="flex items-start">
                     <div 
                       className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 mr-4"
-                      style={{ backgroundColor: `${theme.colors.primary}20` }}
+                      style={{ backgroundColor: `${theme.colors.primary700}20` }}
                     >
-                      <Phone size={20} style={{ color: theme.colors.primary }} />
+                      <Phone size={20} style={{ color: theme.colors.primary700 }} />
                     </div>
                     <div>
                       <h4 className="font-medium mb-1">Phone</h4>
                       <button 
                         onClick={handlePhoneClick}
-                        className="text-primary hover:underline cursor-pointer"
-                        style={{ color: theme.colors.primary }}
+                        className="text-primary-700 hover:underline cursor-pointer font-medium"
+                        style={{ color: theme.colors.primary700 }}
                       >
                         {contact.phone}
                       </button>
@@ -128,9 +128,9 @@ const ContactSection: React.FC = () => {
                 <div className="flex items-start">
                   <div 
                     className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 mr-4"
-                    style={{ backgroundColor: `${theme.colors.primary}20` }}
+                    style={{ backgroundColor: `${theme.colors.primary700}20` }}
                   >
-                    <MapPin size={20} style={{ color: theme.colors.primary }} />
+                    <MapPin size={20} style={{ color: theme.colors.primary700 }} />
                   </div>
                   <div>
                     <h4 className="font-medium mb-1">Location</h4>
@@ -147,7 +147,7 @@ const ContactSection: React.FC = () => {
                       onClick={() => handleSocialClick(personal.socialLinks.github)}
                       className="p-3 rounded-full transition-all duration-300 hover:scale-110 cursor-pointer"
                       style={{ 
-                        backgroundColor: theme.colors.primary,
+                        backgroundColor: theme.colors.primary700,
                         color: 'white'
                       }}
                       aria-label="GitHub"
@@ -162,7 +162,7 @@ const ContactSection: React.FC = () => {
                         onClick={() => handleSocialClick(personal.socialLinks.linkedin)}
                         className="p-3 rounded-full transition-all duration-300 hover:scale-110 cursor-pointer"
                         style={{ 
-                          backgroundColor: theme.colors.primary,
+                          backgroundColor: theme.colors.primary700,
                           color: 'white'
                         }}
                         aria-label="LinkedIn"
@@ -177,7 +177,7 @@ const ContactSection: React.FC = () => {
                       onClick={() => handleSocialClick(personal.socialLinks.website)}
                       className="p-3 rounded-full transition-all duration-300 hover:scale-110 cursor-pointer"
                       style={{ 
-                        backgroundColor: theme.colors.primary,
+                        backgroundColor: theme.colors.primary700,
                         color: 'white'
                       }}
                       aria-label="Website"
@@ -187,7 +187,7 @@ const ContactSection: React.FC = () => {
                   )}
                 </div>
                 
-                <div className="mt-4 p-4 rounded-lg" style={{ backgroundColor: `${theme.colors.primary}15` }}>
+                <div className="mt-4 p-4 rounded-lg" style={{ backgroundColor: `${theme.colors.primary700}15` }}>
                   <p className="text-sm">
                     <span className="font-medium">Note:</span> If the contact form is unavailable, please feel free to connect with me on LinkedIn for direct communication.
                   </p>
@@ -214,6 +214,7 @@ const ContactSection: React.FC = () => {
                   onChange={handleInputChange}
                   required
                   variant="outlined"
+                  inputProps={{ 'aria-label': 'Your name' }}
                 />
                 
                 <TextField
@@ -225,6 +226,7 @@ const ContactSection: React.FC = () => {
                   onChange={handleInputChange}
                   required
                   variant="outlined"
+                  inputProps={{ 'aria-label': 'Your email address' }}
                 />
                 
                 <TextField
@@ -235,6 +237,7 @@ const ContactSection: React.FC = () => {
                   onChange={handleInputChange}
                   required
                   variant="outlined"
+                  inputProps={{ 'aria-label': 'Message subject' }}
                 />
                 
                 <TextField
@@ -247,6 +250,7 @@ const ContactSection: React.FC = () => {
                   multiline
                   rows={5}
                   variant="outlined"
+                  inputProps={{ 'aria-label': 'Your message' }}
                 />
                 
                 <Button 

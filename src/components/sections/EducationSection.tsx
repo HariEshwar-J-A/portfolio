@@ -46,6 +46,9 @@ const EducationSection: React.FC = () => {
                       src={edu.logo} 
                       alt={edu.institution} 
                       className="w-full h-full object-contain"
+                      width="1081"
+                      height="1081"
+                      loading="lazy"
                     />
                   </div>
                 )}
@@ -55,7 +58,7 @@ const EducationSection: React.FC = () => {
                     <GraduationCap 
                       size={24} 
                       className="mr-2"
-                      style={{ color: theme.colors.primary }}
+                      style={{ color: theme.colors.primary700 }}
                     />
                     <h3 className="text-2xl font-bold">{edu.institution}</h3>
                   </div>
@@ -74,7 +77,7 @@ const EducationSection: React.FC = () => {
                       {edu.location}
                     </div>
                     {edu.gpa && (
-                      <div className="flex items-center text-sm" style={{ color: theme.colors.primary }}>
+                      <div className="flex items-center text-sm font-medium" style={{ color: theme.colors.primary700 }}>
                         GPA: {edu.gpa}
                       </div>
                     )}

@@ -47,7 +47,7 @@ const SkillsSection: React.FC = () => {
         name: skill.name,
         level: skill.level,
         category: category.category,
-        color: skill.color || theme.colors.primary
+        color: skill.color || theme.colors.primary700
       }))
     );
     
@@ -61,6 +61,8 @@ const SkillsSection: React.FC = () => {
       .append('svg')
         .attr('width', width + margin.left + margin.right)
         .attr('height', height + margin.top + margin.bottom)
+        .attr('aria-label', 'Skills proficiency chart')
+        .attr('role', 'img')
       .append('g')
         .attr('transform', `translate(${margin.left},${margin.top})`);
     
@@ -119,6 +121,7 @@ const SkillsSection: React.FC = () => {
         .attr('fill', d => d.color)
         .attr('y', height)
         .attr('height', 0)
+        .attr('aria-label', d => `${d.name}: ${d.level}%`)
         .transition()
         .duration(800)
         .delay((d, i) => i * 100)
@@ -169,6 +172,7 @@ const SkillsSection: React.FC = () => {
             ref={chartRef} 
             className="w-full overflow-x-auto"
             style={{ minHeight: '400px' }}
+            aria-label="Skills proficiency chart"
           ></div>
         </div>
         
@@ -194,13 +198,18 @@ const SkillsSection: React.FC = () => {
                     <div 
                       className="w-full h-2 rounded-full overflow-hidden bg-opacity-20"
                       style={{ backgroundColor: theme.mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' }}
+                      role="progressbar"
+                      aria-valuenow={skill.level}
+                      aria-valuemin={0}
+                      aria-valuemax={100}
+                      aria-label={`${skill.name} skill level: ${skill.level}%`}
                     >
                       <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${skill.level}%` }}
                         transition={{ duration: 1, delay: index * 0.1 }}
                         className="h-full rounded-full"
-                        style={{ backgroundColor: skill.color || theme.colors.primary }}
+                        style={{ backgroundColor: skill.color || theme.colors.primary700 }}
                       ></motion.div>
                     </div>
                   </div>

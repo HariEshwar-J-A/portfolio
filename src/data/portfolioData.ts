@@ -91,6 +91,7 @@ export interface ColorScheme {
   success: string;
   warning: string;
   error: string;
+  primary700: string; // Added for better contrast
   dark: {
     background: string;
     surface: string;
@@ -341,6 +342,7 @@ export const portfolioData: PortfolioData = {
     success: "#22C55E",
     warning: "#F59E0B",
     error: "#EF4444",
+    primary700: "#1D4ED8", // Added for better contrast
     dark: {
       background: "#0F172A",
       surface: "#1E293B",

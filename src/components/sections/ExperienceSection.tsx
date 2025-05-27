@@ -68,7 +68,7 @@ const ExperienceSection: React.FC = () => {
       mode: 'markers',
       marker: {
         size: 12,
-        color: theme.colors.primary,
+        color: theme.colors.primary700,
         line: {
           color: 'white',
           width: 2
@@ -77,7 +77,7 @@ const ExperienceSection: React.FC = () => {
       hoverinfo: 'text',
       hoverlabel: {
         bgcolor: theme.mode === 'dark' ? 'rgba(30, 41, 59, 0.95)' : 'rgba(255, 255, 255, 0.95)',
-        bordercolor: theme.colors.primary,
+        bordercolor: theme.colors.primary700,
         font: { family: 'Inter, system-ui, sans-serif' }
       }
     };
@@ -111,10 +111,11 @@ const ExperienceSection: React.FC = () => {
               onClick={() => setViewMode('timeline')}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
                 viewMode === 'timeline'
-                  ? 'bg-primary text-white'
+                  ? 'bg-primary-700 text-white'
                   : theme.mode === 'dark' ? 'bg-slate-800' : 'bg-slate-100'
               }`}
-              style={{ backgroundColor: viewMode === 'timeline' ? theme.colors.primary : undefined }}
+              style={{ backgroundColor: viewMode === 'timeline' ? theme.colors.primary700 : undefined }}
+              aria-pressed={viewMode === 'timeline'}
             >
               <Timeline size={20} />
               Timeline View
@@ -123,10 +124,11 @@ const ExperienceSection: React.FC = () => {
               onClick={() => setViewMode('map')}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
                 viewMode === 'map'
-                  ? 'bg-primary text-white'
+                  ? 'bg-primary-700 text-white'
                   : theme.mode === 'dark' ? 'bg-slate-800' : 'bg-slate-100'
               }`}
-              style={{ backgroundColor: viewMode === 'map' ? theme.colors.primary : undefined }}
+              style={{ backgroundColor: viewMode === 'map' ? theme.colors.primary700 : undefined }}
+              aria-pressed={viewMode === 'map'}
             >
               <Globe size={20} />
               Map View
@@ -144,12 +146,12 @@ const ExperienceSection: React.FC = () => {
                   type: 'scatter',
                   mode: 'lines+markers',
                   line: { 
-                    color: theme.colors.primary,
+                    color: theme.colors.primary700,
                     width: 3,
                     shape: 'spline'
                   },
                   marker: { 
-                    color: theme.colors.primary,
+                    color: theme.colors.primary700,
                     size: 12,
                     symbol: 'circle',
                     line: {
@@ -226,7 +228,7 @@ const ExperienceSection: React.FC = () => {
                 hoverlabel: {
                   bgcolor: theme.mode === 'dark' ? 'rgba(30, 41, 59, 0.95)' : 'rgba(255, 255, 255, 0.95)',
                   font: { color: plotlyColors.text },
-                  bordercolor: theme.colors.primary
+                  bordercolor: theme.colors.primary700
                 }
               }}
               config={{
@@ -280,7 +282,7 @@ const ExperienceSection: React.FC = () => {
                 hoverlabel: {
                   bgcolor: theme.mode === 'dark' ? 'rgba(30, 41, 59, 0.95)' : 'rgba(255, 255, 255, 0.95)',
                   font: { color: plotlyColors.text },
-                  bordercolor: theme.colors.primary
+                  bordercolor: theme.colors.primary700
                 }
               }}
               config={{
@@ -314,6 +316,9 @@ const ExperienceSection: React.FC = () => {
                     src={exp.logo} 
                     alt={exp.company} 
                     className="w-full h-full object-contain"
+                    width="400"
+                    height="400"
+                    loading="lazy"
                   />
                 </div>
                 
@@ -322,8 +327,9 @@ const ExperienceSection: React.FC = () => {
                   <button
                     onClick={() => handleCompanyClick(exp.website)}
                     className={`text-xl hover:underline ${exp.website ? 'cursor-pointer' : 'cursor-default'}`}
-                    style={{ color: theme.colors.primary }}
+                    style={{ color: theme.colors.primary700 }}
                     disabled={!exp.website}
+                    aria-label={`Visit ${exp.company} website`}
                   >
                     {exp.company}
                   </button>
@@ -344,7 +350,7 @@ const ExperienceSection: React.FC = () => {
               <div className="mt-6">
                 <p className="mb-4">{exp.description}</p>
                 <div className="mt-4">
-                  <h5 className="font-semibold mb-2">Key Achievements:</h5>
+                  <h4 className="font-semibold mb-2">Key Achievements:</h4>
                   <ul className="list-disc pl-5 space-y-1">
                     {exp.achievements.map((achievement, i) => (
                       <li key={i}>{achievement}</li>

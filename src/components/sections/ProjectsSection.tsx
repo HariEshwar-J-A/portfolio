@@ -54,9 +54,10 @@ const ProjectsSection: React.FC = () => {
                 : theme.mode === 'dark' ? 'text-slate-300 hover:text-white' : 'text-slate-700 hover:text-black'
             }`}
             style={{ 
-              backgroundColor: filter === null ? theme.colors.primary : 'transparent',
-              border: `1px solid ${filter === null ? theme.colors.primary : theme.mode === 'dark' ? '#4B5563' : '#D1D5DB'}`
+              backgroundColor: filter === null ? theme.colors.primary700 : 'transparent',
+              border: `1px solid ${filter === null ? theme.colors.primary700 : theme.mode === 'dark' ? '#4B5563' : '#D1D5DB'}`
             }}
+            aria-pressed={filter === null}
           >
             All
           </button>
@@ -71,9 +72,10 @@ const ProjectsSection: React.FC = () => {
                   : theme.mode === 'dark' ? 'text-slate-300 hover:text-white' : 'text-slate-700 hover:text-black'
               }`}
               style={{ 
-                backgroundColor: filter === tech ? theme.colors.primary : 'transparent',
-                border: `1px solid ${filter === tech ? theme.colors.primary : theme.mode === 'dark' ? '#4B5563' : '#D1D5DB'}`
+                backgroundColor: filter === tech ? theme.colors.primary700 : 'transparent',
+                border: `1px solid ${filter === tech ? theme.colors.primary700 : theme.mode === 'dark' ? '#4B5563' : '#D1D5DB'}`
               }}
+              aria-pressed={filter === tech}
             >
               {tech}
             </button>
@@ -104,11 +106,14 @@ const ProjectsSection: React.FC = () => {
                     src={project.image} 
                     alt={project.title} 
                     className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                    width="1200"
+                    height="630"
+                    loading="lazy"
                   />
                   {project.featured && (
                     <div 
                       className="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold"
-                      style={{ backgroundColor: theme.colors.primary, color: 'white' }}
+                      style={{ backgroundColor: theme.colors.primary700, color: 'white' }}
                     >
                       Featured
                     </div>
@@ -140,8 +145,9 @@ const ProjectsSection: React.FC = () => {
                   {project.demoLink && (
                     <button 
                       onClick={() => handleProjectLink(project.demoLink!)}
-                      className="flex items-center transition-colors hover:text-primary"
-                      style={{ color: theme.colors.primary }}
+                      className="flex items-center transition-colors hover:text-primary-700"
+                      style={{ color: theme.colors.primary700 }}
+                      aria-label={`View demo for ${project.title}`}
                     >
                       <ExternalLink size={16} className="mr-1" />
                       Demo
@@ -151,8 +157,9 @@ const ProjectsSection: React.FC = () => {
                   {project.sourceLink && (
                     <button 
                       onClick={() => handleProjectLink(project.sourceLink!)}
-                      className="flex items-center transition-colors hover:text-primary"
-                      style={{ color: theme.colors.primary }}
+                      className="flex items-center transition-colors hover:text-primary-700"
+                      style={{ color: theme.colors.primary700 }}
+                      aria-label={`View source code for ${project.title}`}
                     >
                       <Github size={16} className="mr-1" />
                       Source

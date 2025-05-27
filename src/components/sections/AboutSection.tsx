@@ -38,6 +38,10 @@ const AboutSection: React.FC = () => {
                 alt={name} 
                 className="w-full h-auto rounded-xl object-cover shadow-xl"
                 style={{ maxHeight: '500px' }}
+                width="2256"
+                height="3008"
+                loading="eager"
+                fetchpriority="high"
               />
               <div 
                 className="absolute bottom-0 left-0 right-0 h-1/4 bg-gradient-to-t"
@@ -55,7 +59,7 @@ const AboutSection: React.FC = () => {
             transition={{ delay: 0.3, duration: 0.5 }}
           >
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
-              Hi, I'm <span style={{ color: theme.colors.primary }}>{name}</span>
+              Hi, I'm <span style={{ color: theme.colors.primary700 }}>{name}</span>
             </h1>
             <h2 className="text-xl md:text-2xl mb-6 opacity-80">{title}</h2>
             <p className="text-lg leading-relaxed mb-8 opacity-90">{bio}</p>
@@ -66,7 +70,7 @@ const AboutSection: React.FC = () => {
                   onClick={() => handleSocialClick(socialLinks.github)}
                   className="p-3 rounded-full transition-all duration-300 hover:scale-110 cursor-pointer"
                   style={{ 
-                    backgroundColor: theme.colors.primary,
+                    backgroundColor: theme.colors.primary700,
                     color: 'white'
                   }}
                   aria-label="GitHub"
@@ -80,7 +84,7 @@ const AboutSection: React.FC = () => {
                   onClick={() => handleSocialClick(socialLinks.linkedin)}
                   className="p-3 rounded-full transition-all duration-300 hover:scale-110 cursor-pointer"
                   style={{ 
-                    backgroundColor: theme.colors.primary,
+                    backgroundColor: theme.colors.primary700,
                     color: 'white'
                   }}
                   aria-label="LinkedIn"
@@ -94,7 +98,7 @@ const AboutSection: React.FC = () => {
                   onClick={() => handleSocialClick(socialLinks.twitter)}
                   className="p-3 rounded-full transition-all duration-300 hover:scale-110 cursor-pointer"
                   style={{ 
-                    backgroundColor: theme.colors.primary,
+                    backgroundColor: theme.colors.primary700,
                     color: 'white'
                   }}
                   aria-label="Twitter"
@@ -108,7 +112,7 @@ const AboutSection: React.FC = () => {
                   onClick={() => handleSocialClick(socialLinks.website)}
                   className="p-3 rounded-full transition-all duration-300 hover:scale-110 cursor-pointer"
                   style={{ 
-                    backgroundColor: theme.colors.primary,
+                    backgroundColor: theme.colors.primary700,
                     color: 'white'
                   }}
                   aria-label="Website"
