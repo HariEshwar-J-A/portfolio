@@ -1,13 +1,9 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
-import splitVend from 'vite-plugin-splitvend';
 
 export default defineConfig({
-  plugins: [
-    react(),
-    splitVend(),
-  ],
+  plugins: [react()],
   build: {
     assetsDir: 'assets',
     rollupOptions: {
