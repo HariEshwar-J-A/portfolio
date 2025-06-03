@@ -246,7 +246,7 @@ export const portfolioData: PortfolioData = {
     photo: new URL(`/public/assets/images/profile-picture.jpg`, import.meta.url).href,
     socialLinks: {
       github: "https://github.com/HariEshwar-J-A",
-      linkedin: "https://www.linkedin.com/in/harieshwar-j-a/",
+      linkedin: "https://www.linkedin.com/in/harieshwar-ja/",
       website: "https://harieshwar.dev/",
     },
   },
