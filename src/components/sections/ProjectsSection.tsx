@@ -76,8 +76,7 @@ const ProjectsSection: React.FC = () => {
           >
             All
           </button>
-          
-          {allTechnologies.map(tech => (
+          {allTechnologies.sort().map(tech => (
             <button
               key={tech}
               onClick={() => handleTechFilter(tech)}
@@ -105,18 +104,22 @@ const ProjectsSection: React.FC = () => {
             transition={{ duration: 0.3 }}
           >
             <div className="relative">
-              <button
-                aria-label="Previous projects"
-                onClick={() => scrollCarousel('left')}
-                className="hidden md:flex items-center justify-center absolute left-0 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full shadow"
-                style={{ backgroundColor: theme.colors.primary, color: 'white' }}
-              >
-                <ChevronLeft />
-              </button>
-
+              {
+                filteredProjects.length > 3 && 
+                <button
+                  aria-label="Previous projects"
+                  onClick={() => scrollCarousel('left')}
+                  className="hidden md:flex items-center justify-center absolute left-0 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full shadow"
+                  style={{ backgroundColor: theme.colors.primary, color: 'white' }}
+                  disabled={filteredProjects.length < 4}
+                  aria-disabled={filteredProjects.length < 4}
+                >
+                  <ChevronLeft />
+                </button>
+              }
               <div
                 ref={carouselRef}
-                className="flex overflow-x-auto gap-8 pb-4 scroll-smooth snap-x snap-mandatory"
+                className="flex overflow-x-auto gap-8 pb-4 scroll-smooth snap-x snap-mandatory overflow-y-hidden no-scrollbar-y"
               >
                 {filteredProjects.map((project, index) => (
                   <motion.div
@@ -192,14 +195,17 @@ const ProjectsSection: React.FC = () => {
                 ))}
               </div>
 
-              <button
-                aria-label="Next projects"
-                onClick={() => scrollCarousel('right')}
-                className="hidden md:flex items-center justify-center absolute right-0 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full shadow"
-                style={{ backgroundColor: theme.colors.primary, color: 'white' }}
-              >
-                <ChevronRight />
-              </button>
+              {
+                filteredProjects.length > 3 && 
+                <button
+                  aria-label="Next projects"
+                  onClick={() => scrollCarousel('right')}
+                  className="hidden md:flex items-center justify-center absolute right-0 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full shadow"
+                  style={{ backgroundColor: theme.colors.primary, color: 'white' }}
+                >
+                  <ChevronRight />
+                </button>
+              }
             </div>
           </motion.div>
         </AnimatePresence>

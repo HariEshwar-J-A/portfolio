@@ -1,4 +1,4 @@
-import { takeLatest, put, select } from 'redux-saga/effects';
+import { takeLatest, select } from 'redux-saga/effects';
 import { toggleTheme, setTheme } from '../slices/themeSlice';
 import { RootState } from '../store';
 
