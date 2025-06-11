@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
 import { useTheme } from './hooks/useTheme';
-import { useScroll } from './hooks/useScroll';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import AboutSection from './components/sections/AboutSection';
@@ -15,7 +14,6 @@ import ContactSection from './components/sections/ContactSection';
 
 const AppContent: React.FC = () => {
   const { theme } = useTheme();
-  const scrollY = useScroll();
   
   // Set document title
   useEffect(() => {

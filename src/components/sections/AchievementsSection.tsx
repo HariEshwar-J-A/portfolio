@@ -73,7 +73,7 @@ const AchievementsSection: React.FC = () => {
                 
                 {/* Achievement Content */}
                 <motion.div 
-                  className="pl-12 md:pl-8 w-full md:w-5/12 ml-auto"
+                  className="pl-12 md:pl-8 w-full md:w-5/12 ml-auto cursor-pointer"
                   whileHover={{ scale: 1.05 }}
                 >
                   <motion.div
