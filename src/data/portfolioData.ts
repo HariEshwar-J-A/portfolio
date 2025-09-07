@@ -105,10 +105,22 @@ export interface ColorScheme {
 
 export const WorkData: WorkExperience[] = [
   {
+    company: "Nuclear Promise X",
+    position: "Innovation Catalyst – Full Time",
+    startDate: "Jul-2025",
+    endDate: "Present",
+    description:
+      "Developing cutting-edge web applications and AI-driven solutions to drive innovation and enhance user experiences in the Nuclear Sector.",
+    achievements: ["Cooking..."],
+    logo: new URL(`/public/assets/images/npx.jpg`, import.meta.url).href,
+    location: "Whitby, Canada",
+    website: "https://www.npxinnovation.ca/",
+  },
+  {
     company: "Freelance",
     position: "Freelance React Developer – Part Time",
     startDate: "Aug-2023",
-    endDate: "Present",
+    endDate: "Jul-2025",
     description:
       "Delivered optimized web solutions and innovative features as an independent contractor.",
     achievements: [
@@ -135,7 +147,7 @@ export const WorkData: WorkExperience[] = [
     ],
     logo: new URL(`/public/assets/images/soti.jpg`, import.meta.url).href,
     location: "Mississauga, Canada",
-    website: "https://www.soti.net"
+    website: "https://www.soti.net",
   },
   {
     company: "Soliton Technologies",
@@ -158,7 +170,7 @@ export const WorkData: WorkExperience[] = [
     ],
     logo: new URL(`/public/assets/images/soliton.jpg`, import.meta.url).href,
     location: "Bangalore, India",
-    website: "https://www.solitontech.com"
+    website: "https://www.solitontech.com",
   },
   {
     company: "Soliton Technologies",
@@ -180,7 +192,7 @@ export const WorkData: WorkExperience[] = [
     ],
     logo: new URL(`/public/assets/images/soliton.jpg`, import.meta.url).href,
     location: "Bangalore, India",
-    website: "https://www.solitontech.com"
+    website: "https://www.solitontech.com",
   },
   {
     company: "Soliton Technologies",
@@ -194,7 +206,7 @@ export const WorkData: WorkExperience[] = [
     ],
     logo: new URL(`/public/assets/images/soliton.jpg`, import.meta.url).href,
     location: "Bangalore, India",
-    website: "https://www.solitontech.com"
+    website: "https://www.solitontech.com",
   },
   {
     company: "Zoho Corporation",
@@ -208,7 +220,7 @@ export const WorkData: WorkExperience[] = [
     ],
     logo: new URL(`/public/assets/images/zoho_corp.jpg`, import.meta.url).href,
     location: "Chennai, India",
-    website: "https://www.zoho.com"
+    website: "https://www.zoho.com",
   },
 ];
 
@@ -247,7 +259,8 @@ export const portfolioData: PortfolioData = {
     name: "Harieshwar J A",
     title: "Full Stack Developer",
     bio: "Passionate developer with expertise in React.js, Node.js, and cloud technologies. Currently focused on building scalable web applications and exploring new technologies.",
-    photo: new URL(`/public/assets/images/profile-picture.jpg`, import.meta.url).href,
+    photo: new URL(`/public/assets/images/profile-picture.jpg`, import.meta.url)
+      .href,
     socialLinks: {
       github: "https://github.com/HariEshwar-J-A",
       linkedin: "https://www.linkedin.com/in/harieshwar-ja/",
@@ -273,7 +286,10 @@ export const portfolioData: PortfolioData = {
       field: "Electrical and Electronics Engineering",
       startDate: "2016",
       endDate: "2020",
-      logo: new URL(`/public/assets/images/anna_university.jpg`, import.meta.url).href,
+      logo: new URL(
+        `/public/assets/images/anna_university.jpg`,
+        import.meta.url
+      ).href,
       location: "Thiruvallur, India",
       gpa: "8.57/10.0",
     },
@@ -299,7 +315,8 @@ export const portfolioData: PortfolioData = {
         "GitHub Actions",
         "Netlify",
       ],
-      image: "https://images.pexels.com/photos/1181675/pexels-photo-1181675.jpeg",
+      image:
+        "https://images.pexels.com/photos/1181675/pexels-photo-1181675.jpeg",
       demoLink: "https://your-portfolio-domain.com",
       sourceLink: "https://github.com/HariEshwar-J-A/portfolio",
       featured: true,
@@ -380,7 +397,8 @@ export const portfolioData: PortfolioData = {
         "AWS",
       ],
       image: "https://images.pexels.com/photos/358070/pexels-photo-358070.jpeg",
-      sourceLink: "https://github.com/HariEshwar-J-A/vehicle-anti-theft-system-dashboard",
+      sourceLink:
+        "https://github.com/HariEshwar-J-A/vehicle-anti-theft-system-dashboard",
       featured: false,
     },
     {
@@ -405,7 +423,15 @@ export const portfolioData: PortfolioData = {
       title: "Word Scramble Game",
       description:
         "A browser-based word scramble game developed entirely in vanilla JavaScript, HTML, and CSS. The game shuffles words for users to unscramble within a time limit, featuring responsive design and interactive animations. Hosted on GitHub Pages, it offers quick playability without any dependencies",
-      technologies: ["JavaScript", "HTML5", "CSS3", "GitHub Pages", "SPA", "JSON", "Node.js"],
+      technologies: [
+        "JavaScript",
+        "HTML5",
+        "CSS3",
+        "GitHub Pages",
+        "SPA",
+        "JSON",
+        "Node.js",
+      ],
       image: "https://images.pexels.com/photos/267569/pexels-photo-267569.jpeg",
       sourceLink: "https://github.com/HariEshwar-J-A/scramble.github.io",
       demoLink: "https://word-scramble-game.glitch.me/",
@@ -415,8 +441,19 @@ export const portfolioData: PortfolioData = {
       title: "Weather Monitoring App",
       description:
         "Real-time weather monitoring application with support for major cities worldwide. Features include current conditions, forecasts, and interactive weather maps.",
-      technologies: ["HTML5", "CSS3", "JavaScript", "Node.js", "JSON", "FetchAPI", "Weather API", "GitHub Pages", "SPA"],
-      image: "https://images.pexels.com/photos/2448749/pexels-photo-2448749.jpeg",
+      technologies: [
+        "HTML5",
+        "CSS3",
+        "JavaScript",
+        "Node.js",
+        "JSON",
+        "FetchAPI",
+        "Weather API",
+        "GitHub Pages",
+        "SPA",
+      ],
+      image:
+        "https://images.pexels.com/photos/2448749/pexels-photo-2448749.jpeg",
       demoLink: "https://harieshwar-j-a.github.io/hari.github.io/",
       sourceLink: "https://github.com/HariEshwar-J-A/hari.github.io",
       featured: false,
@@ -426,7 +463,8 @@ export const portfolioData: PortfolioData = {
       description:
         "Real-time chat application demonstrating WebSocket capabilities. Features include instant messaging, user presence, and message history.",
       technologies: ["HTML5", "CSS3", "JavaScript", "Node.js", "Web Sockets"],
-      image: "https://images.pexels.com/photos/4126743/pexels-photo-4126743.jpeg",
+      image:
+        "https://images.pexels.com/photos/4126743/pexels-photo-4126743.jpeg",
       demoLink: "https://chat-box-web.glitch.me/",
       sourceLink: "https://glitch.com/~chat-box-web",
       featured: false,
@@ -460,8 +498,7 @@ export const portfolioData: PortfolioData = {
     {
       title: "Chess Team - Most Successful Leader/Captain",
       date: "2020",
-      description:
-        `
+      description: `
         Led RMDEC Boys Chess team in the Zonal Chess tournaments for 3 consecutive years and won top 3 places every year
         | Secured 1st (first) place in board prizes and inter-department chess tournaments in all 4 (four) years, and obtained RMDEC Sports Rolling Trophy for 3 (three) consecutive years",
         | Won multiple Chess tournaments (Rated/Unrated) across India
