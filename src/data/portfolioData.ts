@@ -105,10 +105,21 @@ export interface ColorScheme {
 
 export const WorkData: WorkExperience[] = [
   {
+    company: "ECAM",
+    position: "Software Developer – Full Time",
+    startDate: "Feb-2026",
+    endDate: "Present",
+    description:
+      "Building software solutions to drive innovation and efficiency.",
+    achievements: ["Cooking..."],
+    logo: new URL(`/public/assets/images/ecam.png`, import.meta.url).href,
+    location: "Canada",
+  },
+  {
     company: "Nuclear Promise X",
     position: "Innovation Catalyst – Full Time",
     startDate: "Jul-2025",
-    endDate: "Present",
+    endDate: "Jan-2026",
     description:
       "Developing cutting-edge web applications and AI-driven solutions to drive innovation and enhance user experiences in the Nuclear Sector.",
     achievements: ["Cooking..."],
