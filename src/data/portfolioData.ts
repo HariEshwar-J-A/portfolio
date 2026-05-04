@@ -121,8 +121,15 @@ export const WorkData: WorkExperience[] = [
     startDate: "Jul-2025",
     endDate: "Jan-2026",
     description:
-      "Developing cutting-edge web applications and AI-driven solutions to drive innovation and enhance user experiences in the Nuclear Sector.",
-    achievements: ["Cooking..."],
+      "Excelled as a Full Stack Developer, driving significant improvements in our development processes and code quality.",
+    achievements: [
+      "Used agentic AI and GitHub Actions to accelerate delivery 20% and provide deeper, high-value PR reviews",
+      "Modernized a React codebase with context providers, custom hooks, components, reducing prop drilling 30% and easing maintenance",
+      "Standardized React/Node.js patterns, added Husky + lint-staged pre-commit checks to block 90% broken commits and improve quality",
+      "Leveraged GitHub Actions for continuous integration and deployment, streamlining workflows",
+      "Converted live components to read-only pages using switch-based architecture for better performance",
+      "Received recognition for valuable peer PR reviews and insightful comments, fostering a collaborative team environment",
+    ],
     logo: new URL(`/public/assets/images/npx.jpg`, import.meta.url).href,
     location: "Whitby, Canada",
     website: "https://www.npxinnovation.ca/",
