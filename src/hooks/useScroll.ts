@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setActiveSection } from '../store/slices/navigationSlice';
+import type { SectionId } from '../store/slices/navigationSlice';
 
 export const useScroll = () => {
   const dispatch = useDispatch();
@@ -17,14 +18,14 @@ export const useScroll = () => {
       sections.forEach((section) => {
         const sectionTop = (section as HTMLElement).offsetTop;
         const sectionHeight = section.clientHeight;
-        const sectionId = section.getAttribute('id');
+        const sectionId = section.getAttribute('id') as SectionId | null;
         
         if (
           scrollPosition >= sectionTop &&
           scrollPosition < sectionTop + sectionHeight &&
           sectionId
         ) {
-          dispatch(setActiveSection(sectionId as any));
+          dispatch(setActiveSection(sectionId));
         }
       });
     };

@@ -34,7 +34,7 @@ const AboutSection: React.FC = () => {
               transition={{ delay: 0.2, duration: 0.5 }}
             >
               <img 
-                src={new URL(`/public/assets/images/profile-picture.jpg`, import.meta.url).href}
+                src={photo}
                 alt={name} 
                 className="w-full h-auto rounded-xl object-cover shadow-xl"
                 style={{ maxHeight: '500px' }}

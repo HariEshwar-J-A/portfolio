@@ -265,6 +265,45 @@ export const SkillsData: SkillCategory[] = [
   },
 ];
 
+export const MarketingData = {
+  headline: "Full-stack engineer bridging industrial automation, AI, and scalable web systems.",
+  tagline:
+    "I transform complex industrial and enterprise challenges into high-performance, observable web applications. From IoT edge devices to AI-driven cloud platforms, I build systems that scale cleanly and deliver measurable impact.",
+  /** Short labels orbiting the hero portrait in 3D (keep concise for readability). */
+  heroOrbitLabels: [
+    "AI & GenAI Integrations",
+    "Web Development",
+    "Automation",
+    "Cloud & DevOps",
+    "React & Node.js",
+    "Agile Leadership",
+    "System Architecture",
+    "Data Visualization",
+    "Internet of Things" ,
+  ],
+  proofPoints: [
+    { metric: "5M+", label: "logs/day ingested for anomaly detection" },
+    { metric: "$100k+", label: "enterprise engagements secured" },
+    { metric: "99.9%", label: "uptime maintained across cloud deployments" },
+  ],
+  pillars: [
+    "AI and GenAI product integrations",
+    "Cloud-native CI/CD and observability",
+    "High-performance React, TypeScript, and data visualization",
+  ],
+  primaryCta: { label: "Start a conversation", href: "#contact" },
+  secondaryCta: { label: "View classic portfolio", href: "/" },
+  /** Short copy for the career “telescope” experience (ECAM + future framing). */
+  telescope: {
+    ecamCompany:
+      "ECAM focuses on industrial automation and smart systems—software that keeps complex operations predictable, observable, and safe in the field.",
+    ecamRole:
+      "I ship full-stack features and integrations that turn product intent into reliable releases: APIs, UIs, and the glue between them—always with an eye on maintainability and operator clarity.",
+    futureBlurb:
+      "The empty map ahead: research-grade products, deeper platform ownership, and collaborations where craft and narrative both matter. Not a destination—a direction.",
+  },
+};
+
 export const portfolioData: PortfolioData = {
   personal: {
     name: "Harieshwar J A",

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { navigateTo } from '../store/slices/navigationSlice';
+import type { SectionId } from '../store/slices/navigationSlice';
 import { RootState } from '../store/store';
 import { useTheme } from '../hooks/useTheme';
-import { Sun, Moon, Menu, X } from 'lucide-react';
+import { Sun, Moon, Menu, X, Box } from 'lucide-react';
 
 const Header: React.FC = () => {
   const dispatch = useDispatch();
@@ -21,8 +23,8 @@ const Header: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleNavigation = (section: string) => {
-    dispatch(navigateTo(section as any));
+  const handleNavigation = (section: SectionId) => {
+    dispatch(navigateTo(section));
     setIsMobileMenuOpen(false);
   };
 
@@ -57,6 +59,15 @@ const Header: React.FC = () => {
               {section}
             </button>
           ))}
+
+          <Link
+            to="/3d"
+            className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5"
+            style={{ backgroundColor: theme.colors.primary }}
+          >
+            <Box size={16} />
+            3D Portfolio
+          </Link>
           
           <button
             onClick={toggleTheme}
@@ -123,6 +134,16 @@ const Header: React.FC = () => {
                 {section}
               </button>
             ))}
+
+          <Link
+            to="/3d"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="inline-flex items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-white shadow-lg transition"
+            style={{ backgroundColor: theme.colors.primary }}
+          >
+            <Box size={16} />
+            3D Portfolio
+          </Link>
           </nav>
         </div>
       )}

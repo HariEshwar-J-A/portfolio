@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../hooks/useTheme';
 import { portfolioData } from '../../data/portfolioData';
@@ -46,6 +46,7 @@ const ExperienceSection: React.FC = () => {
     companies: experience.toReversed().map(exp => exp.company),
     startDates: experience.toReversed().map(exp => new Date(exp.startDate)),
     endDates: experience.toReversed().map(exp => exp.endDate === 'Present' ? new Date() : new Date(exp.endDate)),
+    endLabels: experience.toReversed().map(exp => exp.endDate),
     positions: experience.toReversed().map(exp => exp.position),
     locations: experience.toReversed().map(exp => exp.location),
   };
@@ -163,7 +164,7 @@ const ExperienceSection: React.FC = () => {
                     `<b>${company}</b><br>` +
                     `${timelineData.positions[i]}<br>` +
                     `${timelineData.startDates[i].toLocaleDateString()} - ` +
-                    `${timelineData.endDates[i] === new Date() ? 'Present' : timelineData.endDates[i].toLocaleDateString()}<br>` +
+                    `${timelineData.endLabels[i] === 'Present' ? 'Present' : timelineData.endDates[i].toLocaleDateString()}<br>` +
                     `📍 ${timelineData.locations[i]}`
                   ),
                 }

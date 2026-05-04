@@ -2,6 +2,7 @@ import { takeLatest, call, put, select } from 'redux-saga/effects';
 import { submitForm, submitSuccess, submitFailure } from '../slices/contactSlice';
 import emailjs from '@emailjs/browser';
 import { portfolioData } from '../../data/portfolioData';
+import type { RootState } from '../store';
 
 interface EmailParams {
   name: string;
@@ -12,7 +13,7 @@ interface EmailParams {
 
 function* handleSubmitForm() {
   try {
-    const formData: EmailParams = yield select((state: any) => state.contact.form);
+    const formData: EmailParams = yield select((state: RootState) => state.contact.form);
     const { emailjsServiceId, emailjsTemplateId, emailjsUserId } = portfolioData.contact;
     
     const templateParams = {

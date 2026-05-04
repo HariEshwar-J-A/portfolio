@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-type SectionId = 'about' | 'skills' | 'experience' | 'education' | 'projects' | 'achievements' | 'contact';
+export type SectionId = 'about' | 'skills' | 'experience' | 'education' | 'projects' | 'achievements' | 'contact';
 
 interface NavigationState {
   activeSection: SectionId;
@@ -28,6 +28,8 @@ const navigationSlice = createSlice({
       state.isAnimating = false;
     },
     navigateTo: (state, action: PayloadAction<SectionId>) => {
+      void state;
+      void action;
       // Handled by saga
     },
   },
