@@ -354,6 +354,25 @@ export const portfolioData: PortfolioData = {
   skills: SkillsData,
   projects: [
     {
+      title: "Info Sentry",
+      description:
+        "Personal intelligence dashboard: topic-scoped news feeds, AI summaries, predictions, and GitHub repo discovery with Google OAuth, per-user data isolation, and agent-assisted pipelines.",
+      technologies: [
+        "Next.js",
+        "React",
+        "TypeScript",
+        "PostgreSQL",
+        "Prisma",
+        "Docker",
+        "Google OAuth",
+        "OpenRouter",
+      ],
+      image: "https://images.pexels.com/photos/7688336/pexels-photo-7688336.jpeg",
+      demoLink: "https://sentry.harieshwar.dev",
+      sourceLink: "https://github.com/HariEshwar-J-A/info-sentry",
+      featured: true,
+    },
+    {
       title: "Portfolio Website SPA 2.0",
       description:
         "A modern, highly optimized personal portfolio built with React 18 and TypeScript. Features include dark/light mode toggle, interactive data visualizations using D3 and Plotly, smooth animations with Framer Motion, and full accessibility compliance. It integrates a robust Redux Toolkit + Saga state management pattern and benefits from automated CI/CD with GitHub Actions and Netlify for instant deployment. Lighthouse scores consistently reach 100 across performance, accessibility, SEO, and best practices.",
