@@ -5,7 +5,7 @@ import { navigateTo } from '../store/slices/navigationSlice';
 import type { SectionId } from '../store/slices/navigationSlice';
 import { RootState } from '../store/store';
 import { useTheme } from '../hooks/useTheme';
-import { Sun, Moon, Menu, X, Box } from 'lucide-react';
+import { Sun, Moon, Menu, X, Box, Newspaper } from 'lucide-react';
 
 const Header: React.FC = () => {
   const dispatch = useDispatch();
@@ -59,6 +59,20 @@ const Header: React.FC = () => {
               {section}
             </button>
           ))}
+
+          <a
+            href="https://sentry.harieshwar.dev"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold shadow-lg transition hover:-translate-y-0.5 border border-white/20"
+            style={{
+              backgroundColor: theme.mode === 'dark' ? 'rgba(30,41,59,0.9)' : 'rgba(255,255,255,0.95)',
+              color: theme.mode === 'dark' ? '#f1f5f9' : '#0f172a',
+            }}
+          >
+            <Newspaper size={16} />
+            Info Sentry
+          </a>
 
           <Link
             to="/3d"
@@ -134,6 +148,21 @@ const Header: React.FC = () => {
                 {section}
               </button>
             ))}
+
+          <a
+            href="https://sentry.harieshwar.dev"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="inline-flex items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-semibold shadow-lg transition border border-white/20"
+            style={{
+              backgroundColor: theme.mode === 'dark' ? 'rgba(30,41,59,0.95)' : 'rgba(255,255,255,0.95)',
+              color: theme.mode === 'dark' ? '#f1f5f9' : '#0f172a',
+            }}
+          >
+            <Newspaper size={16} />
+            Info Sentry
+          </a>
 
           <Link
             to="/3d"
