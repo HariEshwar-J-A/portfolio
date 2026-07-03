@@ -1,5 +1,5 @@
 /**
- * Content for the HARI.OS Playground (/os): an endless quiz pool,
+ * Content for the HARI.AI Playground (/ai): an endless quiz pool,
  * scramble words, and memory pairs. Every quiz question unlocks a
  * "memory fragment" — a real fact about Harieshwar — so playing longer
  * always reveals more of the person behind the portfolio.

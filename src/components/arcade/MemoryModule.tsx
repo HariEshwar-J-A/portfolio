@@ -4,6 +4,22 @@ import { Camera, Crown, Gamepad2, Grid3X3, Moon, RotateCcw, Rocket, Trophy } fro
 import { memoryPairs } from '../../data/arcadeData';
 import { useTheme } from '../../hooks/useTheme';
 import { glassPanel } from '../SectionShell';
+import AiGuide, { pickLine } from './AiGuide';
+
+const START_LINE = 'His obsessions come in pairs. Find them all.';
+
+const MATCH_LINES = [
+  'Pair locked. That is one of his loves.',
+  'Match. You are mapping him fast.',
+  'Another pair down — he approves of your memory.',
+];
+
+const MISS_LINES = [
+  'Not a pair. His interests run deep — keep looking.',
+  'Close. The grid remembers even when you do not.',
+];
+
+const WIN_LINE = 'Grid cleared. Your pattern recognition rivals mine.';
 
 const ICONS: Record<string, React.ReactNode> = {
   gamepad: <Gamepad2 size={22} />,
@@ -48,6 +64,7 @@ const MemoryModule: React.FC<MemoryModuleProps> = ({ onWin }) => {
   const [flipped, setFlipped] = useState<number[]>([]);
   const [matched, setMatched] = useState<string[]>([]);
   const [moves, setMoves] = useState(0);
+  const [guideLine, setGuideLine] = useState(START_LINE);
   const isWon = useMemo(() => matched.length === memoryPairs.length, [matched]);
 
   useEffect(() => {
@@ -56,7 +73,15 @@ const MemoryModule: React.FC<MemoryModuleProps> = ({ onWin }) => {
     const [a, b] = flipped.map((key) => cards.find((card) => card.key === key)!);
     const timeout = window.setTimeout(() => {
       if (a.pairId === b.pairId) {
-        setMatched((current) => [...current, a.pairId]);
+        setMatched((current) => {
+          const next = [...current, a.pairId];
+          setGuideLine(
+            next.length === memoryPairs.length ? WIN_LINE : pickLine(MATCH_LINES)
+          );
+          return next;
+        });
+      } else {
+        setGuideLine(pickLine(MISS_LINES));
       }
       setFlipped([]);
     }, 650);
@@ -79,6 +104,7 @@ const MemoryModule: React.FC<MemoryModuleProps> = ({ onWin }) => {
     setFlipped([]);
     setMatched([]);
     setMoves(0);
+    setGuideLine(START_LINE);
   };
 
   return (
@@ -92,6 +118,8 @@ const MemoryModule: React.FC<MemoryModuleProps> = ({ onWin }) => {
           moves: {moves} · pairs: {matched.length}/{memoryPairs.length}
         </p>
       </div>
+
+      <AiGuide message={guideLine} />
 
       <div className="mx-auto mt-6 grid max-w-md grid-cols-3 gap-2.5 sm:grid-cols-4">
         {cards.map((card) => {

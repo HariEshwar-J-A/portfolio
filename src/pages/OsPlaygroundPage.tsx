@@ -34,10 +34,10 @@ const MODULES: { id: ModuleId; label: string; blurb: string; icon: React.ReactNo
 ];
 
 /**
- * HARI.OS Playground — the gamified exploration mode, separate from the
- * base portfolio. A futuristic AI-lab where visitors earn unbounded XP
- * through quizzes and puzzles, decode memory fragments about Hari, and
- * keep being nudged toward the collaboration channel.
+ * HARI.AI Playground — the gamified exploration mode, separate from the
+ * base portfolio. Hari's AI hosts the games itself: visitors earn
+ * unbounded XP through quizzes and puzzles, decode memory fragments
+ * about Hari, and keep being nudged toward the collaboration channel.
  */
 const OsPlaygroundPage: React.FC = () => {
   const { theme } = useTheme();
@@ -46,7 +46,7 @@ const OsPlaygroundPage: React.FC = () => {
   const [activeModule, setActiveModule] = useState<ModuleId>('sync');
 
   useEffect(() => {
-    document.title = 'HARI.OS Playground | Explore Harieshwar';
+    document.title = 'HARI.AI Playground | Explore Harieshwar';
     document.body.className = isDark ? 'bg-slate-950 text-white' : 'bg-slate-50 text-slate-900';
   }, [isDark]);
 
@@ -73,7 +73,7 @@ const OsPlaygroundPage: React.FC = () => {
             }`}
           >
             <ArrowLeft size={15} className="transition group-hover:-translate-x-1" />
-            hari.os portfolio
+            hari.ai portfolio
           </Link>
           <div className="flex items-center gap-2">
             <button
@@ -95,12 +95,12 @@ const OsPlaygroundPage: React.FC = () => {
             <Sparkles size={13} className="mr-1 inline" />
             exploration mode
           </p>
-          <h1 className="os-glitch mt-3 font-mono text-4xl font-black tracking-tight md:text-6xl">
-            HARI.OS<span style={{ color: 'var(--os-primary)' }}> PLAYGROUND</span>
+          <h1 className="os-glitch mt-3 font-mono text-3xl font-black tracking-tight sm:text-4xl md:text-6xl">
+            HARI.AI<span style={{ color: 'var(--os-primary)' }}> PLAYGROUND</span>
           </h1>
           <p className={`mx-auto mt-4 max-w-xl text-sm leading-relaxed md:text-base ${mutedText}`}>
-            An intelligence you can play with. Every round decodes another fragment of who Hari is —
-            and the archive never runs dry. XP has no cap. Neither does he.
+            I'm Hari's personal AI, and these are my games. Every round I reveal another true
+            fragment of my human — the archive never runs dry, XP has no cap, and neither does he.
           </p>
         </div>
 

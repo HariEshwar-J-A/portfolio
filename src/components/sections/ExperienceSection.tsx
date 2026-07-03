@@ -6,6 +6,131 @@ import { Calendar, MapPin, Globe, Baseline as Timeline } from 'lucide-react';
 import Plot from 'react-plotly.js';
 import SectionShell, { glassPanel } from '../SectionShell';
 
+const MONTHS: Record<string, number> = {
+  Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5,
+  Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11,
+};
+
+const parseWorkDate = (value: string): Date => {
+  if (value === 'Present') return new Date();
+  const [month, year] = value.split('-');
+  return new Date(Number(year), MONTHS[month] ?? 0, 1);
+};
+
+const formatDuration = (start: Date, end: Date): string => {
+  const totalMonths = Math.max(
+    1,
+    (end.getFullYear() - start.getFullYear()) * 12 + end.getMonth() - start.getMonth()
+  );
+  const years = Math.floor(totalMonths / 12);
+  const months = totalMonths % 12;
+  if (years === 0) return `${months} mo`;
+  return months === 0 ? `${years} yr` : `${years} yr ${months} mo`;
+};
+
+/**
+ * Career span widget: a real Gantt of every role — when it started, how
+ * long it ran, and where roles overlapped (freelance alongside co-op).
+ * Replaces the old company-vs-date scatter, which answered no question.
+ */
+const CareerGantt: React.FC<{ isDark: boolean }> = ({ isDark }) => {
+  const roles = [...portfolioData.experience]
+    .map((exp) => ({
+      ...exp,
+      start: parseWorkDate(exp.startDate),
+      end: parseWorkDate(exp.endDate),
+      isSupport: /intern|part time/i.test(exp.position),
+    }))
+    .sort((a, b) => a.start.getTime() - b.start.getTime());
+
+  const rangeStart = roles[0].start.getTime();
+  const rangeEnd = Math.max(...roles.map((role) => role.end.getTime()));
+  const span = rangeEnd - rangeStart;
+  const mutedText = isDark ? 'text-slate-500' : 'text-slate-400';
+
+  const startYear = new Date(rangeStart).getFullYear();
+  const endYear = new Date(rangeEnd).getFullYear();
+  const yearMarks: number[] = [];
+  for (let year = startYear + 1; year <= endYear; year += 1) yearMarks.push(year);
+
+  return (
+    <div>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="font-mono text-xs font-black uppercase tracking-[0.25em]" style={{ color: 'var(--os-primary)' }}>
+          Career span · {formatDuration(new Date(rangeStart), new Date(rangeEnd))} and counting
+        </p>
+        <p className={`flex items-center gap-3 font-mono text-[10px] ${mutedText}`}>
+          <span className="flex items-center gap-1.5">
+            <span
+              className="h-2 w-4 rounded-full"
+              style={{ background: 'linear-gradient(90deg, var(--os-primary), var(--os-secondary))' }}
+            />
+            full-time
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span
+              className="h-2 w-4 rounded-full opacity-45"
+              style={{ background: 'linear-gradient(90deg, var(--os-primary), var(--os-secondary))' }}
+            />
+            intern / part-time
+          </span>
+        </p>
+      </div>
+
+      <div className="mt-5 space-y-4">
+        {roles.map((role, index) => {
+          const left = ((role.start.getTime() - rangeStart) / span) * 100;
+          const width = Math.max(2.5, ((role.end.getTime() - role.start.getTime()) / span) * 100);
+
+          return (
+            <div key={`${role.company}-${role.startDate}`}>
+              <div className="flex flex-wrap items-baseline justify-between gap-x-3">
+                <p className="text-sm font-semibold">
+                  {role.company}
+                  <span className={`ml-2 text-xs font-normal ${mutedText}`}>{role.position}</span>
+                </p>
+                <p className={`font-mono text-[10px] ${mutedText}`}>
+                  {role.startDate} → {role.endDate} · {formatDuration(role.start, role.end)}
+                </p>
+              </div>
+              <div
+                className={`relative mt-1.5 h-3.5 overflow-hidden rounded-full ${
+                  isDark ? 'bg-white/5' : 'bg-slate-100'
+                }`}
+              >
+                {yearMarks.map((year) => (
+                  <span
+                    key={year}
+                    className={`absolute bottom-0 top-0 w-px ${isDark ? 'bg-white/10' : 'bg-slate-300/60'}`}
+                    style={{ left: `${((new Date(year, 0, 1).getTime() - rangeStart) / span) * 100}%` }}
+                  />
+                ))}
+                <motion.div
+                  className="absolute bottom-0 top-0 rounded-full"
+                  style={{
+                    left: `${left}%`,
+                    background: 'linear-gradient(90deg, var(--os-primary), var(--os-secondary))',
+                    opacity: role.isSupport ? 0.45 : 1,
+                  }}
+                  initial={{ width: 0 }}
+                  whileInView={{ width: `${width}%` }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: index * 0.07, ease: 'easeOut' }}
+                />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className={`mt-3 flex justify-between font-mono text-[10px] ${mutedText}`}>
+        <span>{startYear}</span>
+        <span>today</span>
+      </div>
+    </div>
+  );
+};
+
 const ExperienceSection: React.FC = () => {
   const { theme } = useTheme();
   const { experience } = portfolioData;
@@ -40,16 +165,6 @@ const ExperienceSection: React.FC = () => {
     if (url) {
       window.open(url, '_blank', 'noopener,noreferrer');
     }
-  };
-
-  // Prepare data for timeline visualization
-  const timelineData = {
-    companies: experience.toReversed().map(exp => exp.company),
-    startDates: experience.toReversed().map(exp => new Date(exp.startDate)),
-    endDates: experience.toReversed().map(exp => exp.endDate === 'Present' ? new Date() : new Date(exp.endDate)),
-    endLabels: experience.toReversed().map(exp => exp.endDate),
-    positions: experience.toReversed().map(exp => exp.position),
-    locations: experience.toReversed().map(exp => exp.location),
   };
 
   // Prepare data for map visualization
@@ -126,110 +241,7 @@ const ExperienceSection: React.FC = () => {
     >
         <div className={`${glassPanel(theme.mode === 'dark')} mb-16 overflow-x-auto p-4 md:p-6`}>
           {viewMode === 'timeline' ? (
-            <Plot
-              data={[
-                {
-                  x: timelineData.endDates,
-                  y: timelineData.companies,
-                  type: 'scatter',
-                  mode: 'lines+markers',
-                  line: { 
-                    color: theme.colors.primary,
-                    width: 3,
-                    shape: 'spline'
-                  },
-                  marker: { 
-                    color: theme.colors.primary,
-                    size: 12,
-                    symbol: 'circle',
-                    line: {
-                      color: theme.mode === 'dark' ? '#fff' : '#000',
-                      width: 1
-                    }
-                  },
-                  name: 'Career Path',
-                  hoverinfo: 'text',
-                  text: timelineData.companies.map((company, i) => 
-                    `<b>${company}</b><br>` +
-                    `${timelineData.positions[i]}<br>` +
-                    `${timelineData.startDates[i].toLocaleDateString()} - ` +
-                    `${timelineData.endLabels[i] === 'Present' ? 'Present' : timelineData.endDates[i].toLocaleDateString()}<br>` +
-                    `📍 ${timelineData.locations[i]}`
-                  ),
-                }
-              ]}
-              layout={{
-                title: {
-                  text: 'Professional Timeline',
-                  font: { 
-                    size: 24,
-                    color: plotlyColors.text
-                  }
-                },
-                font: { 
-                  family: 'Inter, system-ui, sans-serif',
-                  color: plotlyColors.text
-                },
-                paper_bgcolor: 'transparent',
-                plot_bgcolor: 'transparent',
-                autosize: true,
-                height: 400,
-                margin: { l: 150, r: 50, t: 80, b: 50 },
-                xaxis: {
-                  showgrid: true,
-                  gridcolor: plotlyColors.gridColor,
-                  gridwidth: 1,
-                  linecolor: plotlyColors.gridColor,
-                  linewidth: 2,
-                  tickfont: { 
-                    size: 12,
-                    color: plotlyColors.text
-                  },
-                  title: {
-                    text: 'Timeline',
-                    font: {
-                      size: 14,
-                      color: plotlyColors.text
-                    }
-                  },
-                  type: 'date'
-                },
-                yaxis: {
-                  showgrid: true,
-                  gridcolor: plotlyColors.gridColor,
-                  gridwidth: 1,
-                  linecolor: plotlyColors.gridColor,
-                  linewidth: 2,
-                  tickfont: { 
-                    size: 12,
-                    color: plotlyColors.text
-                  },
-                  title: {
-                    text: 'Companies',
-                    font: {
-                      size: 14,
-                      color: plotlyColors.text
-                    }
-                  }
-                },
-                hovermode: 'closest',
-                hoverlabel: {
-                  bgcolor: theme.mode === 'dark' ? 'rgba(30, 41, 59, 0.95)' : 'rgba(255, 255, 255, 0.95)',
-                  font: { color: plotlyColors.text },
-                  bordercolor: theme.colors.primary
-                }
-              }}
-              config={{
-                responsive: true,
-                displayModeBar: false,
-                scrollZoom: false
-              }}
-              style={{
-                width: '100%',
-                borderRadius: '12px',
-                overflow: 'hidden'
-              }}
-            />
+            <CareerGantt isDark={theme.mode === 'dark'} />
           ) : (
             <Plot
               data={mapData}

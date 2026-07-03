@@ -7,7 +7,7 @@ import { setPalette } from '../store/slices/themeSlice';
 import { useTheme } from '../hooks/useTheme';
 import { themePalettes } from '../data/osPersona';
 
-/** Popover picker for the HARI.OS theme personas. */
+/** Popover picker for the HARI.AI theme personas. */
 const ThemeSwitcher: React.FC = () => {
   const dispatch = useDispatch();
   const { theme } = useTheme();

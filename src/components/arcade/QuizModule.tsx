@@ -4,6 +4,28 @@ import { ArrowRight, BrainCircuit, Check, Flame, X } from 'lucide-react';
 import { quizQuestions, FRAGMENT_CATEGORY_LABELS } from '../../data/arcadeData';
 import { useTheme } from '../../hooks/useTheme';
 import { glassPanel } from '../SectionShell';
+import AiGuide, { pickLine } from './AiGuide';
+
+const ASK_LINES = [
+  'I wrote this one about my human myself.',
+  "Let's see how well you know him.",
+  'Careful — I grade on streaks.',
+  'This one separates visitors from future collaborators.',
+  'Easy one. Or is it?',
+];
+
+const CORRECT_LINES = [
+  "Correct. You'd get along with him.",
+  'Verified — updating your file.',
+  "Sharp. He'd approve.",
+  'Streak rising. Even I am impressed.',
+];
+
+const WRONG_LINES = [
+  'Not quite — but now you know him better.',
+  'Wrong, but I decoded the truth for you anyway.',
+  "He surprises everyone. Don't feel bad.",
+];
 
 const shuffle = <T,>(items: T[]): T[] => {
   const copy = [...items];
@@ -31,6 +53,7 @@ const QuizModule: React.FC<QuizModuleProps> = ({ onAnswer }) => {
   const [picked, setPicked] = useState<number | null>(null);
   const [streak, setStreak] = useState(0);
   const [round, setRound] = useState(1);
+  const [guideLine, setGuideLine] = useState(() => pickLine(ASK_LINES));
 
   const question = order[index];
   const optionOrder = useMemo(
@@ -46,11 +69,13 @@ const QuizModule: React.FC<QuizModuleProps> = ({ onAnswer }) => {
     const correct = optionIndex === question.correctIndex;
     const nextStreak = correct ? streak + 1 : 0;
     setStreak(nextStreak);
+    setGuideLine(pickLine(correct ? CORRECT_LINES : WRONG_LINES, guideLine));
     onAnswer(correct, question.id, nextStreak);
   };
 
   const next = () => {
     setPicked(null);
+    setGuideLine(pickLine(ASK_LINES, guideLine));
     if (index + 1 >= order.length) {
       // The sync never ends — reshuffle and go again.
       setOrder(shuffle(quizQuestions));
@@ -73,6 +98,8 @@ const QuizModule: React.FC<QuizModuleProps> = ({ onAnswer }) => {
           streak ×{streak}
         </p>
       </div>
+
+      <AiGuide message={guideLine} />
 
       <AnimatePresence mode="wait">
         <motion.div

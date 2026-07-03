@@ -4,6 +4,27 @@ import { ArrowRight, KeyRound, Lightbulb, RotateCcw } from 'lucide-react';
 import { scrambleWords } from '../../data/arcadeData';
 import { useTheme } from '../../hooks/useTheme';
 import { glassPanel } from '../SectionShell';
+import AiGuide, { pickLine } from './AiGuide';
+
+const GREET_LINES = [
+  "A cipher from his world. Unscramble it.",
+  'I encrypted this one lightly. You have got this.',
+  'His life, scrambled. Restore it.',
+  'This word matters to him. Decode it and see why.',
+];
+
+const SOLVED_LINES = [
+  'Broken. He would call that clean work.',
+  'Decrypted — you are getting good at him.',
+  'Cipher down. The archive grows.',
+];
+
+const WRONG_LINES = [
+  'The cipher holds. Try another angle.',
+  'Close, maybe. The letters say no.',
+];
+
+const HINT_LINE = 'Fine — a nudge. Do not tell him I helped.';
 
 const shuffleLetters = (word: string): string => {
   const letters = word.split('');
@@ -46,6 +67,7 @@ const ScrambleModule: React.FC<ScrambleModuleProps> = ({ onSolve }) => {
   const [status, setStatus] = useState<'playing' | 'solved' | 'wrong'>('playing');
   const [showHint, setShowHint] = useState(false);
   const [solvedCount, setSolvedCount] = useState(0);
+  const [guideLine, setGuideLine] = useState(() => pickLine(GREET_LINES));
 
   const entry = scrambleWords[deck[position]];
   const scrambled = useMemo(() => shuffleLetters(entry.word), [entry]);
@@ -54,6 +76,7 @@ const ScrambleModule: React.FC<ScrambleModuleProps> = ({ onSolve }) => {
     setGuess('');
     setStatus('playing');
     setShowHint(false);
+    setGuideLine(pickLine(GREET_LINES, guideLine));
     if (position + 1 >= deck.length) {
       setDeck(shuffleOrder(scrambleWords.length));
       setPosition(0);
@@ -68,9 +91,11 @@ const ScrambleModule: React.FC<ScrambleModuleProps> = ({ onSolve }) => {
     if (guess.trim().toUpperCase() === entry.word) {
       setStatus('solved');
       setSolvedCount((count) => count + 1);
+      setGuideLine(pickLine(SOLVED_LINES, guideLine));
       onSolve();
     } else {
       setStatus('wrong');
+      setGuideLine(pickLine(WRONG_LINES, guideLine));
     }
   };
 
@@ -85,6 +110,8 @@ const ScrambleModule: React.FC<ScrambleModuleProps> = ({ onSolve }) => {
           decoded: {solvedCount} · deck loops forever
         </p>
       </div>
+
+      <AiGuide message={guideLine} />
 
       <AnimatePresence mode="wait">
         <motion.div
@@ -167,7 +194,10 @@ const ScrambleModule: React.FC<ScrambleModuleProps> = ({ onSolve }) => {
             <div className="mt-4 flex justify-center gap-4">
               <button
                 type="button"
-                onClick={() => setShowHint(true)}
+                onClick={() => {
+                  setShowHint(true);
+                  setGuideLine(HINT_LINE);
+                }}
                 className={`inline-flex items-center gap-1.5 text-xs font-bold transition hover-primary ${
                   isDark ? 'text-slate-400' : 'text-slate-500'
                 }`}

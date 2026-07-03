@@ -3,6 +3,7 @@ import { Construction, Crown, Swords } from 'lucide-react';
 import { useTheme } from '../../hooks/useTheme';
 import { glassPanel } from '../SectionShell';
 import { OPEN_COLLAB_EVENT } from '../CollabWizard';
+import AiGuide from './AiGuide';
 
 const BACK_RANK = ['♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜'];
 const WHITE_BACK_RANK = ['♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖'];
@@ -30,6 +31,8 @@ const ChessArena: React.FC = () => {
         <Swords size={15} />
         Chess arena
       </p>
+
+      <AiGuide message="I keep losing the prototype games to him, so the arena is still in the shop. Challenge him by mail meanwhile — he never declines a board." />
 
       <div className="mt-6 grid items-center gap-8 lg:grid-cols-[minmax(0,20rem)_1fr]">
         {/* Board — starting position, persona-tinted squares */}
@@ -86,7 +89,7 @@ const ChessArena: React.FC = () => {
           <p className={`mt-3 leading-relaxed ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
             Chess isn't a hobby here — it's a lifestyle. College team captain, three consecutive
             years of zonal podium finishes, and a 4-player squad coached into a 50-player program.
-            A live arena where you can challenge Hari directly is being built into HARI.OS.
+            A live arena where you can challenge Hari directly is being built into HARI.AI.
           </p>
           <ul className={`mt-4 space-y-1.5 font-mono text-xs ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
             <li>▸ live board vs. Hari — in development</li>

@@ -5,8 +5,8 @@ import { useTheme } from '../hooks/useTheme';
 /** Shared glass-panel styling so every card floats consistently above the ambient layer. */
 export const glassPanel = (isDark: boolean) =>
   isDark
-    ? 'rounded-2xl border border-white/10 bg-slate-900/40 shadow-xl shadow-black/20 backdrop-blur-md'
-    : 'rounded-2xl border border-white/70 bg-white/70 shadow-xl shadow-slate-300/40 backdrop-blur-md';
+    ? 'glass-card rounded-2xl border border-white/10 bg-slate-900/40 shadow-xl shadow-black/20 backdrop-blur-xl'
+    : 'glass-card rounded-2xl border border-white/70 bg-white/70 shadow-xl shadow-slate-300/40 backdrop-blur-xl';
 
 interface SectionShellProps {
   id: string;
@@ -50,9 +50,13 @@ const SectionShell: React.FC<SectionShellProps> = ({
             {eyebrow}
           </p>
           <h2 className="mt-3 text-4xl font-bold tracking-tight md:text-5xl">{title}</h2>
-          <span
+          <motion.span
             aria-hidden
-            className="os-border-flow mx-auto mt-5 block h-1 w-16 rounded-full"
+            initial={{ width: 0, opacity: 0 }}
+            whileInView={{ width: '4rem', opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.25, ease: 'easeOut' }}
+            className="os-border-flow mx-auto mt-5 block h-1 rounded-full"
           />
           {subtitle && (
             <p className={`mx-auto mt-5 max-w-2xl text-lg ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>

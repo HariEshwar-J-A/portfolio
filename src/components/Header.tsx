@@ -44,7 +44,7 @@ const Header: React.FC = () => {
         <div className="flex items-center gap-2 font-mono text-xl font-bold tracking-tight">
           <span className="h-2 w-2 animate-pulse rounded-full" style={{ backgroundColor: 'var(--os-primary)' }} />
           <span className={isDark ? 'text-white' : 'text-slate-900'}>
-            hari<span style={{ color: 'var(--os-primary)' }}>.os</span>
+            hari<span style={{ color: 'var(--os-primary)' }}>.ai</span>
           </span>
         </div>
 
@@ -81,56 +81,69 @@ const Header: React.FC = () => {
             );
           })}
 
-          <button
-            type="button"
-            onClick={() => window.dispatchEvent(new Event(OPEN_PALETTE_EVENT))}
-            className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-2 text-xs font-semibold transition hover:-translate-y-0.5 ${
-              isDark
-                ? 'border-slate-700 bg-slate-800/80 text-slate-300'
-                : 'border-slate-300 bg-white/80 text-slate-600'
+          {/* Destinations — the other experiences */}
+          <div
+            className={`ml-1 flex items-center gap-2 border-l pl-4 ${
+              isDark ? 'border-white/10' : 'border-slate-200'
             }`}
-            aria-label="Open command palette"
           >
-            <Command size={13} />
-            <span className="hidden 2xl:inline">Ctrl K</span>
-          </button>
+            <Link to="/ai" className="os-border-flow rounded-full p-[1.5px] transition hover:-translate-y-0.5">
+              <span
+                className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-bold ${
+                  isDark ? 'bg-slate-950/90 text-white' : 'bg-white/95 text-slate-900'
+                }`}
+              >
+                <Gamepad2 size={14} style={{ color: 'var(--os-primary)' }} />
+                Play AI
+              </span>
+            </Link>
 
-          {/* Playground — the gamified exploration mode */}
-          <Link to="/os" className="os-border-flow rounded-full p-[1.5px] transition hover:-translate-y-0.5">
-            <span
-              className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-bold ${
-                isDark ? 'bg-slate-950/90 text-white' : 'bg-white/95 text-slate-900'
-              }`}
+            <Link
+              to="/3d"
+              className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold text-white shadow-lg transition hover:-translate-y-0.5"
+              style={{ backgroundColor: 'var(--os-primary)' }}
             >
-              <Gamepad2 size={14} style={{ color: 'var(--os-primary)' }} />
-              Playground
-            </span>
-          </Link>
+              <Box size={14} />
+              3D
+            </Link>
 
-          <a
-            href="https://sentry.harieshwar.dev"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold shadow-lg transition hover:-translate-y-0.5 border border-white/20"
-            style={{
-              backgroundColor: isDark ? 'rgba(30,41,59,0.9)' : 'rgba(255,255,255,0.95)',
-              color: isDark ? '#f1f5f9' : '#0f172a',
-            }}
+            <a
+              href="https://sentry.harieshwar.dev"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold shadow-lg transition hover:-translate-y-0.5 border border-white/20"
+              style={{
+                backgroundColor: isDark ? 'rgba(30,41,59,0.9)' : 'rgba(255,255,255,0.95)',
+                color: isDark ? '#f1f5f9' : '#0f172a',
+              }}
+            >
+              <Newspaper size={14} />
+              Info Sentry
+            </a>
+          </div>
+
+          {/* Controls — search & appearance */}
+          <div
+            className={`ml-1 flex items-center gap-1 border-l pl-4 ${
+              isDark ? 'border-white/10' : 'border-slate-200'
+            }`}
           >
-            <Newspaper size={14} />
-            Info Sentry
-          </a>
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new Event(OPEN_PALETTE_EVENT))}
+              className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-2 text-xs font-semibold transition hover:-translate-y-0.5 ${
+                isDark
+                  ? 'border-slate-700 bg-slate-800/80 text-slate-300'
+                  : 'border-slate-300 bg-white/80 text-slate-600'
+              }`}
+              aria-label="Open command palette"
+            >
+              <Command size={13} />
+              <span className="hidden 2xl:inline">Ctrl K</span>
+            </button>
 
-          <Link
-            to="/3d"
-            className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold text-white shadow-lg transition hover:-translate-y-0.5"
-            style={{ backgroundColor: 'var(--os-primary)' }}
-          >
-            <Box size={14} />
-            3D
-          </Link>
-
-          <ThemeSwitcher />
+            <ThemeSwitcher />
+          </div>
         </nav>
 
         {/* Mobile Navigation Toggle */}
@@ -199,7 +212,7 @@ const Header: React.FC = () => {
               <div className={`my-3 border-t ${isDark ? 'border-white/10' : 'border-slate-200'}`} />
 
               <Link
-                to="/os"
+                to="/ai"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="os-border-flow rounded-full p-[1.5px]"
               >
@@ -209,7 +222,7 @@ const Header: React.FC = () => {
                   }`}
                 >
                   <Gamepad2 size={16} style={{ color: 'var(--os-primary)' }} />
-                  Enter the Playground
+                  Play with HARI.AI
                 </span>
               </Link>
 

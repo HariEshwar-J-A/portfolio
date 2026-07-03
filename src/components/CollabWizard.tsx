@@ -91,7 +91,7 @@ const STEP_TITLES = ['Who are you?', 'What brings you here?', 'A few details', '
 
 /**
  * Guided collaboration wizard: three quick prompts with pre-curated
- * answers (plus a free-text note), then HARI.OS assembles a ready-to-send
+ * answers (plus a free-text note), then HARI.AI assembles a ready-to-send
  * email draft — open in the visitor's mail app or copy to clipboard.
  */
 const CollabWizard: React.FC = () => {
@@ -222,7 +222,7 @@ const CollabWizard: React.FC = () => {
                 </span>
                 <div>
                   <p className="font-mono text-[10px] font-black uppercase tracking-[0.25em]" style={{ color: theme.colors.primary }}>
-                    HARI.OS · Collaboration assistant
+                    HARI.AI · Collaboration assistant
                   </p>
                   <p className="text-sm font-bold">{STEP_TITLES[step]}</p>
                 </div>
@@ -352,7 +352,7 @@ const CollabWizard: React.FC = () => {
                   {step === 3 && (
                     <div>
                       <p className={`mb-3 font-mono text-xs ${mutedText}`}>
-                        ▍draft composed from your answers — edit anything after it opens in your mail app
+                        ▍I composed this from your answers — edit anything after it opens in your mail app
                       </p>
                       <div className={`rounded-2xl border p-5 font-mono text-sm leading-relaxed ${cardBase}`}>
                         <p className={mutedText}>To: {email}</p>

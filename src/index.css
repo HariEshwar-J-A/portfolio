@@ -91,6 +91,19 @@ html.lenis body {
   color: var(--os-primary);
 }
 
+/* Modern glass cards: persona-tinted glow + lift on hover */
+.glass-card {
+  transition:
+    box-shadow 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.3s ease;
+}
+
+.glass-card:hover {
+  border-color: color-mix(in srgb, var(--os-primary) 32%, transparent);
+  box-shadow: 0 8px 32px color-mix(in srgb, var(--os-primary) 14%, transparent);
+}
+
 /* Animated gradient used for borders and accent strips */
 @keyframes border-flow {
   0% {

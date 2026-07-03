@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { quizQuestions } from '../data/arcadeData';
 
-const STORAGE_KEY = 'hari-os-arcade-v1';
+const STORAGE_KEY = 'hari-ai-arcade-v1';
 
 export interface ArcadeStats {
   xp: number;
@@ -82,7 +82,7 @@ const buildAchievements = (stats: ArcadeStats): Achievement[] => {
 };
 
 /**
- * Persistent, never-ending progression for the HARI.OS Playground:
+ * Persistent, never-ending progression for the HARI.AI Playground:
  * unbounded XP/levels, streaks, fragment discovery, and an achievement
  * ladder that always dangles the next milestone.
  */

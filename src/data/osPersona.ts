@@ -1,7 +1,7 @@
 /**
- * HARI.OS — the persona layer that makes the site behave like an
- * intelligence describing Harieshwar: theme personas, boot sequence,
- * and per-section narration.
+ * HARI.AI — Harieshwar's personal AI. It runs this site, narrates its
+ * human in first person, hosts the games, and drafts the emails.
+ * Theme personas, boot sequence, and per-section narration live here.
  */
 
 export type PaletteId = 'aurora' | 'grandmaster' | 'circuit' | 'daylight';
@@ -97,31 +97,26 @@ export const getPalette = (id: PaletteId): ThemePalette =>
 
 /** Lines typed out during the first-visit boot overlay. */
 export const bootLines = [
-  'HARI.OS v3.0 — boot sequence initiated',
-  '> loading profile: HARIESHWAR J A',
-  '> mounting experience: full-stack · IoT · AI · cloud',
-  '> verifying achievements .............. OK',
-  '> linking flagship: InfoSentry ........ OK',
-  '> calibrating theme personas .......... OK',
-  '> intelligence online.',
+  'HARI.AI — waking up…',
+  "> hi. I'm Harieshwar's personal AI.",
+  '> I run his portfolio, host his games, draft his emails.',
+  '> loading his story ................... OK',
+  '> linking his product: InfoSentry ..... OK',
+  '> picking an outfit (theme persona) ... OK',
+  '> ready. let me introduce my human.',
 ];
 
-/** What the system narrator says about him, per section. */
+/**
+ * What HARI.AI says about its human, per section.
+ * Kept short so the floating bar never overflows on narrow screens.
+ */
 export const sectionNarration: Record<string, string> = {
-  about:
-    'Subject identified: Harieshwar J A — architect-level full-stack engineer shipping across IoT, AI, and cloud.',
-  skills:
-    'Capability scan complete: React, TypeScript, Node, Python, cloud-native tooling — depth verified in production.',
-  experience:
-    'Career telemetry: Zoho → Soliton → SOTI → NPX → ECAM. Trajectory analysis: consistently upward.',
-  education:
-    'Credentials verified: M.Eng Systems & Technology, McMaster (3.9 GPA) · B.E. EEE, Anna University.',
-  projects:
-    'Archive open: live systems with real users and measurable outcomes. No vaporware detected.',
-  products:
-    'Flagship offering detected: InfoSentry — a private, AI-powered personal intelligence layer.',
-  achievements:
-    'Recognition log: Star Soliton ×2 · shark-tank finalist · championship chess captain. Pattern: leadership.',
-  contact:
-    'Channel open. Fastest route to collaboration is one message away.',
+  about: 'Meet my human: Harieshwar — architect-level full-stack engineer.',
+  skills: "I've indexed his stack. React, TypeScript, Node, Python, cloud.",
+  experience: 'His career log: Zoho → Soliton → SOTI → NPX → ECAM. Only up.',
+  education: 'Credentials: M.Eng @ McMaster (3.9 GPA) · B.E. EEE.',
+  projects: 'Everything here actually shipped. I checked.',
+  products: 'InfoSentry — his flagship build. I consider it family.',
+  achievements: '2× Star awards, shark-tank finalist, chess captain. My human.',
+  contact: 'I draft the email. You just hit send.',
 };

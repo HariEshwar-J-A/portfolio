@@ -4,12 +4,12 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import { getPalette, bootLines } from '../data/osPersona';
 
-const BOOT_KEY = 'hari-os-booted';
+const BOOT_KEY = 'hari-ai-booted';
 const LINE_INTERVAL_MS = 260;
 const HOLD_AFTER_MS = 650;
 
 /**
- * First-visit OS boot overlay: types the HARI.OS boot log, fills a
+ * First-visit overlay: HARI.AI wakes up, types its intro log, fills a
  * progress bar, then dissolves into the site. Shown once per tab
  * session; any click or key skips it instantly. Skipped entirely
  * under prefers-reduced-motion.

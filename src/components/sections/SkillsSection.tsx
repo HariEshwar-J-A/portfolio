@@ -1,201 +1,165 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
+import { Boxes, Briefcase, Package, Server } from 'lucide-react';
 import { useTheme } from '../../hooks/useTheme';
 import { portfolioData } from '../../data/portfolioData';
 import SectionShell, { glassPanel } from '../SectionShell';
-import * as d3 from 'd3';
+
+/** Real, defensible numbers pulled from the career record — not vanity percentages. */
+const KPI_WIDGETS = [
+  { value: 6, suffix: '+', label: 'Years shipping software', icon: <Briefcase size={18} /> },
+  { value: 5, suffix: '', label: 'Companies across 2 countries', icon: <Boxes size={18} /> },
+  { value: 10, suffix: '+', label: 'Projects delivered end to end', icon: <Package size={18} /> },
+  { value: 1, suffix: '', label: 'Live product run solo (InfoSentry)', icon: <Server size={18} /> },
+];
+
+/** Years actively building in each domain, derived from the roles below. */
+const DOMAIN_DEPTH = [
+  { domain: 'Frontend (React · TypeScript)', years: 6 },
+  { domain: 'Backend & APIs (Node · Python)', years: 5 },
+  { domain: 'Data visualization (D3 · Plotly)', years: 5 },
+  { domain: 'Cloud & DevOps (AWS · CI/CD)', years: 4 },
+  { domain: 'IoT & industrial systems', years: 4 },
+  { domain: 'AI & GenAI integrations', years: 3 },
+];
+
+const MAX_YEARS = Math.max(...DOMAIN_DEPTH.map((d) => d.years));
+
+/** Eased count-up that starts when the widget scrolls into view. */
+const CountUp: React.FC<{ value: number; suffix?: string }> = ({ value, suffix = '' }) => {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: '-40px' });
+  const [display, setDisplay] = useState(0);
+
+  useEffect(() => {
+    if (!inView) return;
+    const duration = 900;
+    const start = performance.now();
+    let frame = 0;
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - start) / duration);
+      setDisplay(Math.round(value * (1 - (1 - t) ** 3)));
+      if (t < 1) frame = window.requestAnimationFrame(tick);
+    };
+    frame = window.requestAnimationFrame(tick);
+    return () => window.cancelAnimationFrame(frame);
+  }, [inView, value]);
+
+  return (
+    <span ref={ref}>
+      {display}
+      {suffix}
+    </span>
+  );
+};
 
 const SkillsSection: React.FC = () => {
   const { theme } = useTheme();
   const { skills } = portfolioData;
-  const chartRef = useRef<HTMLDivElement>(null);
-  const [hasAnimated, setHasAnimated] = useState(false);
-  
-  useEffect(() => {
-    if (!chartRef.current) return;
-    
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          createChart();
-          setHasAnimated(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-    
-    observer.observe(chartRef.current);
-    return () => observer.disconnect();
-  }, [hasAnimated]);
+  const isDark = theme.mode === 'dark';
+  const mutedText = isDark ? 'text-slate-400' : 'text-slate-500';
 
-  // Add new useEffect to handle theme changes
-  useEffect(() => {
-    if (chartRef.current && hasAnimated) {
-      createChart();
-    }
-  }, [theme.mode]);
-  
-  const createChart = () => {
-    if (!chartRef.current) return;
-    
-    // Clear previous chart
-    d3.select(chartRef.current).selectAll('*').remove();
-    
-    // Flatten all skills for visualization
-    const allSkills = skills.flatMap(category => 
-      category.skills.map(skill => ({
-        name: skill.name,
-        level: skill.level,
-        category: category.category,
-        color: skill.color || theme.colors.primary
-      }))
-    );
-    
-    // Set up dimensions
-    const margin = { top: 30, right: 30, bottom: 70, left: 60 };
-    const width = chartRef.current.clientWidth - margin.left - margin.right;
-    const height = 400 - margin.top - margin.bottom;
-    
-    // Create SVG
-    const svg = d3.select(chartRef.current)
-      .append('svg')
-        .attr('width', width + margin.left + margin.right)
-        .attr('height', height + margin.top + margin.bottom)
-      .append('g')
-        .attr('transform', `translate(${margin.left},${margin.top})`);
-    
-    // X axis
-    const x = d3.scaleBand()
-      .range([0, width])
-      .domain(allSkills.map(d => d.name))
-      .padding(0.2);
-    
-    svg.append('g')
-      .attr('transform', `translate(0,${height})`)
-      .call(d3.axisBottom(x))
-      .selectAll('text')
-        .attr('transform', 'translate(-10,0)rotate(-45)')
-        .style('text-anchor', 'end')
-        .style('font-size', '12px')
-        .style('fill', theme.mode === 'dark' ? '#fff' : '#000');
-    
-    // Y axis
-    const y = d3.scaleLinear()
-      .domain([0, 100])
-      .range([height, 0]);
-    
-    svg.append('g')
-      .call(d3.axisLeft(y))
-      .selectAll('text')
-        .style('font-size', '12px')
-        .style('fill', theme.mode === 'dark' ? '#fff' : '#000');
-    
-    // Add grid lines
-    svg.append('g')
-      .attr('class', 'grid')
-      .call(d3.axisLeft(y)
-        .tickSize(-width)
-        .tickFormat(() => '')
-      )
-      .style('stroke', theme.mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)')
-      .style('stroke-dasharray', '2,2');
-    
-    // Add title
-    svg.append('text')
-      .attr('x', width / 2)
-      .attr('y', 0 - (margin.top / 2))
-      .attr('text-anchor', 'middle')
-      .style('font-size', '16px')
-      .style('fill', theme.mode === 'dark' ? '#fff' : '#000')
-      .text('Skills Proficiency');
-    
-    // Add bars with animation
-    svg.selectAll('rect')
-      .data(allSkills)
-      .enter()
-      .append('rect')
-        .attr('x', d => x(d.name) as number)
-        .attr('width', x.bandwidth())
-        .attr('fill', d => d.color)
-        .attr('y', height)
-        .attr('height', 0)
-        .transition()
-        .duration(800)
-        .delay((d, i) => i * 100)
-        .attr('y', d => y(d.level))
-        .attr('height', d => height - y(d.level));
-    
-    // Add values on top of bars with dynamic text color
-    svg.selectAll('.value')
-      .data(allSkills)
-      .enter()
-      .append('text')
-        .attr('class', 'value')
-        .attr('x', d => (x(d.name) as number) + x.bandwidth() / 2)
-        .attr('y', d => y(d.level) - 5)
-        .attr('text-anchor', 'middle')
-        .style('font-size', '12px')
-        .style('fill', theme.mode === 'dark' ? '#fff' : '#000')
-        .style('opacity', 0)
-        .transition()
-        .duration(800)
-        .delay((d, i) => i * 100 + 300)
-        .style('opacity', 1)
-        .text(d => `${d.level}%`);
-  };
-  
   return (
     <SectionShell
       id="skills"
       eyebrow="Capabilities"
       title="Skills & Expertise"
-      subtitle="My technical skills and proficiency levels across different technologies and domains."
+      subtitle="Measured in years shipped and systems running — not self-scored percentages."
     >
-        <div className={`${glassPanel(theme.mode === 'dark')} mb-16 p-4 md:p-6`}>
-          <div
-            ref={chartRef}
-            className="w-full overflow-x-auto"
-            style={{ minHeight: '400px' }}
-          ></div>
-        </div>
+      {/* KPI widgets */}
+      <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
+        {KPI_WIDGETS.map((kpi, index) => (
+          <motion.div
+            key={kpi.label}
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.45, delay: index * 0.08 }}
+            className={`${glassPanel(isDark)} p-5`}
+          >
+            <span style={{ color: 'var(--os-primary)' }}>{kpi.icon}</span>
+            <p className="mt-2 text-3xl font-black md:text-4xl" style={{ color: 'var(--os-primary)' }}>
+              <CountUp value={kpi.value} suffix={kpi.suffix} />
+            </p>
+            <p className={`mt-1 text-xs leading-snug ${mutedText}`}>{kpi.label}</p>
+          </motion.div>
+        ))}
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {skills.map((category, index) => (
-            <motion.div
-              key={category.category}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className={`p-6 ${glassPanel(theme.mode === 'dark')}`}
-            >
-              <h3 className="text-xl font-semibold mb-4">{category.category}</h3>
-              <div className="space-y-4">
-                {category.skills.map(skill => (
-                  <div key={skill.name} className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span>{skill.name}</span>
-                      <span className="text-sm opacity-80">{skill.level}%</span>
-                    </div>
-                    <div 
-                      className="w-full h-2 rounded-full overflow-hidden bg-opacity-20"
-                      style={{ backgroundColor: theme.mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' }}
-                    >
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${skill.level}%` }}
-                        transition={{ duration: 1, delay: index * 0.1 }}
-                        className="h-full rounded-full"
-                        style={{ backgroundColor: skill.color || theme.colors.primary }}
-                      ></motion.div>
-                    </div>
-                  </div>
-                ))}
+      {/* Domain depth widget */}
+      <motion.div
+        initial={{ opacity: 0, y: 18 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.25 }}
+        transition={{ duration: 0.5 }}
+        className={`${glassPanel(isDark)} mb-16 p-6 md:p-8`}
+      >
+        <p className="font-mono text-xs font-black uppercase tracking-[0.25em]" style={{ color: 'var(--os-primary)' }}>
+          Domain depth · years actively building
+        </p>
+        <div className="mt-5 space-y-4">
+          {DOMAIN_DEPTH.map((entry, index) => (
+            <div key={entry.domain}>
+              <div className="flex items-baseline justify-between gap-3">
+                <p className="text-sm font-semibold">{entry.domain}</p>
+                <p className="font-mono text-xs font-bold" style={{ color: 'var(--os-primary)' }}>
+                  {entry.years} yrs
+                </p>
               </div>
-            </motion.div>
+              <div className={`mt-1.5 h-2 overflow-hidden rounded-full ${isDark ? 'bg-white/10' : 'bg-slate-200'}`}>
+                <motion.div
+                  className="h-full rounded-full"
+                  style={{
+                    background: 'linear-gradient(90deg, var(--os-primary), var(--os-secondary))',
+                  }}
+                  initial={{ width: 0 }}
+                  whileInView={{ width: `${(entry.years / MAX_YEARS) * 100}%` }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.9, delay: index * 0.08, ease: 'easeOut' }}
+                />
+              </div>
+            </div>
           ))}
         </div>
+      </motion.div>
+
+      {/* Stack breakdown by category */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {skills.map((category, index) => (
+          <motion.div
+            key={category.category}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+            className={`p-6 ${glassPanel(isDark)}`}
+          >
+            <h3 className="text-xl font-semibold mb-4">{category.category}</h3>
+            <div className="space-y-4">
+              {category.skills.map((skill) => (
+                <div key={skill.name} className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span>{skill.name}</span>
+                    <span className="text-sm opacity-80">{skill.level}%</span>
+                  </div>
+                  <div className={`w-full h-2 rounded-full overflow-hidden ${isDark ? 'bg-white/10' : 'bg-slate-200'}`}>
+                    <motion.div
+                      initial={{ width: 0 }}
+                      whileInView={{ width: `${skill.level}%` }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 1, delay: index * 0.1 }}
+                      className="h-full rounded-full"
+                      style={{
+                        background: 'linear-gradient(90deg, var(--os-primary), var(--os-secondary))',
+                      }}
+                    ></motion.div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        ))}
+      </div>
     </SectionShell>
   );
 };

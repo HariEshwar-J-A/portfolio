@@ -1,6 +1,6 @@
 import React, { Suspense, lazy } from 'react';
 import { Provider } from 'react-redux';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { store } from './store/store';
 import HomePage from './pages/HomePage';
@@ -9,13 +9,17 @@ import ThemeVariables from './components/ThemeVariables';
 const ThreeDPortfolioPage = lazy(() => import('./pages/ThreeDPortfolioPage'));
 const OsPlaygroundPage = lazy(() => import('./pages/OsPlaygroundPage'));
 
-/** Soft fade/slide between routes so page switches feel continuous. */
+/**
+ * Cinematic fade between routes. No `filter` here: a persistent filter
+ * (even blur(0px)) turns the wrapper into a containing block and breaks
+ * every fixed-position element inside (header, narrator, palette).
+ */
 const PageFade: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <motion.div
-    initial={{ opacity: 0, y: 10 }}
-    animate={{ opacity: 1, y: 0 }}
-    exit={{ opacity: 0, y: -10 }}
-    transition={{ duration: 0.28, ease: 'easeOut' }}
+    initial={{ opacity: 0, y: 14, scale: 0.995 }}
+    animate={{ opacity: 1, y: 0, scale: 1 }}
+    exit={{ opacity: 0, y: -14, scale: 0.995 }}
+    transition={{ duration: 0.3, ease: 'easeOut' }}
   >
     {children}
   </motion.div>
@@ -44,13 +48,14 @@ const AnimatedRoutes: React.FC = () => {
           }
         />
         <Route
-          path="/os"
+          path="/ai"
           element={
             <PageFade>
               <OsPlaygroundPage />
             </PageFade>
           }
         />
+        <Route path="/os" element={<Navigate to="/ai" replace />} />
       </Routes>
     </AnimatePresence>
   );

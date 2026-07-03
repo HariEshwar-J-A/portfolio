@@ -152,11 +152,11 @@ const CommandPalette: React.FC = () => {
       {
         id: 'action-playground',
         group: 'Actions',
-        label: 'Enter the HARI.OS Playground',
+        label: 'Play with HARI.AI',
         hint: 'Quizzes · puzzles · chess arena',
-        keywords: 'play game arcade playground quiz puzzle chess explore os',
+        keywords: 'play game arcade playground quiz puzzle chess explore ai',
         icon: <Layers size={16} />,
-        perform: () => navigate('/os'),
+        perform: () => navigate('/ai'),
       },
       {
         id: 'action-3d',
