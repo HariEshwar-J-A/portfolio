@@ -21,13 +21,88 @@
   }
 }
 
-/* Keyboard-driven section jumps should still feel smooth */
+/* Fallback smoothness when Lenis is not driving the scroll */
 html {
   scroll-behavior: smooth;
+}
+
+/* Lenis takes over scrolling — native smooth behavior must be off */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+/* Ambient aurora blobs drifting behind the content */
+@keyframes aurora-drift-1 {
+  0%,
+  100% {
+    transform: translate(-8%, -4%) scale(1);
+  }
+  50% {
+    transform: translate(10%, 12%) scale(1.18);
+  }
+}
+
+@keyframes aurora-drift-2 {
+  0%,
+  100% {
+    transform: translate(6%, 8%) scale(1.1);
+  }
+  50% {
+    transform: translate(-10%, -6%) scale(0.92);
+  }
+}
+
+@keyframes aurora-drift-3 {
+  0%,
+  100% {
+    transform: translate(0%, 6%) scale(0.95);
+  }
+  50% {
+    transform: translate(8%, -10%) scale(1.15);
+  }
+}
+
+.animate-aurora-1 {
+  animation: aurora-drift-1 28s ease-in-out infinite;
+}
+
+.animate-aurora-2 {
+  animation: aurora-drift-2 34s ease-in-out infinite;
+}
+
+.animate-aurora-3 {
+  animation: aurora-drift-3 40s ease-in-out infinite;
+}
+
+/* Gentle vertical float for the hero portrait */
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+.animate-float-slow {
+  animation: float-slow 7s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  .animate-aurora-1,
+  .animate-aurora-2,
+  .animate-aurora-3,
+  .animate-float-slow {
+    animation: none;
   }
 }

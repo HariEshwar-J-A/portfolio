@@ -8,6 +8,7 @@ import { updateForm, submitForm, resetStatus } from '../../store/slices/contactS
 import { RootState } from '../../store/store';
 import { TextField, Button, Snackbar, Alert, CircularProgress, Tooltip } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import SectionShell, { glassPanel } from '../SectionShell';
 
 const ContactSection: React.FC = () => {
   const { theme } = useTheme();
@@ -56,31 +57,19 @@ const ContactSection: React.FC = () => {
   };
   
   return (
-    <section 
-      id="contact" 
-      className={`min-h-screen py-20 ${
-        theme.mode === 'dark' ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'
-      }`}
+    <SectionShell
+      id="contact"
+      eyebrow="Final chapter"
+      title="Get In Touch"
+      subtitle="Have a question or want to work together? Reach out to me directly."
     >
       <ThemeProvider theme={muiTheme}>
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="mb-12 text-center"
-          >
-            <h2 className="text-4xl font-bold mb-4">Get In Touch</h2>
-            <p className="text-lg max-w-2xl mx-auto opacity-80">
-              Have a question or want to work together? Reach out to me directly.
-            </p>
-          </motion.div>
-          
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-6xl mx-auto">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
             >
               <h3 className="text-2xl font-bold mb-6">Contact Information</h3>
               
@@ -197,11 +186,10 @@ const ContactSection: React.FC = () => {
             
             <motion.div
               initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className={`p-6 rounded-lg shadow-lg ${
-                theme.mode === 'dark' ? 'bg-slate-800' : 'bg-slate-50'
-              }`}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className={`p-6 ${glassPanel(theme.mode === 'dark')}`}
             >
               <h3 className="text-2xl font-bold mb-6">Send Me a Message</h3>
               
@@ -287,9 +275,8 @@ const ContactSection: React.FC = () => {
               }
             </Alert>
           </Snackbar>
-        </div>
       </ThemeProvider>
-    </section>
+    </SectionShell>
   );
 };
 

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../hooks/useTheme';
 import { portfolioData } from '../../data/portfolioData';
 import { Award, Medal, Trophy } from 'lucide-react';
+import SectionShell, { glassPanel } from '../SectionShell';
 
 const AchievementsSection: React.FC = () => {
   const { theme } = useTheme();
@@ -17,25 +18,12 @@ const AchievementsSection: React.FC = () => {
   };
   
   return (
-    <section 
-      id="achievements" 
-      className={`min-h-screen py-20 ${
-        theme.mode === 'dark' ? 'bg-slate-800 text-white' : 'bg-slate-50 text-slate-900'
-      }`}
+    <SectionShell
+      id="achievements"
+      eyebrow="Recognition"
+      title="Achievements"
+      subtitle="Notable accomplishments and recognition throughout my career."
     >
-      <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-12 text-center"
-        >
-          <h2 className="text-4xl font-bold mb-4">Achievements</h2>
-          <p className="text-lg max-w-2xl mx-auto opacity-80">
-            Notable accomplishments and recognition throughout my career.
-          </p>
-        </motion.div>
-        
         <div className="max-w-4xl mx-auto relative">
           {/* Timeline Line */}
           <div 
@@ -51,8 +39,9 @@ const AchievementsSection: React.FC = () => {
               <motion.div
                 key={achievement.title}
                 initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.2 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="flex items-center"
                 onHoverStart={() => setSelectedAchievement(index)}
                 onHoverEnd={() => setSelectedAchievement(null)}
@@ -76,16 +65,7 @@ const AchievementsSection: React.FC = () => {
                   className="pl-12 md:pl-8 w-full md:w-5/12 ml-auto cursor-pointer"
                   whileHover={{ scale: 1.05 }}
                 >
-                  <motion.div
-                    className={`p-6 rounded-lg shadow-lg ${
-                      theme.mode === 'dark' ? 'bg-slate-700' : 'bg-white'
-                    }`}
-                    animate={{
-                      backgroundColor: selectedAchievement === index 
-                        ? theme.mode === 'dark' ? theme.colors.dark.surface : theme.colors.light.surface
-                        : theme.mode === 'dark' ? 'rgb(51, 65, 85)' : 'white'
-                    }}
-                  >
+                  <motion.div className={`p-6 ${glassPanel(theme.mode === 'dark')}`}>
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-2">
                         <motion.div
@@ -126,8 +106,7 @@ const AchievementsSection: React.FC = () => {
             ))}
           </div>
         </div>
-      </div>
-    </section>
+    </SectionShell>
   );
 };
 

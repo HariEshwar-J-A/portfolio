@@ -1,10 +1,50 @@
 import React, { Suspense, lazy } from 'react';
 import { Provider } from 'react-redux';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 import { store } from './store/store';
 import HomePage from './pages/HomePage';
 
 const ThreeDPortfolioPage = lazy(() => import('./pages/ThreeDPortfolioPage'));
+
+/** Soft fade/slide between routes so page switches feel continuous. */
+const PageFade: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 10 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, y: -10 }}
+    transition={{ duration: 0.28, ease: 'easeOut' }}
+  >
+    {children}
+  </motion.div>
+);
+
+const AnimatedRoutes: React.FC = () => {
+  const location = useLocation();
+
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route
+          path="/"
+          element={
+            <PageFade>
+              <HomePage />
+            </PageFade>
+          }
+        />
+        <Route
+          path="/3d"
+          element={
+            <PageFade>
+              <ThreeDPortfolioPage />
+            </PageFade>
+          }
+        />
+      </Routes>
+    </AnimatePresence>
+  );
+};
 
 function App() {
   return (
@@ -16,10 +56,7 @@ function App() {
           </div>
         }
       >
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/3d" element={<ThreeDPortfolioPage />} />
-        </Routes>
+        <AnimatedRoutes />
       </Suspense>
     </Provider>
   );

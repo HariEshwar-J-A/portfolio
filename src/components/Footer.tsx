@@ -14,11 +14,11 @@ const Footer: React.FC = () => {
   };
   
   return (
-    <footer 
-      className={`py-8 mt-12 border-t ${
-        theme.mode === 'dark' 
-          ? 'bg-slate-900 border-slate-800' 
-          : 'bg-white border-slate-200'
+    <footer
+      className={`py-8 mt-12 border-t backdrop-blur-sm ${
+        theme.mode === 'dark'
+          ? 'bg-slate-950/40 border-white/10'
+          : 'bg-white/40 border-slate-200'
       }`}
     >
       <div className="container mx-auto px-4">

@@ -9,8 +9,8 @@ import {
   Sparkles,
   Video,
 } from 'lucide-react';
-import { useTheme } from '../../hooks/useTheme';
 import { OfferingsData } from '../../data/portfolioData';
+import SectionShell from '../SectionShell';
 
 const MODULE_ICONS: Record<string, React.ReactNode> = {
   iFeeds: <Rss size={18} />,
@@ -21,33 +21,15 @@ const MODULE_ICONS: Record<string, React.ReactNode> = {
 };
 
 const ProductsSection: React.FC = () => {
-  const { theme } = useTheme();
-  const isDark = theme.mode === 'dark';
   const flagship = OfferingsData.flagship;
 
   return (
-    <section
+    <SectionShell
       id="products"
-      className={`min-h-screen py-24 ${isDark ? 'bg-slate-900 text-white' : 'bg-slate-50 text-slate-900'}`}
+      eyebrow="Offerings"
+      title="Products I design, build, and run end to end"
+      subtitle="Not just portfolio pieces — live, self-hosted products with real users, real pipelines, and real uptime to defend."
     >
-      <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.6 }}
-          className="mx-auto mb-12 max-w-2xl text-center"
-        >
-          <p className="text-xs font-black uppercase tracking-[0.3em] text-indigo-500">Offerings</p>
-          <h2 className="mt-3 text-3xl font-bold md:text-4xl">
-            Products I design, build, and run end to end
-          </h2>
-          <p className={`mt-4 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
-            Not just portfolio pieces — live, self-hosted products with real users, real pipelines,
-            and real uptime to defend.
-          </p>
-        </motion.div>
-
         {/* Flagship: InfoSentry — always dark, on-brand with its indigo marketing site */}
         <motion.div
           initial={{ opacity: 0, y: 28 }}
@@ -142,8 +124,7 @@ const ProductsSection: React.FC = () => {
             </div>
           </div>
         </motion.div>
-      </div>
-    </section>
+    </SectionShell>
   );
 };
 

@@ -2,10 +2,12 @@ import React, { useEffect } from 'react';
 import { useTheme } from '../hooks/useTheme';
 import { useScroll } from '../hooks/useScroll';
 import { useKeyboardNav } from '../hooks/useKeyboardNav';
+import { useSmoothScroll } from '../hooks/useSmoothScroll';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import CommandPalette from '../components/CommandPalette';
 import GameHud from '../components/GameHud';
+import AmbientBackground from '../components/AmbientBackground';
 import AboutSection from '../components/sections/AboutSection';
 import SkillsSection from '../components/sections/SkillsSection';
 import ExperienceSection from '../components/sections/ExperienceSection';
@@ -18,7 +20,8 @@ import ContactSection from '../components/sections/ContactSection';
 const HomePage: React.FC = () => {
   const { theme } = useTheme();
 
-  // Scroll-spy keeps the active section in sync; keyboard nav adds game-style controls.
+  // Immersive base layer: Lenis smooth scrolling, scroll-spy, game-style keys.
+  useSmoothScroll();
   useScroll();
   useKeyboardNav();
 
@@ -28,27 +31,35 @@ const HomePage: React.FC = () => {
 
   useEffect(() => {
     document.body.className =
-      theme.mode === 'dark' ? 'bg-slate-900 text-white' : 'bg-white text-slate-900';
+      theme.mode === 'dark' ? 'bg-slate-950 text-white' : 'bg-slate-50 text-slate-900';
   }, [theme.mode]);
 
   return (
-    <div className={theme.mode === 'dark' ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'}>
-      <Header />
-      <CommandPalette />
-      <GameHud />
+    <div
+      className={`relative ${
+        theme.mode === 'dark' ? 'bg-slate-950 text-white' : 'bg-slate-50 text-slate-900'
+      }`}
+    >
+      <AmbientBackground />
 
-      <main>
-        <AboutSection />
-        <SkillsSection />
-        <ExperienceSection />
-        <EducationSection />
-        <ProjectsSection />
-        <ProductsSection />
-        <AchievementsSection />
-        <ContactSection />
-      </main>
+      <div className="relative z-10">
+        <Header />
+        <CommandPalette />
+        <GameHud />
 
-      <Footer />
+        <main>
+          <AboutSection />
+          <SkillsSection />
+          <ExperienceSection />
+          <EducationSection />
+          <ProjectsSection />
+          <ProductsSection />
+          <AchievementsSection />
+          <ContactSection />
+        </main>
+
+        <Footer />
+      </div>
     </div>
   );
 };

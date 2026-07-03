@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../../hooks/useTheme';
 import { portfolioData } from '../../data/portfolioData';
 import { ExternalLink, Github, ChevronLeft, ChevronRight } from 'lucide-react';
+import SectionShell, { glassPanel } from '../SectionShell';
 
 const ProjectsSection: React.FC = () => {
   const { theme } = useTheme();
@@ -42,25 +43,12 @@ const ProjectsSection: React.FC = () => {
   };
   
   return (
-    <section 
-      id="projects" 
-      className={`min-h-screen py-20 ${
-        theme.mode === 'dark' ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'
-      }`}
+    <SectionShell
+      id="projects"
+      eyebrow="Selected work"
+      title="Projects"
+      subtitle="A showcase of my recent work and projects."
     >
-      <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-12 text-center"
-        >
-          <h2 className="text-4xl font-bold mb-4">Projects</h2>
-          <p className="text-lg max-w-2xl mx-auto opacity-80">
-            A showcase of my recent work and projects.
-          </p>
-        </motion.div>
-        
         <div className="flex flex-wrap justify-center mb-8 gap-2">
           <button
             onClick={() => handleTechFilter(null)}
@@ -127,9 +115,9 @@ const ProjectsSection: React.FC = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
-                    className={`flex-shrink-0 w-80 sm:w-96 snap-center rounded-lg overflow-hidden shadow-lg h-full flex flex-col ${
-                      theme.mode === 'dark' ? 'bg-slate-800' : 'bg-slate-50'
-                    }`}
+                    className={`flex-shrink-0 w-80 sm:w-96 snap-center overflow-hidden h-full flex flex-col ${glassPanel(
+                      theme.mode === 'dark'
+                    )}`}
                   >
                     <div className="h-48 overflow-hidden relative">
                       <img
@@ -209,8 +197,7 @@ const ProjectsSection: React.FC = () => {
             </div>
           </motion.div>
         </AnimatePresence>
-      </div>
-    </section>
+    </SectionShell>
   );
 };
 

@@ -4,6 +4,7 @@ import { useTheme } from '../../hooks/useTheme';
 import { portfolioData } from '../../data/portfolioData';
 import { Calendar, MapPin, Globe, Baseline as Timeline } from 'lucide-react';
 import Plot from 'react-plotly.js';
+import SectionShell, { glassPanel } from '../SectionShell';
 
 const ExperienceSection: React.FC = () => {
   const { theme } = useTheme();
@@ -89,53 +90,41 @@ const ExperienceSection: React.FC = () => {
     { bg: 'rgba(255, 255, 255, 0.8)', text: '#0f172a', gridColor: 'rgba(0, 0, 0, 0.1)' };
 
   return (
-    <section 
-      id="experience" 
-      className={`min-h-screen py-20 ${
-        theme.mode === 'dark' ? 'bg-slate-900 text-white' : 'bg-white text-slate-900'
-      }`}
+    <SectionShell
+      id="experience"
+      eyebrow="Journey"
+      title="Work Experience"
+      subtitle="My professional journey and the companies I've worked with."
+      headerExtra={
+        <div className="flex justify-center gap-4 mt-8">
+          <button
+            onClick={() => setViewMode('timeline')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all backdrop-blur ${
+              viewMode === 'timeline'
+                ? 'text-white shadow-lg'
+                : theme.mode === 'dark' ? 'bg-white/5 border border-white/10' : 'bg-white/60 border border-slate-200'
+            }`}
+            style={{ backgroundColor: viewMode === 'timeline' ? theme.colors.primary : undefined }}
+          >
+            <Timeline size={20} />
+            Timeline View
+          </button>
+          <button
+            onClick={() => setViewMode('map')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all backdrop-blur ${
+              viewMode === 'map'
+                ? 'text-white shadow-lg'
+                : theme.mode === 'dark' ? 'bg-white/5 border border-white/10' : 'bg-white/60 border border-slate-200'
+            }`}
+            style={{ backgroundColor: viewMode === 'map' ? theme.colors.primary : undefined }}
+          >
+            <Globe size={20} />
+            Map View
+          </button>
+        </div>
+      }
     >
-      <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-12 text-center"
-        >
-          <h2 className="text-4xl font-bold mb-4">Work Experience</h2>
-          <p className="text-lg max-w-2xl mx-auto opacity-80">
-            My professional journey and the companies I've worked with.
-          </p>
-          
-          <div className="flex justify-center gap-4 mt-8">
-            <button
-              onClick={() => setViewMode('timeline')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
-                viewMode === 'timeline'
-                  ? 'bg-primary text-white'
-                  : theme.mode === 'dark' ? 'bg-slate-800' : 'bg-slate-100'
-              }`}
-              style={{ backgroundColor: viewMode === 'timeline' ? theme.colors.primary : undefined }}
-            >
-              <Timeline size={20} />
-              Timeline View
-            </button>
-            <button
-              onClick={() => setViewMode('map')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
-                viewMode === 'map'
-                  ? 'bg-primary text-white'
-                  : theme.mode === 'dark' ? 'bg-slate-800' : 'bg-slate-100'
-              }`}
-              style={{ backgroundColor: viewMode === 'map' ? theme.colors.primary : undefined }}
-            >
-              <Globe size={20} />
-              Map View
-            </button>
-          </div>
-        </motion.div>
-        
-        <div className="mb-16 overflow-x-auto">
+        <div className={`${glassPanel(theme.mode === 'dark')} mb-16 overflow-x-auto p-4 md:p-6`}>
           {viewMode === 'timeline' ? (
             <Plot
               data={[
@@ -299,15 +288,14 @@ const ExperienceSection: React.FC = () => {
         </div>
         
         <div className="space-y-12">
-          {experience.map((exp, index) => (
+          {experience.map((exp) => (
             <motion.div
               key={`${exp.company}-${exp.startDate}`}
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className={`p-6 rounded-lg shadow-lg ${
-                theme.mode === 'dark' ? 'bg-slate-800' : 'bg-slate-50'
-              }`}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.15 }}
+              transition={{ duration: 0.5 }}
+              className={`p-6 ${glassPanel(theme.mode === 'dark')}`}
             >
               <div className="flex flex-col md:flex-row md:items-center gap-6">
                 <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-white p-2">
@@ -356,8 +344,7 @@ const ExperienceSection: React.FC = () => {
             </motion.div>
           ))}
         </div>
-      </div>
-    </section>
+    </SectionShell>
   );
 };
 

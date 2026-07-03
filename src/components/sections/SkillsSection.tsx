@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../hooks/useTheme';
 import { portfolioData } from '../../data/portfolioData';
+import SectionShell, { glassPanel } from '../SectionShell';
 import * as d3 from 'd3';
 
 const SkillsSection: React.FC = () => {
@@ -145,43 +146,29 @@ const SkillsSection: React.FC = () => {
   };
   
   return (
-    <section 
-      id="skills" 
-      className={`min-h-screen py-20 ${
-        theme.mode === 'dark' ? 'bg-slate-800 text-white' : 'bg-slate-50 text-slate-900'
-      }`}
+    <SectionShell
+      id="skills"
+      eyebrow="Capabilities"
+      title="Skills & Expertise"
+      subtitle="My technical skills and proficiency levels across different technologies and domains."
     >
-      <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-12 text-center"
-        >
-          <h2 className="text-4xl font-bold mb-4">Skills & Expertise</h2>
-          <p className="text-lg max-w-2xl mx-auto opacity-80">
-            My technical skills and proficiency levels across different technologies and domains.
-          </p>
-        </motion.div>
-        
-        <div className="mb-16">
-          <div 
-            ref={chartRef} 
+        <div className={`${glassPanel(theme.mode === 'dark')} mb-16 p-4 md:p-6`}>
+          <div
+            ref={chartRef}
             className="w-full overflow-x-auto"
             style={{ minHeight: '400px' }}
           ></div>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {skills.map((category, index) => (
             <motion.div
               key={category.category}
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className={`p-6 rounded-lg shadow-lg ${
-                theme.mode === 'dark' ? 'bg-slate-700' : 'bg-white'
-              }`}
+              className={`p-6 ${glassPanel(theme.mode === 'dark')}`}
             >
               <h3 className="text-xl font-semibold mb-4">{category.category}</h3>
               <div className="space-y-4">
@@ -209,8 +196,7 @@ const SkillsSection: React.FC = () => {
             </motion.div>
           ))}
         </div>
-      </div>
-    </section>
+    </SectionShell>
   );
 };
 
