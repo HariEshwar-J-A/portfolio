@@ -52,7 +52,7 @@ const SectionShell: React.FC<SectionShellProps> = ({
           <h2 className="mt-3 text-4xl font-bold tracking-tight md:text-5xl">{title}</h2>
           <span
             aria-hidden
-            className="mx-auto mt-5 block h-1 w-16 rounded-full bg-gradient-to-r from-cyan-400 to-indigo-500"
+            className="os-border-flow mx-auto mt-5 block h-1 w-16 rounded-full"
           />
           {subtitle && (
             <p className={`mx-auto mt-5 max-w-2xl text-lg ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>

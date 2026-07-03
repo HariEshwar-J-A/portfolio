@@ -79,6 +79,110 @@ html.lenis body {
   animation: aurora-drift-3 40s ease-in-out infinite;
 }
 
+/* Theme persona colors — set by <ThemeVariables/> from the active palette */
+:root {
+  --os-primary: #38bdf8;
+  --os-secondary: #818cf8;
+  --os-accent: #f472b6;
+}
+
+/* Hover color that follows the persona */
+.hover-primary:hover {
+  color: var(--os-primary);
+}
+
+/* Animated gradient used for borders and accent strips */
+@keyframes border-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+.os-border-flow {
+  background: linear-gradient(
+    90deg,
+    var(--os-primary),
+    var(--os-secondary),
+    var(--os-accent),
+    var(--os-primary)
+  );
+  background-size: 200% 100%;
+  animation: border-flow 6s linear infinite;
+}
+
+/* Vertical scan line sweeping across lab panels */
+@keyframes scan-y {
+  0% {
+    top: -12%;
+  }
+  100% {
+    top: 112%;
+  }
+}
+
+.os-scanline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 18%;
+  background: linear-gradient(180deg, transparent, var(--os-primary), transparent);
+  opacity: 0.14;
+  animation: scan-y 3.2s linear infinite;
+  pointer-events: none;
+}
+
+/* Subtle holographic flicker for lab headings */
+@keyframes glitch-flicker {
+  0%,
+  91%,
+  100% {
+    text-shadow:
+      0.4px 0 var(--os-accent),
+      -0.4px 0 var(--os-secondary);
+    transform: translateX(0);
+  }
+  92% {
+    text-shadow:
+      2px 0 var(--os-accent),
+      -2px 0 var(--os-secondary);
+    transform: translateX(1px);
+  }
+  94% {
+    text-shadow:
+      -2px 0 var(--os-accent),
+      2px 0 var(--os-secondary);
+    transform: translateX(-1px);
+  }
+  96% {
+    text-shadow:
+      1px 0 var(--os-accent),
+      -1px 0 var(--os-secondary);
+    transform: translateX(0);
+  }
+}
+
+.os-glitch {
+  animation: glitch-flicker 5s infinite;
+}
+
+/* Soft breathing glow for interactive lab tiles */
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 18px color-mix(in srgb, var(--os-primary) 22%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 34px color-mix(in srgb, var(--os-primary) 40%, transparent);
+  }
+}
+
+.os-pulse-glow {
+  animation: pulse-glow 3.4s ease-in-out infinite;
+}
+
 /* Gentle vertical float for the hero portrait */
 @keyframes float-slow {
   0%,
@@ -102,7 +206,11 @@ html.lenis body {
   .animate-aurora-1,
   .animate-aurora-2,
   .animate-aurora-3,
-  .animate-float-slow {
+  .animate-float-slow,
+  .os-border-flow,
+  .os-scanline,
+  .os-glitch,
+  .os-pulse-glow {
     animation: none;
   }
 }

@@ -6,7 +6,8 @@ import { useSmoothScroll } from '../hooks/useSmoothScroll';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import CommandPalette from '../components/CommandPalette';
-import GameHud from '../components/GameHud';
+import ScrollProgress from '../components/ScrollProgress';
+import SectionDots from '../components/SectionDots';
 import AmbientBackground from '../components/AmbientBackground';
 import BootSequence from '../components/BootSequence';
 import SceneTransition from '../components/SceneTransition';
@@ -52,7 +53,8 @@ const HomePage: React.FC = () => {
         <Header />
         <CommandPalette />
         <CollabWizard />
-        <GameHud />
+        <ScrollProgress />
+        <SectionDots />
         <SceneTransition />
         <SystemNarrator />
 

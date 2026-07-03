@@ -150,6 +150,15 @@ const CommandPalette: React.FC = () => {
         perform: () => dispatch(setPalette(palette.id)),
       })),
       {
+        id: 'action-playground',
+        group: 'Actions',
+        label: 'Enter the HARI.OS Playground',
+        hint: 'Quizzes · puzzles · chess arena',
+        keywords: 'play game arcade playground quiz puzzle chess explore os',
+        icon: <Layers size={16} />,
+        perform: () => navigate('/os'),
+      },
+      {
         id: 'action-3d',
         group: 'Actions',
         label: 'Enter the 3D experience',
@@ -307,7 +316,7 @@ const CommandPalette: React.FC = () => {
                 isDark ? 'border-white/10' : 'border-slate-200'
               }`}
             >
-              <Search size={18} className={isDark ? 'text-cyan-300' : 'text-blue-500'} />
+              <Search size={18} style={{ color: 'var(--os-primary)' }} />
               <input
                 ref={inputRef}
                 value={query}
@@ -355,14 +364,18 @@ const CommandPalette: React.FC = () => {
                       onClick={() => runItem(item)}
                       onMouseMove={() => setSelectedIndex(index)}
                       className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm transition ${
-                        isSelected
-                          ? isDark
-                            ? 'bg-cyan-400/15 text-cyan-100 ring-1 ring-cyan-300/30'
-                            : 'bg-blue-500/10 text-blue-700 ring-1 ring-blue-400/30'
-                          : isDark
-                            ? 'text-slate-300'
-                            : 'text-slate-600'
+                        isSelected ? '' : isDark ? 'text-slate-300' : 'text-slate-600'
                       }`}
+                      style={
+                        isSelected
+                          ? {
+                              backgroundColor: 'color-mix(in srgb, var(--os-primary) 14%, transparent)',
+                              boxShadow:
+                                'inset 0 0 0 1px color-mix(in srgb, var(--os-primary) 35%, transparent)',
+                              color: isDark ? '#fff' : '#0f172a',
+                            }
+                          : undefined
+                      }
                     >
                       <span className={isSelected ? '' : isDark ? 'text-slate-500' : 'text-slate-400'}>
                         {item.icon}

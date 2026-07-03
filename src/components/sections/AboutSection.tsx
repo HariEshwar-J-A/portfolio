@@ -157,11 +157,9 @@ const AboutSection: React.FC = () => {
             <div className="animate-float-slow relative">
               <div
                 aria-hidden
-                className="absolute -inset-4 rounded-[2.5rem] opacity-60 blur-2xl"
+                className="absolute -inset-4 rounded-[2.5rem] opacity-60 blur-2xl transition-all duration-700"
                 style={{
-                  background: isDark
-                    ? 'conic-gradient(from 140deg, rgba(34,211,238,0.5), rgba(99,102,241,0.5), rgba(217,70,239,0.35), rgba(34,211,238,0.5))'
-                    : 'conic-gradient(from 140deg, rgba(59,130,246,0.4), rgba(99,102,241,0.4), rgba(16,185,129,0.3), rgba(59,130,246,0.4))',
+                  background: `conic-gradient(from 140deg, ${palette.primary}80, ${palette.secondary}80, ${palette.accent}59, ${palette.primary}80)`,
                 }}
               />
               <div className={`${glassPanel(isDark)} relative overflow-hidden !rounded-[2rem] p-2`}>
@@ -183,9 +181,9 @@ const AboutSection: React.FC = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2, duration: 0.6 }}
-        className={`absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-1 text-[10px] font-bold uppercase tracking-[0.25em] md:flex ${
-          isDark ? 'text-slate-500 hover:text-cyan-300' : 'text-slate-400 hover:text-blue-600'
-        } transition-colors`}
+        className={`hover-primary absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-1 text-[10px] font-bold uppercase tracking-[0.25em] transition-colors md:flex ${
+          isDark ? 'text-slate-500' : 'text-slate-400'
+        }`}
         aria-label="Scroll to skills"
       >
         Scroll · or press S

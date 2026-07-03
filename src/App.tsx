@@ -4,8 +4,10 @@ import { Route, Routes, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { store } from './store/store';
 import HomePage from './pages/HomePage';
+import ThemeVariables from './components/ThemeVariables';
 
 const ThreeDPortfolioPage = lazy(() => import('./pages/ThreeDPortfolioPage'));
+const OsPlaygroundPage = lazy(() => import('./pages/OsPlaygroundPage'));
 
 /** Soft fade/slide between routes so page switches feel continuous. */
 const PageFade: React.FC<{ children: React.ReactNode }> = ({ children }) => (
@@ -41,6 +43,14 @@ const AnimatedRoutes: React.FC = () => {
             </PageFade>
           }
         />
+        <Route
+          path="/os"
+          element={
+            <PageFade>
+              <OsPlaygroundPage />
+            </PageFade>
+          }
+        />
       </Routes>
     </AnimatePresence>
   );
@@ -49,6 +59,7 @@ const AnimatedRoutes: React.FC = () => {
 function App() {
   return (
     <Provider store={store}>
+      <ThemeVariables />
       <Suspense
         fallback={
           <div className="min-h-screen bg-slate-950 text-white flex items-center justify-center">
