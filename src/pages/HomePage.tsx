@@ -8,6 +8,10 @@ import Footer from '../components/Footer';
 import CommandPalette from '../components/CommandPalette';
 import GameHud from '../components/GameHud';
 import AmbientBackground from '../components/AmbientBackground';
+import BootSequence from '../components/BootSequence';
+import SceneTransition from '../components/SceneTransition';
+import SystemNarrator from '../components/SystemNarrator';
+import CollabWizard from '../components/CollabWizard';
 import AboutSection from '../components/sections/AboutSection';
 import SkillsSection from '../components/sections/SkillsSection';
 import ExperienceSection from '../components/sections/ExperienceSection';
@@ -42,10 +46,15 @@ const HomePage: React.FC = () => {
     >
       <AmbientBackground />
 
+      <BootSequence />
+
       <div className="relative z-10">
         <Header />
         <CommandPalette />
+        <CollabWizard />
         <GameHud />
+        <SceneTransition />
+        <SystemNarrator />
 
         <main>
           <AboutSection />

@@ -21,9 +21,11 @@ import {
 } from 'lucide-react';
 import { navigateTo } from '../store/slices/navigationSlice';
 import type { SectionId } from '../store/slices/navigationSlice';
-import { toggleTheme } from '../store/slices/themeSlice';
+import { setPalette } from '../store/slices/themeSlice';
 import { useTheme } from '../hooks/useTheme';
 import { OfferingsData, portfolioData } from '../data/portfolioData';
+import { themePalettes } from '../data/osPersona';
+import { OPEN_COLLAB_EVENT } from './CollabWizard';
 
 /** Dispatch this event from anywhere (Header button, HUD) to open the palette. */
 export const OPEN_PALETTE_EVENT = 'portfolio:open-palette';
@@ -130,14 +132,23 @@ const CommandPalette: React.FC = () => {
 
     const actionItems: PaletteItem[] = [
       {
-        id: 'action-theme',
+        id: 'action-collab',
         group: 'Actions',
-        label: `Switch to ${isDark ? 'light' : 'dark'} mode`,
-        hint: 'T',
-        keywords: 'theme toggle dark light mode',
-        icon: isDark ? <Sun size={16} /> : <Moon size={16} />,
-        perform: () => dispatch(toggleTheme()),
+        label: 'Start a collaboration',
+        hint: 'Guided email wizard',
+        keywords: 'collaborate hire contact wizard email draft work together',
+        icon: <Mail size={16} />,
+        perform: () => window.dispatchEvent(new Event(OPEN_COLLAB_EVENT)),
       },
+      ...themePalettes.map((palette) => ({
+        id: `action-theme-${palette.id}`,
+        group: 'Actions',
+        label: `Theme: ${palette.label}`,
+        hint: palette.description,
+        keywords: `theme persona palette color ${palette.mode}`,
+        icon: palette.mode === 'dark' ? <Moon size={16} /> : <Sun size={16} />,
+        perform: () => dispatch(setPalette(palette.id)),
+      })),
       {
         id: 'action-3d',
         group: 'Actions',
@@ -193,7 +204,7 @@ const CommandPalette: React.FC = () => {
     ];
 
     return [...sectionItems, ...offeringItems, ...projectItems, ...actionItems, ...connectItems];
-  }, [dispatch, navigate, isDark]);
+  }, [dispatch, navigate]);
 
   const filteredItems = useMemo(
     () => (query.trim() ? items.filter((item) => matches(item, query)) : items),

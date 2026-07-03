@@ -5,12 +5,13 @@ import { navigateTo } from '../store/slices/navigationSlice';
 import type { SectionId } from '../store/slices/navigationSlice';
 import { RootState } from '../store/store';
 import { useTheme } from '../hooks/useTheme';
-import { Sun, Moon, Menu, X, Box, Newspaper, Command } from 'lucide-react';
+import { Menu, X, Box, Newspaper, Command } from 'lucide-react';
 import { OPEN_PALETTE_EVENT } from './CommandPalette';
+import ThemeSwitcher from './ThemeSwitcher';
 
 const Header: React.FC = () => {
   const dispatch = useDispatch();
-  const { theme, toggleTheme } = useTheme();
+  const { theme } = useTheme();
   const { activeSection, sections } = useSelector((state: RootState) => state.navigation);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -38,8 +39,11 @@ const Header: React.FC = () => {
       }`}
     >
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-        <div className="text-2xl font-bold" style={{ color: theme.colors.primary }}>
-          Portfolio
+        <div className="flex items-center gap-2 font-mono text-xl font-bold tracking-tight">
+          <span className="h-2 w-2 animate-pulse rounded-full" style={{ backgroundColor: theme.colors.primary }} />
+          <span className={theme.mode === 'dark' ? 'text-white' : 'text-slate-900'}>
+            hari<span style={{ color: theme.colors.primary }}>.os</span>
+          </span>
         </div>
         
         {/* Desktop Navigation */}
@@ -98,33 +102,13 @@ const Header: React.FC = () => {
             3D Portfolio
           </Link>
           
-          <button
-            onClick={toggleTheme}
-            className="p-2 rounded-full transition-colors"
-            aria-label="Toggle theme"
-          >
-            {theme.mode === 'dark' ? (
-              <Sun size={20} className="text-yellow-300" />
-            ) : (
-              <Moon size={20} className="text-slate-700" />
-            )}
-          </button>
+          <ThemeSwitcher />
         </nav>
-        
+
         {/* Mobile Navigation Toggle */}
-        <div className="flex items-center xl:hidden">
-          <button
-            onClick={toggleTheme}
-            className="p-2 mr-2 rounded-full transition-colors"
-            aria-label="Toggle theme"
-          >
-            {theme.mode === 'dark' ? (
-              <Sun size={20} className="text-yellow-300" />
-            ) : (
-              <Moon size={20} className="text-slate-700" />
-            )}
-          </button>
-          
+        <div className="flex items-center gap-2 xl:hidden">
+          <ThemeSwitcher />
+
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="p-2 rounded-full transition-colors"

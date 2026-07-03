@@ -1,38 +1,27 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store/store';
 import { useTheme } from '../hooks/useTheme';
+import { getPalette } from '../data/osPersona';
 
 /**
  * Fixed, full-viewport ambient layer that every section floats above:
- * a theme-aware base wash, three slowly drifting aurora blobs, a dot
- * grid, and a soft vignette. Pure CSS animation — pauses automatically
- * under prefers-reduced-motion (see index.css).
+ * the active theme persona's base wash, three slowly drifting aurora
+ * blobs, a dot grid, and a soft vignette. Pure CSS animation — pauses
+ * automatically under prefers-reduced-motion (see index.css).
  */
 const AmbientBackground: React.FC = () => {
   const { theme } = useTheme();
+  const palette = getPalette(useSelector((state: RootState) => state.theme.palette));
   const isDark = theme.mode === 'dark';
-
-  const blobs = isDark
-    ? [
-        'radial-gradient(circle, rgba(34,211,238,0.16), transparent 65%)',
-        'radial-gradient(circle, rgba(99,102,241,0.18), transparent 65%)',
-        'radial-gradient(circle, rgba(217,70,239,0.10), transparent 65%)',
-      ]
-    : [
-        'radial-gradient(circle, rgba(59,130,246,0.14), transparent 65%)',
-        'radial-gradient(circle, rgba(99,102,241,0.12), transparent 65%)',
-        'radial-gradient(circle, rgba(16,185,129,0.10), transparent 65%)',
-      ];
+  const blobs = palette.blobs;
 
   return (
     <div aria-hidden className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
       {/* Base wash */}
       <div
-        className="absolute inset-0"
-        style={{
-          background: isDark
-            ? 'linear-gradient(180deg, #020617 0%, #0b1120 45%, #020617 100%)'
-            : 'linear-gradient(180deg, #f8fafc 0%, #eef2ff 45%, #f8fafc 100%)',
-        }}
+        className="absolute inset-0 transition-colors duration-700"
+        style={{ background: palette.ambientBase }}
       />
 
       {/* Aurora blobs */}

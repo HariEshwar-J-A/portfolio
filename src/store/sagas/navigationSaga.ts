@@ -22,8 +22,8 @@ function* handleNavigate(action: ReturnType<typeof navigateTo>) {
   // Set active section
   yield put(setActiveSection(sectionId));
   
-  // End animation after delay
-  yield new Promise(resolve => setTimeout(resolve, 500));
+  // Hold the scene-transition veil for the Lenis travel duration
+  yield new Promise(resolve => setTimeout(resolve, 1100));
   yield put(endAnimation());
 }
 

@@ -1,11 +1,14 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { motion, useScroll as useScrollMotion, useTransform } from 'framer-motion';
 import { useTheme } from '../../hooks/useTheme';
 import { MarketingData, portfolioData } from '../../data/portfolioData';
 import { navigateTo } from '../../store/slices/navigationSlice';
+import { RootState } from '../../store/store';
+import { getPalette } from '../../data/osPersona';
 import TypewriterText from '../TypewriterText';
 import { glassPanel } from '../SectionShell';
+import { OPEN_COLLAB_EVENT } from '../CollabWizard';
 import {
   ArrowRight,
   ArrowUpRight,
@@ -18,6 +21,7 @@ import {
 const AboutSection: React.FC = () => {
   const dispatch = useDispatch();
   const { theme } = useTheme();
+  const palette = getPalette(useSelector((state: RootState) => state.theme.palette));
   const isDark = theme.mode === 'dark';
   const { name, title, photo, socialLinks } = portfolioData.personal;
   const { headline, tagline, heroOrbitLabels, proofPoints } = MarketingData;
@@ -43,25 +47,24 @@ const AboutSection: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: 'easeOut' }}
           >
-            <p
-              className={`inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] ${
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new Event(OPEN_COLLAB_EVENT))}
+              className={`group inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] transition hover:-translate-y-0.5 ${
                 isDark
-                  ? 'border-emerald-400/30 bg-emerald-400/10 text-emerald-300'
-                  : 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600'
+                  ? 'border-emerald-400/30 bg-emerald-400/10 text-emerald-300 hover:border-emerald-300/60'
+                  : 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600 hover:border-emerald-500/60'
               }`}
             >
               <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
-              Open to opportunities
-            </p>
+              Open to collaboration
+              <ArrowRight size={13} className="transition group-hover:translate-x-0.5" />
+            </button>
 
             <h1 className="mt-6 text-5xl font-black leading-[0.95] tracking-tight md:text-7xl">
               <span
                 className="bg-clip-text text-transparent"
-                style={{
-                  backgroundImage: isDark
-                    ? 'linear-gradient(120deg, #f8fafc 0%, #67e8f9 55%, #818cf8 100%)'
-                    : 'linear-gradient(120deg, #0f172a 0%, #2563eb 55%, #6366f1 100%)',
-                }}
+                style={{ backgroundImage: palette.heroGradient }}
               >
                 {name}
               </span>
@@ -73,10 +76,9 @@ const AboutSection: React.FC = () => {
               }`}
             >
               {title} ·{' '}
-              <TypewriterText
-                strings={heroOrbitLabels}
-                className={isDark ? 'text-cyan-300' : 'text-blue-600'}
-              />
+              <span style={{ color: theme.colors.primary }}>
+                <TypewriterText strings={heroOrbitLabels} />
+              </span>
             </p>
 
             <h2 className="mt-8 max-w-xl text-2xl font-bold leading-snug md:text-3xl">{headline}</h2>
@@ -133,7 +135,7 @@ const AboutSection: React.FC = () => {
                 <div key={point.metric} className={`${glassPanel(isDark)} p-4`}>
                   <p
                     className="text-2xl font-black"
-                    style={{ color: isDark ? '#67e8f9' : theme.colors.primary }}
+                    style={{ color: theme.colors.primary }}
                   >
                     {point.metric}
                   </p>
