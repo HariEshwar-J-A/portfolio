@@ -13,3 +13,21 @@
     -ms-overflow-style: none;    /* IE/Edge */
   }
 }
+
+@layer components {
+  /* Keycap chips used in the game HUD controls legend */
+  .hud-kbd {
+    @apply inline-flex min-w-[1.1rem] items-center justify-center rounded border border-slate-400/40 px-1 py-px font-mono text-[9px] font-bold;
+  }
+}
+
+/* Keyboard-driven section jumps should still feel smooth */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

@@ -12,6 +12,11 @@ A modern, responsive portfolio website built with React, TypeScript, and Tailwin
 - **Data Visualization**: Dynamic charts and graphs using D3.js and Plotly.js
 - **Accessibility**: WCAG compliant with a focus on keyboard navigation and screen reader support
 - **Performance Optimized**: Lazy loading, code splitting, and optimized assets for fast loading
+- **Command Palette**: Ctrl/⌘ + K opens a fuzzy-searchable palette covering sections, featured projects, offerings, actions, and social links
+- **Game-Style Navigation**: W/S or arrow keys move between sections, number keys jump directly, T toggles the theme
+- **Explorer HUD**: Quest-tracker rail, XP bar with rank progression (Visitor → Legend), and achievement toasts as sections are explored (progress persists across visits)
+- **Product Offerings**: Dedicated section spotlighting [InfoSentry](https://sentry.harieshwar.dev) — a personal AI intelligence layer (iFeeds, iChat, iGitHub, iVideos, iSurprise)
+- **3D Experience**: Immersive WebGL portfolio at /3d built with react-three-fiber
 - **Contact Form**: Integrated email functionality using EmailJS
 - **State Management**: Centralized state management with Redux Toolkit and Redux Saga
 - **TypeScript**: Type-safe code for better developer experience and fewer bugs

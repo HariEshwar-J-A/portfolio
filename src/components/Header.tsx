@@ -5,7 +5,8 @@ import { navigateTo } from '../store/slices/navigationSlice';
 import type { SectionId } from '../store/slices/navigationSlice';
 import { RootState } from '../store/store';
 import { useTheme } from '../hooks/useTheme';
-import { Sun, Moon, Menu, X, Box, Newspaper } from 'lucide-react';
+import { Sun, Moon, Menu, X, Box, Newspaper, Command } from 'lucide-react';
+import { OPEN_PALETTE_EVENT } from './CommandPalette';
 
 const Header: React.FC = () => {
   const dispatch = useDispatch();
@@ -42,23 +43,37 @@ const Header: React.FC = () => {
         </div>
         
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-8">
+        <nav className="hidden xl:flex items-center space-x-5">
           {sections.map((section) => (
             <button
               key={section}
               onClick={() => handleNavigation(section)}
-              className={`text-base font-medium capitalize transition-colors ${
+              className={`text-sm font-medium capitalize transition-colors ${
                 activeSection === section
                   ? `text-${theme.colors.primary}`
                   : theme.mode === 'dark' ? 'text-slate-300 hover:text-white' : 'text-slate-700 hover:text-black'
               }`}
-              style={{ 
-                color: activeSection === section ? theme.colors.primary : undefined 
+              style={{
+                color: activeSection === section ? theme.colors.primary : undefined
               }}
             >
               {section}
             </button>
           ))}
+
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new Event(OPEN_PALETTE_EVENT))}
+            className={`inline-flex items-center gap-2 rounded-full border px-3 py-2 text-xs font-semibold transition hover:-translate-y-0.5 ${
+              theme.mode === 'dark'
+                ? 'border-slate-700 bg-slate-800/80 text-slate-300 hover:border-cyan-400/50'
+                : 'border-slate-300 bg-white/80 text-slate-600 hover:border-blue-400/60'
+            }`}
+            aria-label="Open command palette"
+          >
+            <Command size={14} />
+            <span className="hidden lg:inline">Ctrl K</span>
+          </button>
 
           <a
             href="https://sentry.harieshwar.dev"
@@ -97,7 +112,7 @@ const Header: React.FC = () => {
         </nav>
         
         {/* Mobile Navigation Toggle */}
-        <div className="flex items-center md:hidden">
+        <div className="flex items-center xl:hidden">
           <button
             onClick={toggleTheme}
             className="p-2 mr-2 rounded-full transition-colors"
@@ -127,7 +142,7 @@ const Header: React.FC = () => {
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div 
-          className={`md:hidden absolute w-full py-4 px-6 shadow-lg ${
+          className={`xl:hidden absolute w-full py-4 px-6 shadow-lg ${
             theme.mode === 'dark' ? 'bg-slate-800' : 'bg-white'
           }`}
         >
@@ -148,6 +163,22 @@ const Header: React.FC = () => {
                 {section}
               </button>
             ))}
+
+          <button
+            type="button"
+            onClick={() => {
+              setIsMobileMenuOpen(false);
+              window.dispatchEvent(new Event(OPEN_PALETTE_EVENT));
+            }}
+            className={`inline-flex items-center justify-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition ${
+              theme.mode === 'dark'
+                ? 'border-slate-700 bg-slate-800/80 text-slate-300'
+                : 'border-slate-300 bg-white/80 text-slate-600'
+            }`}
+          >
+            <Command size={16} />
+            Command palette
+          </button>
 
           <a
             href="https://sentry.harieshwar.dev"

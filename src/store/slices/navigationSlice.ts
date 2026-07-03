@@ -1,6 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export type SectionId = 'about' | 'skills' | 'experience' | 'education' | 'projects' | 'achievements' | 'contact';
+export type SectionId =
+  | 'about'
+  | 'skills'
+  | 'experience'
+  | 'education'
+  | 'projects'
+  | 'products'
+  | 'achievements'
+  | 'contact';
 
 interface NavigationState {
   activeSection: SectionId;
@@ -10,7 +18,7 @@ interface NavigationState {
 
 const initialState: NavigationState = {
   activeSection: 'about',
-  sections: ['about', 'skills', 'experience', 'education', 'projects', 'achievements', 'contact'],
+  sections: ['about', 'skills', 'experience', 'education', 'projects', 'products', 'achievements', 'contact'],
   isAnimating: false,
 };
 

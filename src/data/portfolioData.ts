@@ -311,6 +311,48 @@ export const MarketingData = {
   },
 };
 
+/** Product offerings spotlighted on the portfolio — flagship first. */
+export const OfferingsData = {
+  flagship: {
+    name: "InfoSentry",
+    tagline: "Your personal intelligence layer.",
+    description:
+      "Signal, not noise. A private, AI-powered intelligence suite that monitors 50+ sources, scores relevance with LLMs, and delivers curated news, predictions, GitHub trends, and video digests — to you, not the algorithm.",
+    marketingUrl: "https://sentry.harieshwar.dev",
+    sourceUrl: "https://github.com/HariEshwar-J-A/info-sentry",
+    accent: "#6366f1",
+    badges: ["Personal", "AI-powered", "Private"],
+    stats: [
+      { value: "50+", label: "Sources monitored" },
+      { value: "LLM", label: "Relevance scoring" },
+      { value: "6h", label: "Update cadence" },
+      { value: "0", label: "Ads. Ever." },
+    ],
+    modules: [
+      {
+        key: "iFeeds",
+        blurb: "AI-curated news scoped to your topics, with summaries, sentiment, and predictions.",
+      },
+      {
+        key: "iChat",
+        blurb: "Converse with your intelligence layer — grounded in everything it has read for you.",
+      },
+      {
+        key: "iGitHub",
+        blurb: "Repo discovery and GitHub trend tracking tuned to your stack.",
+      },
+      {
+        key: "iVideos",
+        blurb: "Video digests distilled from the channels that actually matter to you.",
+      },
+      {
+        key: "iSurprise",
+        blurb: "A serendipity engine surfacing high-signal finds outside your usual orbit.",
+      },
+    ],
+  },
+};
+
 export const portfolioData: PortfolioData = {
   personal: {
     name: "Harieshwar J A",
