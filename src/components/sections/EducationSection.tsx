@@ -1,5 +1,7 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
+import { RootState } from '../../store/store';
 import { useTheme } from '../../hooks/useTheme';
 import { portfolioData } from '../../data/portfolioData';
 import { Calendar, MapPin, GraduationCap } from 'lucide-react';
@@ -8,6 +10,7 @@ import SectionShell, { glassPanel } from '../SectionShell';
 const EducationSection: React.FC = () => {
   const { theme } = useTheme();
   const { education } = portfolioData;
+  const isMinimal = useSelector((state: RootState) => state.view.mode) === 'minimal';
 
   return (
     <SectionShell
@@ -27,7 +30,7 @@ const EducationSection: React.FC = () => {
               className={`p-6 ${glassPanel(theme.mode === 'dark')}`}
             >
               <div className="flex flex-col md:flex-row gap-6">
-                {edu.logo && (
+                {edu.logo && !isMinimal && (
                   <div className="w-32 h-32 rounded-lg overflow-hidden flex-shrink-0 bg-white p-2">
                     <img 
                       src={edu.logo} 
@@ -67,7 +70,7 @@ const EducationSection: React.FC = () => {
                     )}
                   </div>
                   
-                  {edu.description && (
+                  {edu.description && !isMinimal && (
                     <p className="mt-4">{edu.description}</p>
                   )}
                 </div>

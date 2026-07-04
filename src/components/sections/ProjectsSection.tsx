@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
+import { RootState } from '../../store/store';
 import { useTheme } from '../../hooks/useTheme';
 import { portfolioData } from '../../data/portfolioData';
 import { ExternalLink, Github, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -10,6 +12,7 @@ const ProjectsSection: React.FC = () => {
   const { projects } = portfolioData;
   const [filter, setFilter] = useState<string | null>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
+  const isMinimal = useSelector((state: RootState) => state.view.mode) === 'minimal';
 
   // Reset scroll position when filter changes
   useEffect(() => {
@@ -22,9 +25,11 @@ const ProjectsSection: React.FC = () => {
     new Set(projects.flatMap(project => project.technologies))
   );
   
+  // Minimal view: featured work only — the quick-peek shortlist.
+  const visibleProjects = isMinimal ? projects.filter((project) => project.featured) : projects;
   const filteredProjects = filter
-    ? projects.filter(project => project.technologies.includes(filter))
-    : projects;
+    ? visibleProjects.filter(project => project.technologies.includes(filter))
+    : visibleProjects;
     
   const handleTechFilter = (tech: string | null) => {
     setFilter(tech);
@@ -49,7 +54,7 @@ const ProjectsSection: React.FC = () => {
       title="Projects"
       subtitle="A showcase of my recent work and projects."
     >
-        <div className="flex flex-wrap justify-center mb-8 gap-2">
+        <div className={`flex flex-wrap justify-center mb-8 gap-2 ${isMinimal ? 'hidden' : ''}`}>
           <button
             onClick={() => handleTechFilter(null)}
             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${

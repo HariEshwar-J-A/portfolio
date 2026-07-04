@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { motion, useInView } from 'framer-motion';
 import { Boxes, Briefcase, Package, Server } from 'lucide-react';
+import { RootState } from '../../store/store';
 import { useTheme } from '../../hooks/useTheme';
 import { portfolioData } from '../../data/portfolioData';
 import SectionShell, { glassPanel } from '../SectionShell';
@@ -57,6 +59,7 @@ const SkillsSection: React.FC = () => {
   const { theme } = useTheme();
   const { skills } = portfolioData;
   const isDark = theme.mode === 'dark';
+  const isMinimal = useSelector((state: RootState) => state.view.mode) === 'minimal';
   const mutedText = isDark ? 'text-slate-400' : 'text-slate-500';
 
   return (
@@ -86,6 +89,24 @@ const SkillsSection: React.FC = () => {
         ))}
       </div>
 
+      {/* Minimal view stops at the KPIs — a quick, honest headline */}
+      {isMinimal ? (
+        <div className="flex flex-wrap justify-center gap-2">
+          {skills
+            .flatMap((category) => category.skills.map((skill) => skill.name))
+            .map((name) => (
+              <span
+                key={name}
+                className={`rounded-full border px-3 py-1.5 text-xs font-semibold ${
+                  isDark ? 'border-white/10 bg-white/5' : 'border-slate-200 bg-white/70'
+                }`}
+              >
+                {name}
+              </span>
+            ))}
+        </div>
+      ) : (
+        <>
       {/* Domain depth widget */}
       <motion.div
         initial={{ opacity: 0, y: 18 }}
@@ -160,6 +181,8 @@ const SkillsSection: React.FC = () => {
           </motion.div>
         ))}
       </div>
+        </>
+      )}
     </SectionShell>
   );
 };

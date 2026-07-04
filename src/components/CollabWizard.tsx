@@ -13,6 +13,8 @@ import {
   Sparkles,
   X,
 } from 'lucide-react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store/store';
 import { useTheme } from '../hooks/useTheme';
 import { portfolioData } from '../data/portfolioData';
 
@@ -98,6 +100,7 @@ const CollabWizard: React.FC = () => {
   const { theme } = useTheme();
   const isDark = theme.mode === 'dark';
   const email = portfolioData.contact.email;
+  const focusDetail = useSelector((state: RootState) => state.view.focusDetail);
 
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState(0);
@@ -115,10 +118,12 @@ const CollabWizard: React.FC = () => {
       setIsOpen(true);
       setStep(0);
       setCopied(false);
+      // Carry what they told the intent wizard into the draft.
+      setNote((current) => current || (focusDetail ? `Context: ${focusDetail}` : ''));
     };
     window.addEventListener(OPEN_COLLAB_EVENT, open);
     return () => window.removeEventListener(OPEN_COLLAB_EVENT, open);
-  }, []);
+  }, [focusDetail]);
 
   useEffect(() => {
     document.documentElement.dataset.modalOpen = isOpen ? 'true' : 'false';

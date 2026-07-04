@@ -1,5 +1,7 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
+import { RootState } from '../../store/store';
 import {
   ArrowUpRight,
   GitBranch,
@@ -22,6 +24,7 @@ const MODULE_ICONS: Record<string, React.ReactNode> = {
 
 const ProductsSection: React.FC = () => {
   const flagship = OfferingsData.flagship;
+  const isMinimal = useSelector((state: RootState) => state.view.mode) === 'minimal';
 
   return (
     <SectionShell
@@ -81,7 +84,7 @@ const ProductsSection: React.FC = () => {
               {flagship.description}
             </p>
 
-            <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+            <div className={`mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5 ${isMinimal ? 'hidden' : ''}`}>
               {flagship.modules.map((module) => (
                 <div
                   key={module.key}

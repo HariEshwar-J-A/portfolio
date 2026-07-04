@@ -1,6 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useSelector } from 'react-redux';
+import { Sparkles } from 'lucide-react';
+import { RootState } from '../store/store';
+import type { SectionId } from '../store/slices/navigationSlice';
 import { useTheme } from '../hooks/useTheme';
+import { FOCUS_CONFIGS } from '../data/personalization';
 
 /** Shared glass-panel styling so every card floats consistently above the ambient layer. */
 export const glassPanel = (isDark: boolean) =>
@@ -32,6 +37,10 @@ const SectionShell: React.FC<SectionShellProps> = ({
 }) => {
   const { theme } = useTheme();
   const isDark = theme.mode === 'dark';
+  const focus = useSelector((state: RootState) => state.view.focus);
+  const isEmphasized = Boolean(
+    focus && focus !== 'explore' && FOCUS_CONFIGS[focus].emphasized.includes(id as SectionId)
+  );
 
   return (
     <section id={id} className="relative min-h-screen py-24">
@@ -43,6 +52,19 @@ const SectionShell: React.FC<SectionShellProps> = ({
           transition={{ duration: 0.6, ease: 'easeOut' }}
           className="mb-14 text-center"
         >
+          {isEmphasized && (
+            <p
+              className="mb-3 inline-flex items-center gap-1.5 rounded-full border px-3 py-1 font-mono text-[10px] font-black uppercase tracking-[0.2em]"
+              style={{
+                color: 'var(--os-primary)',
+                borderColor: 'color-mix(in srgb, var(--os-primary) 45%, transparent)',
+                backgroundColor: 'color-mix(in srgb, var(--os-primary) 10%, transparent)',
+              }}
+            >
+              <Sparkles size={11} />
+              hari.ai picked this for you
+            </p>
+          )}
           <p
             className="text-xs font-black uppercase tracking-[0.3em]"
             style={{ color: theme.colors.primary }}

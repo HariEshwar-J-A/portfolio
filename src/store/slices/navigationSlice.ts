@@ -29,6 +29,10 @@ const navigationSlice = createSlice({
     setActiveSection: (state, action: PayloadAction<SectionId>) => {
       state.activeSection = action.payload;
     },
+    /** Reorder sections — used by the intent wizard's personalized views. */
+    setSections: (state, action: PayloadAction<SectionId[]>) => {
+      state.sections = action.payload;
+    },
     startAnimation: (state) => {
       state.isAnimating = true;
     },
@@ -45,6 +49,7 @@ const navigationSlice = createSlice({
 
 export const {
   setActiveSection,
+  setSections,
   startAnimation,
   endAnimation,
   navigateTo,

@@ -6,9 +6,11 @@ import { navigateTo } from '../store/slices/navigationSlice';
 import type { SectionId } from '../store/slices/navigationSlice';
 import { RootState } from '../store/store';
 import { useTheme } from '../hooks/useTheme';
-import { Menu, X, Box, Newspaper, Command, Gamepad2 } from 'lucide-react';
+import { Menu, X, Box, Newspaper, Command, Gamepad2, Sparkles } from 'lucide-react';
 import { OPEN_PALETTE_EVENT } from './CommandPalette';
+import { OPEN_INTENT_EVENT } from './IntentWizard';
 import ThemeSwitcher from './ThemeSwitcher';
+import ViewModeToggle from './ViewModeToggle';
 
 const Header: React.FC = () => {
   const dispatch = useDispatch();
@@ -122,12 +124,22 @@ const Header: React.FC = () => {
             </a>
           </div>
 
-          {/* Controls — search & appearance */}
+          {/* Controls — concierge, search, density, appearance */}
           <div
             className={`ml-1 flex items-center gap-1 border-l pl-4 ${
               isDark ? 'border-white/10' : 'border-slate-200'
             }`}
           >
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new Event(OPEN_INTENT_EVENT))}
+              className="rounded-full p-2 transition hover:-translate-y-0.5"
+              aria-label="Personalize my visit"
+              title="For you — tell HARI.AI why you're here"
+            >
+              <Sparkles size={19} style={{ color: 'var(--os-primary)' }} />
+            </button>
+
             <button
               type="button"
               onClick={() => window.dispatchEvent(new Event(OPEN_PALETTE_EVENT))}
@@ -136,18 +148,21 @@ const Header: React.FC = () => {
                   ? 'border-slate-700 bg-slate-800/80 text-slate-300'
                   : 'border-slate-300 bg-white/80 text-slate-600'
               }`}
-              aria-label="Open command palette"
+              aria-label="Search and commands"
+              title="Smart search & commands (Ctrl K)"
             >
               <Command size={13} />
               <span className="hidden 2xl:inline">Ctrl K</span>
             </button>
 
+            <ViewModeToggle />
             <ThemeSwitcher />
           </div>
         </nav>
 
         {/* Mobile Navigation Toggle */}
-        <div className="flex items-center gap-2 xl:hidden">
+        <div className="flex items-center gap-1 xl:hidden">
+          <ViewModeToggle />
           <ThemeSwitcher />
 
           <button
@@ -230,6 +245,22 @@ const Header: React.FC = () => {
                 type="button"
                 onClick={() => {
                   setIsMobileMenuOpen(false);
+                  window.dispatchEvent(new Event(OPEN_INTENT_EVENT));
+                }}
+                className={`mt-2 inline-flex items-center justify-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition ${
+                  isDark
+                    ? 'border-slate-700 bg-slate-800/80 text-slate-300'
+                    : 'border-slate-300 bg-white/80 text-slate-600'
+                }`}
+              >
+                <Sparkles size={16} style={{ color: 'var(--os-primary)' }} />
+                Personalize my visit
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
                   window.dispatchEvent(new Event(OPEN_PALETTE_EVENT));
                 }}
                 className={`mt-2 inline-flex items-center justify-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition ${
@@ -239,7 +270,7 @@ const Header: React.FC = () => {
                 }`}
               >
                 <Command size={16} />
-                Command palette
+                Search & commands
               </button>
 
               <a

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
+import { RootState } from '../../store/store';
 import { useTheme } from '../../hooks/useTheme';
 import { portfolioData } from '../../data/portfolioData';
 import { Calendar, MapPin, Globe, Baseline as Timeline } from 'lucide-react';
@@ -135,6 +137,7 @@ const ExperienceSection: React.FC = () => {
   const { theme } = useTheme();
   const { experience } = portfolioData;
   const [viewMode, setViewMode] = useState<'timeline' | 'map'>('timeline');
+  const isMinimal = useSelector((state: RootState) => state.view.mode) === 'minimal';
 
   // Get unique locations with their associated experiences
   const uniqueLocations = experience.reduce((acc, exp) => {
@@ -211,6 +214,7 @@ const ExperienceSection: React.FC = () => {
       title="Work Experience"
       subtitle="My professional journey and the companies I've worked with."
       headerExtra={
+        isMinimal ? undefined : (
         <div className="flex justify-center gap-4 mt-8">
           <button
             onClick={() => setViewMode('timeline')}
@@ -237,8 +241,38 @@ const ExperienceSection: React.FC = () => {
             Map View
           </button>
         </div>
+        )
       }
     >
+        {isMinimal ? (
+          /* Quick peek: one compact card per role, newest first */
+          <div className="mx-auto max-w-3xl space-y-3">
+            {experience.map((exp) => (
+              <motion.div
+                key={`${exp.company}-${exp.startDate}`}
+                initial={{ opacity: 0, y: 14 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.35 }}
+                className={`flex items-center gap-4 p-4 ${glassPanel(theme.mode === 'dark')}`}
+              >
+                <div className="h-11 w-11 shrink-0 overflow-hidden rounded-lg bg-white p-1.5">
+                  <img src={exp.logo} alt={exp.company} className="h-full w-full object-contain" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-bold">{exp.position}</p>
+                  <p className="truncate text-xs" style={{ color: theme.colors.primary }}>
+                    {exp.company}
+                  </p>
+                </div>
+                <p className="shrink-0 font-mono text-[10px] opacity-60">
+                  {exp.startDate} → {exp.endDate}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        ) : (
+        <>
         <div className={`${glassPanel(theme.mode === 'dark')} mb-16 overflow-x-auto p-4 md:p-6`}>
           {viewMode === 'timeline' ? (
             <CareerGantt isDark={theme.mode === 'dark'} />
@@ -356,6 +390,8 @@ const ExperienceSection: React.FC = () => {
             </motion.div>
           ))}
         </div>
+        </>
+        )}
     </SectionShell>
   );
 };

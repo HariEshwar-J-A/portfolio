@@ -13,7 +13,10 @@ A modern, responsive portfolio website built with React, TypeScript, and Tailwin
 - **Accessibility**: WCAG compliant with a focus on keyboard navigation and screen reader support
 - **Performance Optimized**: Lazy loading, code splitting, and optimized assets for fast loading
 - **HARI.AI Identity**: Boot sequence, per-section AI narrator, and four theme personas (Aurora, Grandmaster, Circuit, Daylight) — every background, border, progress bar, and animation recolors via CSS variables when the persona changes
-- **Command Palette**: Ctrl/⌘ + K opens a fuzzy-searchable palette covering sections, featured projects, offerings, actions, and social links
+- **Visit Concierge**: An intent wizard asks why you're here (hire / collaborate / explore / personal) and personalizes the portfolio — section order, emphasis markers, and quick links; the OpenRouter-powered concierge chat is visibly under construction
+- **Minimalist & Comprehensive views**: A header toggle switches between a quick-peek portfolio and the full record; the choice persists
+- **Smart Search**: Ctrl/⌘ + K searches actual section content (always indexed from the comprehensive view) and jumps there, switching out of minimal view when the match needs it
+- **Command Palette**: The same Ctrl/⌘ + K surface also covers sections, featured projects, offerings, actions, and social links
 - **Keyboard Navigation**: W/S or arrow keys move between sections, number keys jump directly, T cycles theme personas
 - **HARI.AI Playground** (/ai): A never-ending gamified exploration mode — endless quiz (Neural Sync), word scramble (Cipher Scramble), memory match (Pattern Grid), a chess arena (coming soon), and a Fragment Archive that reveals Hari piece by piece, with unbounded XP/levels and an achievement ladder
 - **Collaboration Wizard**: 'Open to collaboration' launches a guided email-drafting assistant with pre-curated options and a ready-to-send draft

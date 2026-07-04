@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
@@ -22,10 +22,16 @@ import {
 import { navigateTo } from '../store/slices/navigationSlice';
 import type { SectionId } from '../store/slices/navigationSlice';
 import { setPalette } from '../store/slices/themeSlice';
+import { setViewMode } from '../store/slices/viewSlice';
+import { RootState } from '../store/store';
 import { useTheme } from '../hooks/useTheme';
 import { OfferingsData, portfolioData } from '../data/portfolioData';
 import { themePalettes } from '../data/osPersona';
+import { buildSearchIndex, matchSnippet } from '../data/personalization';
 import { OPEN_COLLAB_EVENT } from './CollabWizard';
+import { OPEN_INTENT_EVENT } from './IntentWizard';
+
+const SEARCH_INDEX = buildSearchIndex();
 
 /** Dispatch this event from anywhere (Header button, HUD) to open the palette. */
 export const OPEN_PALETTE_EVENT = 'portfolio:open-palette';
@@ -132,6 +138,15 @@ const CommandPalette: React.FC = () => {
 
     const actionItems: PaletteItem[] = [
       {
+        id: 'action-intent',
+        group: 'Actions',
+        label: 'Personalize my visit',
+        hint: 'Tell HARI.AI why you are here',
+        keywords: 'wizard intent personalize concierge hire collaborate visit for you',
+        icon: <User size={16} />,
+        perform: () => window.dispatchEvent(new Event(OPEN_INTENT_EVENT)),
+      },
+      {
         id: 'action-collab',
         group: 'Actions',
         label: 'Start a collaboration',
@@ -215,9 +230,40 @@ const CommandPalette: React.FC = () => {
     return [...sectionItems, ...offeringItems, ...projectItems, ...actionItems, ...connectItems];
   }, [dispatch, navigate]);
 
+  const viewMode = useSelector((state: RootState) => state.view.mode);
+
+  /**
+   * Smart search: sections whose comprehensive content contains every
+   * query word. Selecting one switches out of the minimalist view when
+   * needed — the keyword may only be visible in the full record.
+   */
+  const contentItems = useMemo<PaletteItem[]>(() => {
+    const words = query.toLowerCase().split(/\s+/).filter(Boolean);
+    if (words.length === 0) return [];
+    return (Object.entries(SEARCH_INDEX) as [SectionId, string][])
+      .filter(([, text]) => {
+        const lower = text.toLowerCase();
+        return words.every((word) => lower.includes(word));
+      })
+      .map(([section, text]) => ({
+        id: `content-${section}`,
+        group: 'Sections matching your search',
+        label: section.charAt(0).toUpperCase() + section.slice(1),
+        hint: matchSnippet(text, query),
+        icon: SECTION_ICONS[section],
+        perform: () => {
+          if (viewMode === 'minimal') dispatch(setViewMode('comprehensive'));
+          dispatch(navigateTo(section));
+        },
+      }));
+  }, [query, viewMode, dispatch]);
+
   const filteredItems = useMemo(
-    () => (query.trim() ? items.filter((item) => matches(item, query)) : items),
-    [items, query]
+    () =>
+      query.trim()
+        ? [...contentItems, ...items.filter((item) => matches(item, query))]
+        : items,
+    [items, contentItems, query]
   );
 
   useEffect(() => {

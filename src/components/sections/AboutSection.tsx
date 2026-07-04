@@ -22,6 +22,7 @@ const AboutSection: React.FC = () => {
   const dispatch = useDispatch();
   const { theme } = useTheme();
   const palette = getPalette(useSelector((state: RootState) => state.theme.palette));
+  const isMinimal = useSelector((state: RootState) => state.view.mode) === 'minimal';
   const isDark = theme.mode === 'dark';
   const { name, title, photo, socialLinks } = portfolioData.personal;
   const { headline, tagline, heroOrbitLabels, proofPoints } = MarketingData;
@@ -130,7 +131,7 @@ const AboutSection: React.FC = () => {
               ))}
             </div>
 
-            <div className="mt-10 grid max-w-xl gap-3 sm:grid-cols-3">
+            <div className={`mt-10 grid max-w-xl gap-3 sm:grid-cols-3 ${isMinimal ? 'hidden' : ''}`}>
               {proofPoints.map((point) => (
                 <div key={point.metric} className={`${glassPanel(isDark)} p-4`}>
                   <p

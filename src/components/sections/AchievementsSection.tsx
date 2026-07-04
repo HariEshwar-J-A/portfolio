@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
+import { RootState } from '../../store/store';
 import { useTheme } from '../../hooks/useTheme';
 import { portfolioData } from '../../data/portfolioData';
 import { Award, Medal, Trophy } from 'lucide-react';
@@ -9,6 +11,7 @@ const AchievementsSection: React.FC = () => {
   const { theme } = useTheme();
   const { achievements } = portfolioData;
   const [selectedAchievement, setSelectedAchievement] = useState<number | null>(null);
+  const isMinimal = useSelector((state: RootState) => state.view.mode) === 'minimal';
   
   const getIcon = (title: string) => {
     const lowerTitle = title.toLowerCase();
@@ -24,6 +27,29 @@ const AchievementsSection: React.FC = () => {
       title="Achievements"
       subtitle="Notable accomplishments and recognition throughout my career."
     >
+        {isMinimal ? (
+          /* Quick peek: recognition as a compact grid, no timeline */
+          <div className="mx-auto grid max-w-3xl gap-3 sm:grid-cols-2">
+            {achievements.map((achievement) => (
+              <motion.div
+                key={achievement.title}
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.3 }}
+                className={`flex items-start gap-3 rounded-2xl border p-4 ${
+                  theme.mode === 'dark' ? 'border-white/10 bg-white/5' : 'border-slate-200 bg-white/70'
+                }`}
+              >
+                <span style={{ color: theme.colors.primary }}>{getIcon(achievement.title)}</span>
+                <span>
+                  <p className="text-sm font-bold leading-snug">{achievement.title}</p>
+                  <p className="mt-0.5 text-xs opacity-60">{achievement.date}</p>
+                </span>
+              </motion.div>
+            ))}
+          </div>
+        ) : (
         <div className="max-w-4xl mx-auto relative">
           {/* Timeline Line */}
           <div 
@@ -106,6 +132,7 @@ const AchievementsSection: React.FC = () => {
             ))}
           </div>
         </div>
+        )}
     </SectionShell>
   );
 };
