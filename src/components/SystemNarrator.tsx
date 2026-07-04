@@ -34,9 +34,10 @@ const SystemNarrator: React.FC = () => {
   }, [line]);
 
   return (
+    // pointer-events-none: purely informational — taps must reach the content behind it
     <div
       aria-live="polite"
-      className={`fixed bottom-4 left-1/2 z-40 flex w-[min(38rem,calc(100vw-1.5rem))] -translate-x-1/2 items-center gap-2 rounded-full border px-3.5 py-2 font-mono text-[10px] shadow-xl backdrop-blur-xl sm:gap-3 sm:px-5 sm:py-2.5 sm:text-xs ${
+      className={`pointer-events-none fixed bottom-4 left-1/2 z-40 flex w-[min(38rem,calc(100vw-1.5rem))] -translate-x-1/2 items-center gap-2 rounded-full border px-3.5 py-2 font-mono text-[10px] shadow-xl backdrop-blur-xl sm:gap-3 sm:px-5 sm:py-2.5 sm:text-xs ${
         isDark
           ? 'border-white/10 bg-slate-950/75 text-slate-300'
           : 'border-slate-200 bg-white/85 text-slate-600'

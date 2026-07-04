@@ -15,7 +15,7 @@ const ScrollProgress: React.FC = () => {
   }, []);
 
   return (
-    <div aria-hidden className="fixed left-0 top-0 z-[60] h-[3px] w-full">
+    <div aria-hidden className="pointer-events-none fixed left-0 top-0 z-[60] h-[3px] w-full">
       <div
         className="h-full origin-left transition-transform duration-150 ease-out"
         style={{

@@ -30,10 +30,11 @@ const PersonalizedBanner: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -16 }}
           transition={{ duration: 0.25, ease: 'easeOut' }}
-          className="fixed inset-x-0 top-[64px] z-40 px-3 sm:px-6"
+          className="pointer-events-none fixed inset-x-0 top-[64px] z-40 px-3 sm:px-6"
         >
+          {/* Only the card itself catches taps — the strip's margins pass through */}
           <div
-            className={`mx-auto flex max-w-4xl flex-wrap items-center gap-x-4 gap-y-2 rounded-2xl border px-4 py-2.5 shadow-xl backdrop-blur-xl ${
+            className={`pointer-events-auto mx-auto flex max-w-4xl flex-wrap items-center gap-x-4 gap-y-2 rounded-2xl border px-4 py-2.5 shadow-xl backdrop-blur-xl ${
               isDark ? 'border-white/10 bg-slate-950/80' : 'border-slate-200 bg-white/90'
             }`}
             style={{ borderColor: 'color-mix(in srgb, var(--os-primary) 35%, transparent)' }}
