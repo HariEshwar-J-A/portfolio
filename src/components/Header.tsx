@@ -8,9 +8,15 @@ import { RootState } from '../store/store';
 import { useTheme } from '../hooks/useTheme';
 import { Menu, X, Box, Newspaper, Command, Gamepad2, Sparkles } from 'lucide-react';
 import { OPEN_PALETTE_EVENT } from './CommandPalette';
-import { OPEN_INTENT_EVENT } from './IntentWizard';
+import { CLOSE_INTENT_EVENT, OPEN_INTENT_EVENT } from './IntentWizard';
 import ThemeSwitcher from './ThemeSwitcher';
 import ViewModeToggle from './ViewModeToggle';
+import { prefetchThreeDRoute, prefetchPlaygroundRoute } from '../lib/experienceRoutes';
+
+/** Dismiss the visit concierge before leaving for Games/3D. */
+const dismissIntentWizard = () => {
+  window.dispatchEvent(new Event(CLOSE_INTENT_EVENT));
+};
 
 const Header: React.FC = () => {
   const dispatch = useDispatch();
@@ -35,8 +41,9 @@ const Header: React.FC = () => {
   };
 
   return (
+    // z-[120]: stay above the visit-concierge modal so Play AI / 3D remain reachable on first visit
     <header
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 w-full z-[120] transition-all duration-300 ${
         isScrolled
           ? `${isDark ? 'bg-slate-950/85 backdrop-blur-md' : 'bg-white/85 backdrop-blur-md'} shadow-md`
           : 'bg-transparent'
@@ -89,7 +96,13 @@ const Header: React.FC = () => {
               isDark ? 'border-white/10' : 'border-slate-200'
             }`}
           >
-            <Link to="/ai" className="os-border-flow rounded-full p-[1.5px] transition hover:-translate-y-0.5">
+            <Link
+              to="/ai"
+              onMouseEnter={prefetchPlaygroundRoute}
+              onFocus={prefetchPlaygroundRoute}
+              onClick={dismissIntentWizard}
+              className="os-border-flow rounded-full p-[1.5px] transition hover:-translate-y-0.5"
+            >
               <span
                 className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-bold ${
                   isDark ? 'bg-slate-950/90 text-white' : 'bg-white/95 text-slate-900'
@@ -102,6 +115,9 @@ const Header: React.FC = () => {
 
             <Link
               to="/3d"
+              onMouseEnter={prefetchThreeDRoute}
+              onFocus={prefetchThreeDRoute}
+              onClick={dismissIntentWizard}
               className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold text-white shadow-lg transition hover:-translate-y-0.5"
               style={{ backgroundColor: 'var(--os-primary)' }}
             >
@@ -228,7 +244,12 @@ const Header: React.FC = () => {
 
               <Link
                 to="/ai"
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={() => {
+                  dismissIntentWizard();
+                  setIsMobileMenuOpen(false);
+                }}
+                onMouseEnter={prefetchPlaygroundRoute}
+                onFocus={prefetchPlaygroundRoute}
                 className="os-border-flow rounded-full p-[1.5px]"
               >
                 <span
@@ -290,7 +311,12 @@ const Header: React.FC = () => {
 
               <Link
                 to="/3d"
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={() => {
+                  dismissIntentWizard();
+                  setIsMobileMenuOpen(false);
+                }}
+                onMouseEnter={prefetchThreeDRoute}
+                onFocus={prefetchThreeDRoute}
                 className="mt-2 inline-flex items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-white shadow-lg transition"
                 style={{ backgroundColor: 'var(--os-primary)' }}
               >

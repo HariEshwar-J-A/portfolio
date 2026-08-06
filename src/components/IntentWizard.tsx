@@ -20,6 +20,8 @@ import { OPEN_COLLAB_EVENT } from './CollabWizard';
 
 /** Dispatch this event (header, palette, banner) to reopen the wizard. */
 export const OPEN_INTENT_EVENT = 'portfolio:open-intent';
+/** Dispatch to dismiss an open wizard (e.g. before leaving for Games/3D). */
+export const CLOSE_INTENT_EVENT = 'portfolio:close-intent';
 const SEEN_KEY = 'hari-ai-intent-done';
 
 const INTENTS: { id: FocusId; label: string; blurb: string; icon: React.ReactNode }[] = [
@@ -91,8 +93,24 @@ const IntentWizard: React.FC = () => {
       setIsOpen(true);
       setStep(0);
     };
+    const closeFromOutside = () => {
+      try {
+        window.sessionStorage.setItem(SEEN_KEY, 'true');
+      } catch {
+        // Session storage unavailable — wizard may greet again.
+      }
+      setIsOpen(false);
+      setStep(0);
+      setIntent(null);
+      setChips([]);
+      setDetail('');
+    };
     window.addEventListener(OPEN_INTENT_EVENT, open);
-    return () => window.removeEventListener(OPEN_INTENT_EVENT, open);
+    window.addEventListener(CLOSE_INTENT_EVENT, closeFromOutside);
+    return () => {
+      window.removeEventListener(OPEN_INTENT_EVENT, open);
+      window.removeEventListener(CLOSE_INTENT_EVENT, closeFromOutside);
+    };
   }, []);
 
   useEffect(() => {
