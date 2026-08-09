@@ -8,9 +8,11 @@ import {
   Grid3X3,
   Handshake,
   KeyRound,
+  Menu,
   Sparkles,
   Swords,
   TrendingUp,
+  X,
 } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
 import { useArcade } from '../hooks/useArcade';
@@ -25,25 +27,28 @@ import FragmentArchive from '../components/arcade/FragmentArchive';
 
 type ModuleId = 'sync' | 'cipher' | 'grid' | 'chess' | 'archive';
 
-const MODULES: { id: ModuleId; label: string; blurb: string; icon: React.ReactNode }[] = [
-  { id: 'sync', label: 'Neural Sync', blurb: 'Endless quiz — decode who Hari is', icon: <BrainCircuit size={18} /> },
-  { id: 'cipher', label: 'Cipher Scramble', blurb: 'Unscramble his world, forever', icon: <KeyRound size={18} /> },
-  { id: 'grid', label: 'Pattern Grid', blurb: 'Match the obsessions', icon: <Grid3X3 size={18} /> },
-  { id: 'chess', label: 'Chess Arena', blurb: 'Coming soon — bring a board', icon: <Swords size={18} /> },
-  { id: 'archive', label: 'Fragment Archive', blurb: 'Everything decoded so far', icon: <Archive size={18} /> },
+const MODULES: { id: ModuleId; label: string; short: string; blurb: string; icon: React.ReactNode }[] = [
+  { id: 'sync', label: 'Neural Sync', short: 'Sync', blurb: 'Endless quiz — decode who Hari is', icon: <BrainCircuit size={15} /> },
+  { id: 'cipher', label: 'Cipher Scramble', short: 'Cipher', blurb: 'Unscramble his world, forever', icon: <KeyRound size={15} /> },
+  { id: 'grid', label: 'Pattern Grid', short: 'Grid', blurb: 'Match the obsessions', icon: <Grid3X3 size={15} /> },
+  { id: 'chess', label: 'Chess Arena', short: 'Chess', blurb: 'Coming soon — bring a board', icon: <Swords size={15} /> },
+  { id: 'archive', label: 'Fragment Archive', short: 'Archive', blurb: 'Everything decoded so far', icon: <Archive size={15} /> },
 ];
 
 /**
- * HARI.AI Playground — the gamified exploration mode, separate from the
- * base portfolio. Hari's AI hosts the games itself: visitors earn
- * unbounded XP through quizzes and puzzles, decode memory fragments
- * about Hari, and keep being nudged toward the collaboration channel.
+ * HARI.AI Playground — gamified exploration with a portfolio-style top
+ * navbar: game modes are tabs, not a card grid.
  */
 const OsPlaygroundPage: React.FC = () => {
   const { theme } = useTheme();
   const isDark = theme.mode === 'dark';
   const arcade = useArcade();
   const [activeModule, setActiveModule] = useState<ModuleId>('sync');
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const activeMeta = MODULES.find((module) => module.id === activeModule) ?? MODULES[0];
+  const mutedText = isDark ? 'text-slate-400' : 'text-slate-500';
 
   useEffect(() => {
     document.title = 'HARI.AI Playground | Explore Harieshwar';
@@ -56,119 +61,236 @@ const OsPlaygroundPage: React.FC = () => {
     return () => window.clearTimeout(timeout);
   }, [arcade.lastLevelUp, arcade.clearLevelUp]);
 
-  const mutedText = isDark ? 'text-slate-400' : 'text-slate-500';
+  useEffect(() => {
+    const onScroll = () => setIsScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const selectModule = (id: ModuleId) => {
+    setActiveModule(id);
+    setIsMobileMenuOpen(false);
+  };
 
   return (
     <div className={`relative min-h-screen ${isDark ? 'bg-slate-950 text-white' : 'bg-slate-50 text-slate-900'}`}>
       <AmbientBackground />
       <CollabWizard />
 
-      <div className="relative z-10 mx-auto max-w-6xl px-4 pb-20 pt-6 md:px-8">
-        {/* Lab chrome */}
-        <div className="flex flex-wrap items-center justify-between gap-3">
+      {/* Fixed top navbar — same rhythm as the portfolio header */}
+      <header
+        className={`fixed left-0 top-0 z-[120] w-full transition-all duration-300 ${
+          isScrolled
+            ? `${isDark ? 'bg-slate-950/85 backdrop-blur-md' : 'bg-white/85 backdrop-blur-md'} shadow-md`
+            : 'bg-transparent'
+        }`}
+      >
+        <div className="container mx-auto flex items-center justify-between gap-3 px-4 py-3 md:px-6 md:py-4">
           <Link
             to="/"
-            className={`group inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold backdrop-blur transition ${
-              isDark ? 'border-white/10 bg-white/5 text-white' : 'border-slate-200 bg-white/70 text-slate-800'
+            className={`group inline-flex shrink-0 items-center gap-2 font-mono text-sm font-bold tracking-tight md:text-base ${
+              isDark ? 'text-white' : 'text-slate-900'
             }`}
           >
-            <ArrowLeft size={15} className="transition group-hover:-translate-x-1" />
-            hari.ai portfolio
+            <ArrowLeft size={15} className="opacity-70 transition group-hover:-translate-x-0.5 group-hover:opacity-100" />
+            <span className="h-2 w-2 animate-pulse rounded-full" style={{ backgroundColor: 'var(--os-primary)' }} />
+            <span>
+              hari<span style={{ color: 'var(--os-primary)' }}>.ai</span>
+              <span className={`ml-1.5 hidden font-sans text-xs font-semibold sm:inline ${mutedText}`}>playground</span>
+            </span>
           </Link>
-          <div className="flex items-center gap-2">
+
+          {/* Desktop game tabs */}
+          <nav
+            className="hidden items-center gap-1 lg:flex xl:gap-3"
+            aria-label="Playground games"
+          >
+            {MODULES.map((module) => {
+              const isActive = activeModule === module.id;
+              return (
+                <button
+                  key={module.id}
+                  type="button"
+                  onClick={() => selectModule(module.id)}
+                  title={module.blurb}
+                  className={`relative inline-flex items-center gap-1.5 pb-1 text-sm font-medium transition-colors ${
+                    isActive
+                      ? ''
+                      : isDark
+                        ? 'text-slate-300 hover:text-white'
+                        : 'text-slate-700 hover:text-black'
+                  }`}
+                  style={{ color: isActive ? 'var(--os-primary)' : undefined }}
+                  aria-current={isActive ? 'page' : undefined}
+                >
+                  {module.icon}
+                  <span className="hidden xl:inline">{module.label}</span>
+                  <span className="xl:hidden">{module.short}</span>
+                  {isActive && (
+                    <motion.span
+                      layoutId="playground-nav-underline"
+                      className="absolute inset-x-0 -bottom-0.5 h-0.5 rounded-full"
+                      style={{
+                        background: 'linear-gradient(90deg, var(--os-primary), var(--os-secondary))',
+                      }}
+                      transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+                    />
+                  )}
+                </button>
+              );
+            })}
+          </nav>
+
+          {/* Desktop controls */}
+          <div className="hidden items-center gap-2 lg:flex">
+            <div
+              className={`hidden items-center gap-2 rounded-full border px-3 py-1.5 font-mono text-[11px] xl:flex ${
+                isDark ? 'border-white/10 bg-white/5 text-slate-300' : 'border-slate-200 bg-white/70 text-slate-600'
+              }`}
+              title={`${arcade.stats.xp} XP · ${arcade.xpToNext} to next level`}
+            >
+              <TrendingUp size={13} style={{ color: 'var(--os-primary)' }} />
+              <span className="font-black">LV {arcade.level}</span>
+              <span className={mutedText}>· {arcade.stats.xp} xp</span>
+            </div>
             <button
               type="button"
               onClick={() => window.dispatchEvent(new Event(OPEN_COLLAB_EVENT))}
-              className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-bold text-white shadow-lg transition hover:-translate-y-0.5"
+              className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-bold text-white shadow-lg transition hover:-translate-y-0.5"
               style={{ backgroundColor: 'var(--os-primary)' }}
             >
-              <Handshake size={15} />
+              <Handshake size={14} />
               Collaborate
             </button>
             <ThemeSwitcher />
           </div>
-        </div>
 
-        {/* Title */}
-        <div className="mt-10 text-center">
-          <p className="font-mono text-xs font-black uppercase tracking-[0.35em]" style={{ color: 'var(--os-primary)' }}>
-            <Sparkles size={13} className="mr-1 inline" />
-            exploration mode
-          </p>
-          <h1 className="os-glitch mt-3 font-mono text-3xl font-black tracking-tight sm:text-4xl md:text-6xl">
-            HARI.AI<span style={{ color: 'var(--os-primary)' }}> PLAYGROUND</span>
-          </h1>
-          <p className={`mx-auto mt-4 max-w-xl text-sm leading-relaxed md:text-base ${mutedText}`}>
-            I'm Hari's personal AI, and these are my games. Every round I reveal another true
-            fragment of my human — the archive never runs dry, XP has no cap, and neither does he.
-          </p>
-        </div>
-
-        {/* Explorer status — persona-colored, always-growing progression */}
-        <div className="os-border-flow mx-auto mt-8 max-w-3xl rounded-2xl p-[1.5px]">
-          <div
-            className={`flex flex-wrap items-center gap-x-6 gap-y-3 rounded-2xl px-5 py-4 backdrop-blur-xl ${
-              isDark ? 'bg-slate-950/85' : 'bg-white/90'
-            }`}
+          {/* Mobile menu toggle */}
+          <button
+            type="button"
+            className={`rounded-lg p-2 transition lg:hidden ${isDark ? 'hover:bg-white/10' : 'hover:bg-slate-100'}`}
+            onClick={() => setIsMobileMenuOpen((open) => !open)}
+            aria-expanded={isMobileMenuOpen}
+            aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
           >
-            <div className="flex items-center gap-2">
-              <TrendingUp size={16} style={{ color: 'var(--os-primary)' }} />
-              <span className="font-mono text-sm font-black">
-                LV {arcade.level}
-              </span>
-            </div>
-            <div className="min-w-[10rem] flex-1">
-              <div className={`h-2 overflow-hidden rounded-full ${isDark ? 'bg-white/10' : 'bg-slate-200'}`}>
-                <motion.div
-                  className="h-full rounded-full"
-                  style={{ background: 'linear-gradient(90deg, var(--os-primary), var(--os-secondary))' }}
-                  initial={false}
-                  animate={{ width: `${Math.round(arcade.levelProgress * 100)}%` }}
-                  transition={{ duration: 0.5, ease: 'easeOut' }}
-                />
+            {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
+
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.2 }}
+              className={`border-t px-4 py-3 lg:hidden ${
+                isDark ? 'border-white/10 bg-slate-950/95' : 'border-slate-200 bg-white/95'
+              }`}
+            >
+              <nav className="flex flex-col gap-1" aria-label="Playground games">
+                {MODULES.map((module, index) => {
+                  const isActive = activeModule === module.id;
+                  return (
+                    <motion.button
+                      key={module.id}
+                      type="button"
+                      initial={{ opacity: 0, x: -12 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.04 }}
+                      onClick={() => selectModule(module.id)}
+                      className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-semibold transition ${
+                        isDark ? 'hover:bg-white/5' : 'hover:bg-slate-100'
+                      }`}
+                      style={
+                        isActive
+                          ? {
+                              color: 'var(--os-primary)',
+                              backgroundColor: 'color-mix(in srgb, var(--os-primary) 10%, transparent)',
+                            }
+                          : undefined
+                      }
+                      aria-current={isActive ? 'page' : undefined}
+                    >
+                      <span style={{ color: 'var(--os-primary)' }}>{module.icon}</span>
+                      <span className="flex-1">
+                        {module.label}
+                        <span className={`mt-0.5 block text-[11px] font-normal ${mutedText}`}>{module.blurb}</span>
+                      </span>
+                    </motion.button>
+                  );
+                })}
+              </nav>
+              <div className={`mt-3 flex items-center justify-between gap-2 border-t pt-3 ${isDark ? 'border-white/10' : 'border-slate-200'}`}>
+                <p className={`font-mono text-[11px] ${mutedText}`}>
+                  LV {arcade.level} · {arcade.stats.xp} xp · {arcade.stats.fragments.length} fragments
+                </p>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      window.dispatchEvent(new Event(OPEN_COLLAB_EVENT));
+                    }}
+                    className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold text-white"
+                    style={{ backgroundColor: 'var(--os-primary)' }}
+                  >
+                    <Handshake size={13} />
+                    Collaborate
+                  </button>
+                  <ThemeSwitcher />
+                </div>
               </div>
-              <p className={`mt-1 font-mono text-[10px] ${mutedText}`}>
-                {arcade.stats.xp} xp · {arcade.xpToNext} to next level · levels are infinite
-              </p>
-            </div>
-            <div className={`font-mono text-[11px] ${mutedText}`}>
-              fragments {arcade.stats.fragments.length} · best streak {arcade.stats.bestStreak}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </header>
+
+      <div className="relative z-10 mx-auto max-w-6xl px-4 pb-20 pt-24 md:px-8 md:pt-28">
+        {/* Compact intro under the nav */}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="font-mono text-[10px] font-black uppercase tracking-[0.3em]" style={{ color: 'var(--os-primary)' }}>
+              <Sparkles size={12} className="mr-1 inline" />
+              exploration mode · {activeMeta.label}
+            </p>
+            <h1 className="os-glitch mt-2 font-mono text-2xl font-black tracking-tight sm:text-3xl md:text-4xl">
+              HARI.AI<span style={{ color: 'var(--os-primary)' }}> PLAYGROUND</span>
+            </h1>
+            <p className={`mt-2 max-w-xl text-sm leading-relaxed ${mutedText}`}>{activeMeta.blurb}</p>
+          </div>
+
+          {/* Compact XP strip (always visible; desktop also has a chip in the nav) */}
+          <div className="os-border-flow w-full max-w-sm rounded-2xl p-[1.5px] sm:w-72">
+            <div
+              className={`flex items-center gap-3 rounded-2xl px-4 py-3 backdrop-blur-xl ${
+                isDark ? 'bg-slate-950/85' : 'bg-white/90'
+              }`}
+            >
+              <TrendingUp size={16} style={{ color: 'var(--os-primary)' }} />
+              <div className="min-w-0 flex-1">
+                <div className="flex items-baseline justify-between gap-2">
+                  <span className="font-mono text-sm font-black">LV {arcade.level}</span>
+                  <span className={`font-mono text-[10px] ${mutedText}`}>
+                    {arcade.stats.fragments.length} frag · streak {arcade.stats.bestStreak}
+                  </span>
+                </div>
+                <div className={`mt-1.5 h-1.5 overflow-hidden rounded-full ${isDark ? 'bg-white/10' : 'bg-slate-200'}`}>
+                  <motion.div
+                    className="h-full rounded-full"
+                    style={{ background: 'linear-gradient(90deg, var(--os-primary), var(--os-secondary))' }}
+                    initial={false}
+                    animate={{ width: `${Math.round(arcade.levelProgress * 100)}%` }}
+                    transition={{ duration: 0.5, ease: 'easeOut' }}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Module switcher */}
-        <div className="mt-8 grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-5">
-          {MODULES.map((module) => {
-            const isActive = activeModule === module.id;
-            return (
-              <button
-                key={module.id}
-                type="button"
-                onClick={() => setActiveModule(module.id)}
-                className={`rounded-2xl border p-3.5 text-left transition hover:-translate-y-0.5 ${
-                  isDark ? 'border-white/10 bg-white/5' : 'border-slate-200 bg-white/70'
-                } ${isActive ? 'os-pulse-glow' : ''}`}
-                style={
-                  isActive
-                    ? {
-                        borderColor: 'var(--os-primary)',
-                        backgroundColor: 'color-mix(in srgb, var(--os-primary) 10%, transparent)',
-                      }
-                    : undefined
-                }
-                aria-pressed={isActive}
-              >
-                <span style={{ color: 'var(--os-primary)' }}>{module.icon}</span>
-                <p className="mt-1.5 text-sm font-bold">{module.label}</p>
-                <p className={`mt-0.5 text-[11px] leading-snug ${mutedText}`}>{module.blurb}</p>
-              </button>
-            );
-          })}
-        </div>
-
         {/* Active module */}
-        <div className="mt-6">
+        <div className="mt-8">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeModule}
@@ -188,7 +310,6 @@ const OsPlaygroundPage: React.FC = () => {
           </AnimatePresence>
         </div>
 
-        {/* Standing invitation */}
         <p className={`mt-10 text-center font-mono text-xs ${mutedText}`}>
           decoded something you like?{' '}
           <button
@@ -203,7 +324,6 @@ const OsPlaygroundPage: React.FC = () => {
         </p>
       </div>
 
-      {/* Level-up toast → collaboration nudge */}
       <AnimatePresence>
         {arcade.lastLevelUp !== null && (
           <motion.div
