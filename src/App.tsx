@@ -1,7 +1,7 @@
 import React, { Suspense, lazy, useEffect } from 'react';
 import { Provider } from 'react-redux';
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { store } from './store/store';
 import HomePage from './pages/HomePage';
 import ThemeVariables from './components/ThemeVariables';
@@ -18,16 +18,20 @@ const ThreeDPortfolioPage = lazy(threeDImport);
 const OsPlaygroundPage = lazy(playgroundImport);
 
 /**
- * Cinematic fade between routes. No `filter` here: a persistent filter
- * (even blur(0px)) turns the wrapper into a containing block and breaks
- * every fixed-position element inside (header, narrator, palette).
+ * Enter-only route transition.
+ *
+ * No AnimatePresence / exit animation at the route level: keeping the
+ * previous tree mounted while the next enters left two fixed z-120
+ * headers (home + playground) stacked during the crossfade.
+ *
+ * Opacity-only — no transform/filter — so `position: fixed` chrome stays
+ * viewport-anchored and does not detach into a containing block.
  */
-const PageFade: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+const PageEnter: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <motion.div
-    initial={{ opacity: 0, y: 14, scale: 0.995 }}
-    animate={{ opacity: 1, y: 0, scale: 1 }}
-    exit={{ opacity: 0, y: -14, scale: 0.995 }}
-    transition={{ duration: 0.3, ease: 'easeOut' }}
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 0.28, ease: 'easeOut' }}
   >
     {children}
   </motion.div>
@@ -35,8 +39,8 @@ const PageFade: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 
 /**
  * Suspense is per-route so a lazy suspend cannot tear down the router shell.
- * No opacity-0 wrapper here: after the chunk resolves the page must paint
- * immediately — a stuck PageFade left /ai as an empty ambient background.
+ * Chunk resolves → page paints immediately inside PageEnter (no stuck
+ * opacity-0 from a competing exit animation).
  */
 const LazyPage: React.FC<{ pathname: string; children: React.ReactNode }> = ({
   pathname,
@@ -47,9 +51,7 @@ const LazyPage: React.FC<{ pathname: string; children: React.ReactNode }> = ({
   </RouteErrorBoundary>
 );
 
-const AnimatedRoutes: React.FC = () => {
-  const location = useLocation();
-
+const AppRoutes: React.FC = () => {
   // Prefetch the small Games chunk on idle; 3D waits for hover (see Header).
   useEffect(() => {
     const ric = window.requestIdleCallback as
@@ -65,37 +67,35 @@ const AnimatedRoutes: React.FC = () => {
   }, []);
 
   return (
-    // Do not use mode="wait": nested presence (intent wizard, etc.) can
-    // deadlock the exit and leave the next route on a forever loader.
-    <AnimatePresence>
-      <Routes location={location} key={location.pathname}>
-        <Route
-          path="/"
-          element={
-            <PageFade>
-              <HomePage />
-            </PageFade>
-          }
-        />
-        <Route
-          path="/3d"
-          element={
-            <LazyPage pathname="/3d">
-              <ThreeDPortfolioPage />
-            </LazyPage>
-          }
-        />
-        <Route
-          path="/ai"
-          element={
-            <LazyPage pathname="/ai">
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <PageEnter>
+            <HomePage />
+          </PageEnter>
+        }
+      />
+      <Route
+        path="/3d"
+        element={
+          <LazyPage pathname="/3d">
+            <ThreeDPortfolioPage />
+          </LazyPage>
+        }
+      />
+      <Route
+        path="/ai"
+        element={
+          <LazyPage pathname="/ai">
+            <PageEnter>
               <OsPlaygroundPage />
-            </LazyPage>
-          }
-        />
-        <Route path="/os" element={<Navigate to="/ai" replace />} />
-      </Routes>
-    </AnimatePresence>
+            </PageEnter>
+          </LazyPage>
+        }
+      />
+      <Route path="/os" element={<Navigate to="/ai" replace />} />
+    </Routes>
   );
 };
 
@@ -104,7 +104,7 @@ function App() {
     <Provider store={store}>
       <ThemeVariables />
       <ScrollToTop />
-      <AnimatedRoutes />
+      <AppRoutes />
     </Provider>
   );
 }
