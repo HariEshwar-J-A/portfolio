@@ -115,7 +115,7 @@ const IntentWizard: React.FC = () => {
 
   useEffect(() => {
     document.documentElement.dataset.modalOpen = isOpen ? 'true' : 'false';
-    if (isOpen) window.requestAnimationFrame(() => panelRef.current?.focus());
+    if (isOpen) window.requestAnimationFrame(() => panelRef.current?.focus({ preventScroll: true }));
     return () => {
       document.documentElement.dataset.modalOpen = 'false';
     };

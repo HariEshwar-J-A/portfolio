@@ -6,6 +6,7 @@ import { store } from './store/store';
 import HomePage from './pages/HomePage';
 import ThemeVariables from './components/ThemeVariables';
 import AiRouteLoader from './components/AiRouteLoader';
+import ScrollToTop from './components/ScrollToTop';
 import {
   playgroundImport,
   prefetchPlaygroundRoute,
@@ -101,6 +102,7 @@ function App() {
   return (
     <Provider store={store}>
       <ThemeVariables />
+      <ScrollToTop />
       <AnimatedRoutes />
     </Provider>
   );

@@ -13,6 +13,12 @@ console.warn = (...args) => {
   originalWarn(...args);
 };
 
+// Never restore a mid-page scroll from a previous visit — home must open at the hero.
+if ('scrollRestoration' in window.history) {
+  window.history.scrollRestoration = 'manual';
+}
+window.scrollTo(0, 0);
+
 // Initialize EmailJS with your public key
 import emailjs from '@emailjs/browser';
 emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY);

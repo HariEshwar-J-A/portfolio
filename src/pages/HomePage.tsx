@@ -8,6 +8,7 @@ import { useScroll } from '../hooks/useScroll';
 import { useKeyboardNav } from '../hooks/useKeyboardNav';
 import { useSmoothScroll } from '../hooks/useSmoothScroll';
 import { DEFAULT_SECTION_ORDER, FOCUS_CONFIGS } from '../data/personalization';
+import { scrollDocumentToTop } from '../components/ScrollToTop';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import CommandPalette from '../components/CommandPalette';
@@ -62,6 +63,18 @@ const HomePage: React.FC = () => {
 
   useEffect(() => {
     document.title = 'Harieshwar J A | Senior Full-Stack Developer';
+  }, []);
+
+  // Pin the hero on first paint (and after Lenis boots) so a restored
+  // scroll offset never opens the page mid-Experience.
+  useEffect(() => {
+    scrollDocumentToTop(true);
+    const t0 = window.setTimeout(() => scrollDocumentToTop(true), 0);
+    const t1 = window.setTimeout(() => scrollDocumentToTop(true), 100);
+    return () => {
+      window.clearTimeout(t0);
+      window.clearTimeout(t1);
+    };
   }, []);
 
   useEffect(() => {
