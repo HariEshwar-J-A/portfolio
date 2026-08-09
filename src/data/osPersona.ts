@@ -111,12 +111,12 @@ export const bootLines = [
  * Kept short so the floating bar never overflows on narrow screens.
  */
 export const sectionNarration: Record<string, string> = {
-  about: 'Meet my human: Harieshwar — architect-level full-stack engineer.',
-  skills: "I've indexed his stack. React, TypeScript, Node, Python, cloud.",
+  about: 'Meet my human: Harieshwar — senior full-stack & AI systems engineer.',
+  skills: "I've indexed his stack. React, Next, Node, Angular, RAG, MCP, cloud.",
   experience: 'His career log: Zoho → Soliton → SOTI → NPX → ECAM. Only up.',
   education: 'Credentials: M.Eng @ McMaster (3.9 GPA) · B.E. EEE.',
-  projects: 'Everything here actually shipped. I checked.',
-  products: 'InfoSentry — his flagship build. I consider it family.',
-  achievements: '2× Star awards, shark-tank finalist, chess captain. My human.',
+  projects: 'InfoSentry, WSA, node-jhora, HoraMind — everything here shipped.',
+  products: 'InfoSentry — his multi-agent flagship. I consider it family.',
+  achievements: 'Hackathon mentor win, 2× Star awards, chess captain. My human.',
   contact: 'I draft the email. You just hit send.',
 };

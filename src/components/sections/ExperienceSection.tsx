@@ -155,11 +155,17 @@ const ExperienceSection: React.FC = () => {
   // Helper function to get coordinates for each location
   function getCoordinates(location: string): [number, number] {
     const coordinates: Record<string, [number, number]> = {
+      'Hamilton, ON, Canada': [-79.8711, 43.2557],
       'Hamilton, Canada': [-79.8711, 43.2557],
-      'Mississauga, Canada': [-79.6583, 43.5890],
+      'Mississauga, ON, Canada': [-79.6583, 43.589],
+      'Mississauga, Canada': [-79.6583, 43.589],
+      'Remote, ON, Canada': [-79.3832, 43.6532],
+      Remote: [-79.3832, 43.6532],
+      'Toronto, ON': [-79.3832, 43.6532],
+      'Tamil Nadu, India': [78.6569, 11.1271],
       'Bangalore, India': [77.5946, 12.9716],
       'Chennai, India': [80.2707, 13.0827],
-      'Thiruvallur, India': [79.1378, 13.1231]
+      'Thiruvallur, India': [79.1378, 13.1231],
     };
     return coordinates[location] || [0, 0];
   }

@@ -61,7 +61,7 @@ const HomePage: React.FC = () => {
   }, [dispatch, sectionOrder]);
 
   useEffect(() => {
-    document.title = 'Harieshwar J A | Software Architect & Full Stack Developer';
+    document.title = 'Harieshwar J A | Senior Full-Stack Developer';
   }, []);
 
   useEffect(() => {
