@@ -1,3 +1,10 @@
 /sentry  https://sentry.harieshwar.dev  301
 /sentry/*  https://sentry.harieshwar.dev/:splat  301
-/* /index.html 200
+
+# Missing /assets/* must 404 as plain text — never rewrite to index.html.
+# Otherwise stale tabs fetch deleted chunk URLs, get HTML, and crash with
+# "Failed to fetch dynamically imported module".
+/assets/*  /asset-missing.txt  404
+
+# SPA fallback for client routes (/ai, /3d, …)
+/* /index.html  200

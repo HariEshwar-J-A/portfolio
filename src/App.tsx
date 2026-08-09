@@ -7,6 +7,7 @@ import HomePage from './pages/HomePage';
 import ThemeVariables from './components/ThemeVariables';
 import AiRouteLoader from './components/AiRouteLoader';
 import ScrollToTop from './components/ScrollToTop';
+import RouteErrorBoundary from './components/RouteErrorBoundary';
 import {
   playgroundImport,
   prefetchPlaygroundRoute,
@@ -34,16 +35,16 @@ const PageFade: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 
 /**
  * Suspense is per-route so a lazy suspend cannot tear down the router shell.
- * The same AiRouteLoader is the fallback — no parallel timed overlay (that
- * raced StrictMode/Suspense and left Games/3D covered forever).
+ * No opacity-0 wrapper here: after the chunk resolves the page must paint
+ * immediately — a stuck PageFade left /ai as an empty ambient background.
  */
 const LazyPage: React.FC<{ pathname: string; children: React.ReactNode }> = ({
   pathname,
   children,
 }) => (
-  <Suspense fallback={<AiRouteLoader pathname={pathname} />}>
-    <PageFade>{children}</PageFade>
-  </Suspense>
+  <RouteErrorBoundary pathname={pathname}>
+    <Suspense fallback={<AiRouteLoader pathname={pathname} />}>{children}</Suspense>
+  </RouteErrorBoundary>
 );
 
 const AnimatedRoutes: React.FC = () => {

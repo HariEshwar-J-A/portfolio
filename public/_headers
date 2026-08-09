@@ -1,0 +1,10 @@
+# Hashed build assets — long-cache; missing files must NOT fall through to the SPA HTML rewrite.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# HTML entry — always revalidate so clients pick up new chunk hashes after deploy.
+/
+  Cache-Control: public, max-age=0, must-revalidate
+
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate

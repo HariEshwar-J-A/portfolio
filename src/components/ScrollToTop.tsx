@@ -17,7 +17,7 @@ export const scrollDocumentToTop = (immediate = true) => {
  * Resets scroll on every client-side route change so leaving /3d (very tall)
  * or /ai never drops the visitor mid-homepage (e.g. end of Experience).
  */
-const ScrollToTop: React.FC = () => {
+const ScrollToTop = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
