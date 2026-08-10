@@ -80,7 +80,7 @@ const OsPlaygroundPage: React.FC = () => {
 
       {/* Fixed top navbar — same rhythm as the portfolio header */}
       <header
-        className={`fixed left-0 top-0 z-[120] w-full transition-all duration-300 ${
+        className={`fixed left-0 top-0 z-[130] w-full transition-all duration-300 ${
           isScrolled
             ? `${isDark ? 'bg-slate-950/85 backdrop-blur-md' : 'bg-white/85 backdrop-blur-md'} shadow-md`
             : 'bg-transparent'

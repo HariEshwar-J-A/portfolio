@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { navigateTo } from '../store/slices/navigationSlice';
 import type { SectionId } from '../store/slices/navigationSlice';
@@ -61,6 +61,7 @@ const SECTION_TITLES: Record<SectionId, string> = {
  * does not feel like a control panel.
  */
 const Header: React.FC = () => {
+  const location = useLocation();
   const dispatch = useDispatch();
   const { theme } = useTheme();
   const { activeSection, sections } = useSelector((state: RootState) => state.navigation);
@@ -71,6 +72,7 @@ const Header: React.FC = () => {
   const moreRef = useRef<HTMLDivElement>(null);
   const isDark = theme.mode === 'dark';
   const isMinimal = viewMode === 'minimal';
+  const isHome = location.pathname === '/';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -117,6 +119,9 @@ const Header: React.FC = () => {
     : 'border-slate-200 bg-white/95 text-slate-700';
   const menuItemClass = isDark ? 'hover:bg-white/5' : 'hover:bg-slate-100';
   const menuMuted = isDark ? 'text-slate-500' : 'text-slate-400';
+
+  // Never paint portfolio chrome on experience routes (avoids dual fixed headers).
+  if (!isHome) return null;
 
   return (
     // z-[120]: stay above the visit-concierge modal so Play AI remains reachable on first visit

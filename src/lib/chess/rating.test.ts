@@ -1,12 +1,25 @@
 import { describe, expect, it } from 'vitest';
-import { eloToSkill, livePerformanceRating, settleMatchRating, skillToElo, updateElo } from './rating';
+import {
+  chaseSentryRating,
+  eloToSkill,
+  livePerformanceRating,
+  settleMatchRating,
+  skillToElo,
+  updateElo,
+} from './rating';
 import { nextSkillLevel } from './adaptiveSkill';
 
 describe('rating', () => {
   it('maps skill to elo within arena band', () => {
     expect(skillToElo(0)).toBe(800);
-    expect(skillToElo(20)).toBe(2000);
-    expect(eloToSkill(2000)).toBe(20);
+    expect(skillToElo(20)).toBe(3000);
+    expect(eloToSkill(3000)).toBe(20);
+  });
+
+  it('chases visitor live rating without easing mid-match', () => {
+    expect(chaseSentryRating(1200, 1000)).toBe(1340);
+    expect(chaseSentryRating(1100, 1340)).toBe(1340);
+    expect(chaseSentryRating(2900, 2800)).toBe(3000);
   });
 
   it('updates elo after a win vs stronger opponent', () => {

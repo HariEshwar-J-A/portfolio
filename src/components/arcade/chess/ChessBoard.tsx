@@ -15,8 +15,9 @@ interface ChessBoardProps {
   lastMove: { from: Square; to: Square } | null;
   cursorSquare: Square;
   inCheck: boolean;
+  /** Side currently to move ('w' | 'b') — used for check highlight. */
+  sideToMove: 'w' | 'b';
   turnLabel: string;
-  /** When true, Black is at the bottom (visitor plays Black). */
   flipped: boolean;
   onSquareClick: (sq: Square) => void;
   onKeyDown: (e: React.KeyboardEvent) => void;
@@ -29,7 +30,6 @@ const parsePiece = (label: string): { type: PieceType; color: PieceColor } | nul
   return { type: t as PieceType, color: side === 'White' ? 'w' : 'b' };
 };
 
-/** Light squares: soft tint of theme primary. Dark squares: deeper mix with secondary. */
 const squareBg = (isDarkSq: boolean): string =>
   isDarkSq
     ? 'color-mix(in srgb, var(--os-secondary) 42%, color-mix(in srgb, var(--os-primary) 28%, #1e293b))'
@@ -42,6 +42,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
   lastMove,
   cursorSquare,
   inCheck,
+  sideToMove,
   turnLabel,
   flipped,
   onSquareClick,
@@ -54,7 +55,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
   return (
     <div
       role="grid"
-      aria-label={`Chess board. ${turnLabel}`}
+      aria-label={`Chess board. ${turnLabel}${inCheck ? ' Check!' : ''}`}
       aria-rowcount={8}
       aria-colcount={8}
       tabIndex={0}
@@ -82,7 +83,9 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
               aspectRatio: '1 / 1',
               gridTemplateColumns: 'repeat(8, minmax(0, 1fr))',
               gridTemplateRows: 'repeat(8, minmax(0, 1fr))',
-              borderColor: 'color-mix(in srgb, var(--os-primary) 55%, #0f172a)',
+              borderColor: inCheck
+                ? 'color-mix(in srgb, #ef4444 70%, var(--os-primary))'
+                : 'color-mix(in srgb, var(--os-primary) 55%, #0f172a)',
             }}
           >
             {cells.map((cell, index) => {
@@ -90,23 +93,19 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
               const col = (index % 8) + 1;
               const isSelected = selected === cell.square;
               const isLegal = legalTargets.includes(cell.square);
-              const isLast =
-                !!lastMove && (lastMove.from === cell.square || lastMove.to === cell.square);
+              const isLastFrom = !!lastMove && lastMove.from === cell.square;
+              const isLastTo = !!lastMove && lastMove.to === cell.square;
+              const isLast = isLastFrom || isLastTo;
               const isCursor = cursorSquare === cell.square;
               const parsed = parsePiece(cell.pieceLabel);
               const isCheckedKing =
-                inCheck &&
-                parsed?.type === 'k' &&
-                ((turnLabel.toLowerCase().includes('white') && parsed.color === 'w') ||
-                  ((turnLabel.toLowerCase().includes('black') ||
-                    turnLabel.toLowerCase().includes('sentry') ||
-                    turnLabel.toLowerCase().includes('thinking')) &&
-                    parsed.color === 'b'));
+                inCheck && parsed?.type === 'k' && parsed.color === sideToMove;
 
               let bg = squareBg(cell.isDark);
-              if (isCheckedKing) bg = 'color-mix(in srgb, #ef4444 65%, var(--os-accent))';
+              if (isCheckedKing) bg = '#dc2626';
               else if (isSelected) bg = 'color-mix(in srgb, var(--os-accent) 55%, #fde68a)';
-              else if (isLast) bg = 'color-mix(in srgb, var(--os-secondary) 40%, #fef9c3)';
+              else if (isLastTo) bg = 'color-mix(in srgb, var(--os-primary) 55%, #fef08a)';
+              else if (isLastFrom) bg = 'color-mix(in srgb, var(--os-secondary) 50%, #fde68a)';
 
               return (
                 <button
@@ -115,7 +114,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
                   role="gridcell"
                   aria-rowindex={row}
                   aria-colindex={col}
-                  aria-label={`${cell.square}, ${cell.pieceLabel}`}
+                  aria-label={`${cell.square}, ${cell.pieceLabel}${isCheckedKing ? ', in check' : ''}${isLast ? ', last move' : ''}`}
                   aria-selected={isSelected}
                   onClick={() => onSquareClick(cell.square)}
                   className="relative m-0 box-border flex min-h-0 min-w-0 items-center justify-center overflow-hidden border-0 p-0"
@@ -123,7 +122,14 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
                     backgroundColor: bg,
                     width: '100%',
                     height: '100%',
-                    boxShadow: isCursor ? 'inset 0 0 0 2px var(--os-accent)' : undefined,
+                    boxShadow: isCheckedKing
+                      ? 'inset 0 0 0 3px #fef2f2, inset 0 0 12px rgba(239,68,68,0.85)'
+                      : isLast
+                        ? 'inset 0 0 0 2px color-mix(in srgb, var(--os-accent) 80%, transparent)'
+                        : isCursor
+                          ? 'inset 0 0 0 2px var(--os-accent)'
+                          : undefined,
+                    animation: isCheckedKing ? 'pulse 1.1s ease-in-out infinite' : undefined,
                   }}
                 >
                   {parsed && (

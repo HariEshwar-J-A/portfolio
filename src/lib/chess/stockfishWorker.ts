@@ -71,14 +71,18 @@ export class StockfishEngine {
     return run;
   }
 
-  async setSkill(skill: number): Promise<void> {
+  async setSkill(skill: number, eloOverride?: number): Promise<void> {
     await this.enqueue(async () => {
       await this.init();
       const s = Math.max(0, Math.min(20, Math.round(skill)));
       this.post('setoption name UCI_LimitStrength value true');
       // Skill Level works on many builds; also set Elo when supported
       this.post(`setoption name Skill Level value ${s}`);
-      const elo = 800 + s * 60;
+      // Cap matches HUMAN_RATING_ANCHOR (3000): 800 + skill * 110
+      const elo =
+        typeof eloOverride === 'number' && Number.isFinite(eloOverride)
+          ? Math.max(800, Math.min(3000, Math.round(eloOverride)))
+          : 800 + s * 110;
       this.post(`setoption name UCI_Elo value ${elo}`);
       await this.sendAndWait('isready', (l) => l === 'readyok');
     });

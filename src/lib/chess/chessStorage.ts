@@ -17,6 +17,7 @@ export interface ChessStats {
   skillLevel: number;
   gamesPlayed: number;
   recentPgns: { id: string; pgn: string; endedAt: string }[];
+  unlockedIds: string[];
 }
 
 export const EMPTY_CHESS_STATS: ChessStats = {
@@ -27,6 +28,7 @@ export const EMPTY_CHESS_STATS: ChessStats = {
   skillLevel: DEFAULT_START_SKILL,
   gamesPlayed: 0,
   recentPgns: [],
+  unlockedIds: [],
 };
 
 const isRecord = (v: unknown): v is Record<string, unknown> =>
@@ -57,6 +59,9 @@ export const parseChessStats = (raw: unknown): ChessStats => {
     skillLevel: clampInt(raw.skillLevel, MIN_SKILL, MAX_SKILL, DEFAULT_START_SKILL),
     gamesPlayed: clampInt(raw.gamesPlayed, 0, 1_000_000, 0),
     recentPgns,
+    unlockedIds: Array.isArray(raw.unlockedIds)
+      ? raw.unlockedIds.filter((id): id is string => typeof id === 'string').slice(0, 40)
+      : [],
   };
 };
 

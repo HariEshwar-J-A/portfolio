@@ -3,9 +3,15 @@ import type { Square } from 'chess.js';
 import { Chess } from 'chess.js';
 import { evaluateDrawOffer, isDrawRequest } from '../lib/chess/drawOffer';
 import { eventFromAnalysis, FALLBACK_MODE_NOTICE, pickPrefab, type BanterEvent } from '../data/chessBanter';
+import {
+  chessLevelFor,
+  unlocksEarned,
+  type ChessUnlock,
+} from '../data/chessUnlocks';
 import { AGENT_NAME, HUMAN_RATING_ANCHOR, LICHESS_URL } from '../data/osIdentity';
 import { nextSkillLevel } from '../lib/chess/adaptiveSkill';
 import {
+  EMPTY_CHESS_STATS,
   type ChessStats,
   readChessStats,
   writeChessStats,
@@ -18,7 +24,14 @@ import {
 import { estimateMoveCpl } from '../lib/chess/gameUtils';
 import { buildPgn, pgnDownloadFilename } from '../lib/chess/pgn';
 import type { PromoPiece } from '../lib/chess/pieceAssets';
-import { livePerformanceRating, settleMatchRating, skillToElo } from '../lib/chess/rating';
+import {
+  chaseSentryRating,
+  eloToSkill,
+  livePerformanceRating,
+  ratingGapToHari,
+  settleMatchRating,
+  skillToElo,
+} from '../lib/chess/rating';
 import { sanitizeText } from '../lib/chess/sanitize';
 import { StockfishEngine, uciToFromTo } from '../lib/chess/stockfishWorker';
 
@@ -43,17 +56,7 @@ type Side = 'w' | 'b';
 
 export const useChessArena = () => {
   const [stats, setStats] = useState<ChessStats>(() => {
-    if (typeof window === 'undefined') {
-      return {
-        userWins: 0,
-        sentryWins: 0,
-        draws: 0,
-        visitorElo: 800,
-        skillLevel: 4,
-        gamesPlayed: 0,
-        recentPgns: [],
-      };
-    }
+    if (typeof window === 'undefined') return { ...EMPTY_CHESS_STATS };
     return readChessStats();
   });
   const [phase, setPhase] = useState<GamePhase>('lobby');
@@ -80,7 +83,10 @@ export const useChessArena = () => {
   /** Live performance rating inside the current match (null until enough moves). */
   const [matchRating, setMatchRating] = useState<number | null>(null);
   const [matchBotElo, setMatchBotElo] = useState(() => skillToElo(stats.skillLevel));
+  const [movesSan, setMovesSan] = useState<string[]>([]);
+  const [freshUnlock, setFreshUnlock] = useState<ChessUnlock | null>(null);
   const matchRatingRef = useRef<number | null>(null);
+  const matchBotEloRef = useRef(matchBotElo);
 
   const gameRef = useRef(new Chess());
   const engineRef = useRef<StockfishEngine | null>(null);
@@ -113,6 +119,9 @@ export const useChessArena = () => {
   useEffect(() => {
     presetRef.current = preset;
   }, [preset]);
+  useEffect(() => {
+    matchBotEloRef.current = matchBotElo;
+  }, [matchBotElo]);
 
   const banterModeRef = useRef<'llm' | 'fallback'>('llm');
   const fallbackNoticeSentRef = useRef(false);
@@ -135,6 +144,42 @@ export const useChessArena = () => {
 
   const announce = useCallback((msg: string) => {
     setLiveRegion(msg);
+  }, []);
+
+  const applyUnlocks = useCallback(
+    (base: ChessStats, matchPlies: number, visitorEloForUnlock: number) => {
+      const earned = unlocksEarned({
+        visitorElo: visitorEloForUnlock,
+        gamesPlayed: base.gamesPlayed,
+        userWins: base.userWins,
+        matchPlies,
+        already: base.unlockedIds,
+      });
+      if (earned.length === 0) return base;
+      const nextIds = [...base.unlockedIds, ...earned.map((u) => u.id)];
+      setFreshUnlock(earned[earned.length - 1]!);
+      announce(`Unlocked: ${earned.map((u) => u.title).join(', ')}`);
+      for (const u of earned) {
+        pushChat('system', `Unlocked · ${u.title}: ${u.body}`);
+      }
+      return { ...base, unlockedIds: nextIds };
+    },
+    [announce, pushChat],
+  );
+
+  /** Raise live Sentry strength when the visitor’s performance climbs. */
+  const chaseSentryLive = useCallback(async (visitorLive: number) => {
+    const next = chaseSentryRating(visitorLive, matchBotEloRef.current);
+    if (next <= matchBotEloRef.current) return;
+    matchBotEloRef.current = next;
+    setMatchBotElo(next);
+    const skill = eloToSkill(next);
+    skillRef.current = Math.max(skillRef.current, skill);
+    try {
+      await engineRef.current?.setSkill(skill, next);
+    } catch {
+      /* keep UI rating even if engine option fails */
+    }
   }, []);
 
   const enterFallbackBanter = useCallback(
@@ -211,7 +256,7 @@ export const useChessArena = () => {
           : 80;
 
       const current = readChessStats();
-      const oppElo = skillToElo(skillRef.current);
+      const oppElo = matchBotEloRef.current;
       const score: 0 | 0.5 | 1 = visitorWon ? 1 : draw ? 0.5 : 0;
       const perf =
         matchRatingRef.current ??
@@ -232,7 +277,7 @@ export const useChessArena = () => {
         movesSan: movesSanRef.current,
       });
 
-      persistStats({
+      let nextStats: ChessStats = {
         ...current,
         userWins: current.userWins + (visitorWon ? 1 : 0),
         sentryWins: current.sentryWins + (sentryWon ? 1 : 0),
@@ -244,7 +289,9 @@ export const useChessArena = () => {
           { id: `g-${Date.now()}`, pgn, endedAt: new Date().toISOString() },
           ...current.recentPgns,
         ].slice(0, 20),
-      });
+      };
+      nextStats = applyUnlocks(nextStats, movesSanRef.current.length, nextElo);
+      persistStats(nextStats);
 
       const banterEvent: BanterEvent =
         reason === 'forfeit'
@@ -265,7 +312,7 @@ export const useChessArena = () => {
               : `${AGENT_NAME} wins.`,
       );
     },
-    [announce, persistStats, requestBanter],
+    [announce, applyUnlocks, persistStats, requestBanter],
   );
 
   // Clock: tick the side whose turn it is
@@ -353,6 +400,7 @@ export const useChessArena = () => {
       if (!move) return;
 
       movesSanRef.current.push(move.san);
+      setMovesSan([...movesSanRef.current]);
       setLastMove({ from: move.from, to: move.to });
       syncBoard();
       announce(`${AGENT_NAME} played ${move.san}`);
@@ -370,10 +418,21 @@ export const useChessArena = () => {
 
         const meanCpl =
           cplSamplesRef.current.reduce((a, b) => a + b, 0) / cplSamplesRef.current.length;
-        const botElo = skillToElo(skillRef.current);
+        const botElo = matchBotEloRef.current;
         const live = livePerformanceRating(meanCpl, botElo);
         matchRatingRef.current = live;
         setMatchRating(live);
+        await chaseSentryLive(live);
+
+        const mid = readChessStats();
+        const withUnlocks = applyUnlocks(
+          { ...mid, visitorElo: live },
+          movesSanRef.current.length,
+          live,
+        );
+        if (withUnlocks.unlockedIds.length !== mid.unlockedIds.length) {
+          persistStats({ ...withUnlocks, visitorElo: mid.visitorElo });
+        }
 
         const event = eventFromAnalysis({
           ply: plyRef.current,
@@ -399,15 +458,23 @@ export const useChessArena = () => {
     } finally {
       setThinking(false);
     }
-  }, [announce, endGame, pushChat, requestBanter, syncBoard]);
+  }, [announce, applyUnlocks, chaseSentryLive, endGame, persistStats, pushChat, requestBanter, syncBoard]);
 
   const afterVisitorMove = useCallback(
     async (san: string) => {
       movesSanRef.current.push(san);
+      setMovesSan([...movesSanRef.current]);
       const g = gameRef.current;
       const viw = visitorIsWhiteRef.current;
       syncBoard();
       announce(`You played ${san}`);
+
+      // Mid-match unlocks from ply count (e.g. college captain).
+      const mid = readChessStats();
+      const withUnlocks = applyUnlocks(mid, movesSanRef.current.length, matchRatingRef.current ?? mid.visitorElo);
+      if (withUnlocks.unlockedIds.length !== mid.unlockedIds.length) {
+        persistStats(withUnlocks);
+      }
 
       if (g.isCheckmate()) {
         await endGame('checkmate', viw ? '1-0' : '0-1');
@@ -423,7 +490,7 @@ export const useChessArena = () => {
 
       await playEngineMove();
     },
-    [announce, endGame, playEngineMove, syncBoard],
+    [announce, applyUnlocks, endGame, persistStats, playEngineMove, syncBoard],
   );
 
   const commitVisitorMove = useCallback(
@@ -518,6 +585,7 @@ export const useChessArena = () => {
 
     gameRef.current = new Chess();
     movesSanRef.current = [];
+    setMovesSan([]);
     cplSamplesRef.current = [];
     lastEvalRef.current = 0;
     plyRef.current = 0;
@@ -532,11 +600,15 @@ export const useChessArena = () => {
     setResult(null);
     setEvalPawns(0);
     setChat([]);
+    setFreshUnlock(null);
     setBanterMode('llm');
     banterModeRef.current = 'llm';
     fallbackNoticeSentRef.current = false;
-    const botElo = skillToElo(skillRef.current);
+    // Start at least a margin above settled visitor Elo so Sentry stays the hunter.
+    const botElo = chaseSentryRating(stats.visitorElo, skillToElo(skillRef.current));
+    matchBotEloRef.current = botElo;
     setMatchBotElo(botElo);
+    skillRef.current = Math.max(skillRef.current, eloToSkill(botElo));
     setMatchRating(null);
     matchRatingRef.current = null;
     setCursorSquare(resolvedWhite ? 'e2' : 'e7');
@@ -554,7 +626,7 @@ export const useChessArena = () => {
     if (!engineRef.current) engineRef.current = new StockfishEngine();
     try {
       await engineRef.current.init();
-      await engineRef.current.setSkill(skillRef.current);
+      await engineRef.current.setSkill(skillRef.current, botElo);
       setEngineReady(true);
       // If visitor is Black, Sentry (White) moves first
       if (!resolvedWhite) {
@@ -566,7 +638,7 @@ export const useChessArena = () => {
       activeRef.current = false;
       setPhase('lobby');
     }
-  }, [announce, colorChoice, playEngineMove, preset, pushChat, requestBanter, syncBoard]);
+  }, [announce, colorChoice, playEngineMove, preset, pushChat, requestBanter, stats.visitorElo, syncBoard]);
 
   const resign = useCallback(() => {
     void endGame('resign', visitorIsWhiteRef.current ? '0-1' : '1-0');
@@ -624,6 +696,10 @@ export const useChessArena = () => {
     },
     [announce, endGame, phase, pushChat, requestBanter],
   );
+
+  const requestDraw = useCallback(() => {
+    sendUserChat('draw');
+  }, [sendUserChat]);
 
   useEffect(() => () => engineRef.current?.dispose(), []);
 
@@ -683,6 +759,11 @@ export const useChessArena = () => {
       ? `${AGENT_NAME} thinking…`
       : `${AGENT_NAME} to move`;
 
+  const displayVisitorElo = matchRating ?? stats.visitorElo;
+  const effectiveSentryElo =
+    phase === 'playing' || phase === 'ended' ? matchBotElo : skillToElo(stats.skillLevel);
+  const latestInteraction = chat.length > 0 ? chat[chat.length - 1]! : null;
+
   return {
     stats,
     phase,
@@ -700,6 +781,7 @@ export const useChessArena = () => {
     turn,
     turnLabel,
     chat,
+    latestInteraction,
     banterMode,
     engineReady,
     thinking,
@@ -713,12 +795,20 @@ export const useChessArena = () => {
     cancelPromotion,
     matchRating,
     matchBotElo,
+    movesSan,
+    freshUnlock,
+    arenaLevel: chessLevelFor({
+      visitorElo: displayVisitorElo,
+      gamesPlayed: stats.gamesPlayed,
+      userWins: stats.userWins,
+    }),
+    gapToHari: ratingGapToHari(displayVisitorElo),
     /** Rating shown for the user: live match rating when available, else last settled. */
-    displayVisitorElo: matchRating ?? stats.visitorElo,
-    effectiveSentryElo:
-      phase === 'playing' || phase === 'ended' ? matchBotElo : skillToElo(stats.skillLevel),
+    displayVisitorElo,
+    effectiveSentryElo,
     humanAnchor: HUMAN_RATING_ANCHOR,
     lichessUrl: LICHESS_URL,
+    sideToMove: turn,
     inCheck: (() => {
       try {
         return new Chess(fen).inCheck();
@@ -728,12 +818,14 @@ export const useChessArena = () => {
     })(),
     startGame,
     resign,
+    requestDraw,
     onSquareClick,
     onKeyDown,
     exportLatestPgn,
     sendUserChat,
     backToLobby: () => {
       setPendingPromotion(null);
+      setFreshUnlock(null);
       setPhase('lobby');
     },
   };

@@ -9,7 +9,8 @@ export const AGENT_NAME = 'Sentry';
 export const HUMAN_NAME = 'Harieshwar';
 export const LICHESS_USER = 'HariEshwar';
 export const LICHESS_URL = `https://lichess.org/@/${LICHESS_USER}`;
-export const HUMAN_RATING_ANCHOR = 2000;
+export const HUMAN_RATING_ANCHOR = 3000;
+
 
 export const agentTagline =
   "I run HARI.OS for Harieshwar — themes, mail, playground, and Chess Arena — so he can stay in the physical world.";

@@ -1,13 +1,15 @@
 import React from 'react';
-import { Crown, Download, Flag, Swords } from 'lucide-react';
+import { Crown, Download, Flag, Handshake, Swords } from 'lucide-react';
 import { useTheme } from '../../hooks/useTheme';
 import { glassPanel } from '../SectionShell';
-import { AGENT_NAME, HUMAN_RATING_ANCHOR, chessProcessLabel } from '../../data/osIdentity';
+import { AGENT_NAME, HUMAN_NAME, HUMAN_RATING_ANCHOR, chessProcessLabel } from '../../data/osIdentity';
 import { PIECE_SET_CREDIT } from '../../lib/chess/pieceAssets';
 import { TIME_PRESETS, useChessArena, type ColorChoice } from '../../hooks/useChessArena';
 import ChessBoard from './chess/ChessBoard';
 import ChessClocks from './chess/ChessClocks';
 import ChessChat from './chess/ChessChat';
+import ChessMoveList from './chess/ChessMoveList';
+import ChessProgress from './chess/ChessProgress';
 import PromotionOverlay from './chess/PromotionOverlay';
 import { GameOverPanel, PlayRealHariCta } from './chess/GameOverPanel';
 
@@ -63,6 +65,17 @@ const ChessArena: React.FC = () => {
             <span className="opacity-50">{AGENT_NAME} </span>
             <strong style={{ color: 'var(--os-primary)' }}>{arena.effectiveSentryElo}</strong>
             <span className="opacity-40"> Elo</span>
+            {arena.phase === 'playing' && (
+              <span className="ml-1 text-[9px] uppercase tracking-wider opacity-40">live</span>
+            )}
+          </span>
+          <span className="opacity-30">·</span>
+          <span title={`${HUMAN_NAME}'s arena ceiling`}>
+            <span className="opacity-50">{HUMAN_NAME} </span>
+            <strong>~{HUMAN_RATING_ANCHOR}</strong>
+            {arena.gapToHari > 0 && (
+              <span className="ml-1 opacity-50">· {arena.gapToHari} gap</span>
+            )}
           </span>
           <span className="opacity-30">·</span>
           <span>
@@ -89,8 +102,8 @@ const ChessArena: React.FC = () => {
             </h3>
             <p className={`mt-3 leading-relaxed ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
               Timed games only against <strong>{AGENT_NAME}</strong> — a chess bot by Harieshwar. Pick your color;
-              {AGENT_NAME} adapts after each game. Leaving the page forfeits. Local rating ~{arena.stats.visitorElo};
-              real Hari on Lichess ~{HUMAN_RATING_ANCHOR}.
+              {AGENT_NAME} raises strength live as you improve (capped at {HUMAN_NAME}&apos;s ~{HUMAN_RATING_ANCHOR} Elo).
+              Leaving the page forfeits.
             </p>
 
             <div
@@ -117,7 +130,7 @@ const ChessArena: React.FC = () => {
                   <span className="ml-1 text-xs font-bold opacity-50">Elo</span>
                 </p>
                 <p className="mt-0.5 text-[10px] opacity-50">
-                  Skill {arena.stats.skillLevel}/20 · adapts after each match
+                  Stays ahead of you · max {HUMAN_RATING_ANCHOR}
                 </p>
               </div>
             </div>
@@ -207,11 +220,24 @@ const ChessArena: React.FC = () => {
                 ▸ Score You {arena.stats.userWins} – {AGENT_NAME} {arena.stats.sentryWins}
                 {arena.stats.draws > 0 ? ` · Draws ${arena.stats.draws}` : ''}
               </li>
-              <li>▸ Real Hari on Lichess ~{HUMAN_RATING_ANCHOR} ({'HariEshwar'})</li>
+              <li>
+                ▸ Gap to {HUMAN_NAME}: {arena.gapToHari} Elo · challenge HariEshwar on Lichess
+              </li>
               <li>▸ {PIECE_SET_CREDIT}</li>
             </ul>
           </div>
-          <PlayRealHariCta isDark={isDark} />
+          <div className="space-y-4">
+            <ChessProgress
+              visitorElo={arena.displayVisitorElo}
+              sentryElo={arena.effectiveSentryElo}
+              gamesPlayed={arena.stats.gamesPlayed}
+              userWins={arena.stats.userWins}
+              unlockedIds={arena.stats.unlockedIds}
+              freshUnlock={null}
+              isDark={isDark}
+            />
+            <PlayRealHariCta isDark={isDark} />
+          </div>
         </div>
       )}
 
@@ -236,6 +262,7 @@ const ChessArena: React.FC = () => {
                 lastMove={arena.lastMove}
                 cursorSquare={arena.cursorSquare}
                 inCheck={arena.inCheck}
+                sideToMove={arena.sideToMove}
                 turnLabel={arena.turnLabel}
                 flipped={!arena.visitorIsWhite}
                 onSquareClick={arena.onSquareClick}
@@ -263,20 +290,35 @@ const ChessArena: React.FC = () => {
             {arena.phase === 'playing' && (
               <div className="flex flex-wrap items-center justify-between gap-2 pt-0.5">
                 <p className="font-mono text-[11px] opacity-70" aria-live="polite">
+                  {arena.inCheck ? (
+                    <span className="font-bold text-red-500">Check! </span>
+                  ) : null}
                   {arena.turnLabel}
                   {arena.thinking ? '…' : ''}
                 </p>
-                <button
-                  type="button"
-                  onClick={arena.resign}
-                  className={`inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-[11px] font-bold ${
-                    isDark ? 'border-white/20' : 'border-slate-300'
-                  }`}
-                >
-                  <Flag size={11} /> Resign
-                </button>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={arena.requestDraw}
+                    className={`inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-[11px] font-bold ${
+                      isDark ? 'border-white/20' : 'border-slate-300'
+                    }`}
+                  >
+                    <Handshake size={11} /> Request draw
+                  </button>
+                  <button
+                    type="button"
+                    onClick={arena.resign}
+                    className={`inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-[11px] font-bold ${
+                      isDark ? 'border-white/20' : 'border-slate-300'
+                    }`}
+                  >
+                    <Flag size={11} /> Resign
+                  </button>
+                </div>
               </div>
             )}
+            <ChessMoveList movesSan={arena.movesSan} isDark={isDark} />
             <p className="font-mono text-[9px] opacity-40">{PIECE_SET_CREDIT}</p>
           </div>
 
@@ -296,11 +338,21 @@ const ChessArena: React.FC = () => {
             ) : (
               <ChessChat
                 lines={arena.chat}
+                latest={arena.latestInteraction}
                 banterMode={arena.banterMode}
                 onSend={arena.sendUserChat}
                 isDark={isDark}
               />
             )}
+            <ChessProgress
+              visitorElo={arena.displayVisitorElo}
+              sentryElo={arena.effectiveSentryElo}
+              gamesPlayed={arena.stats.gamesPlayed}
+              userWins={arena.stats.userWins}
+              unlockedIds={arena.stats.unlockedIds}
+              freshUnlock={arena.freshUnlock}
+              isDark={isDark}
+            />
             {arena.phase === 'playing' && <PlayRealHariCta isDark={isDark} />}
           </div>
         </div>
