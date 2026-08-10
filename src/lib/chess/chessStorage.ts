@@ -6,12 +6,15 @@ import {
   eloToSkill,
   ENGINE_ELO_CAP,
   INITIAL_VISITOR_ELO,
-  MAX_SKILL,
-  MIN_SKILL,
-  SENTRY_ELO_STEP,
 } from './rating';
 
-export const CHESS_STORAGE_KEY = 'hari-os-chess-v1';
+/**
+ * v2 = one-time arena reset (Aug 2026).
+ * Old `hari-os-chess-v1` (and earlier) saves are discarded so every client
+ * starts at Sentry 2000 instead of carrying stale low skill / Elo.
+ */
+export const CHESS_STORAGE_KEY = 'hari-os-chess-v2';
+const LEGACY_CHESS_STORAGE_KEYS = ['hari-os-chess-v1', 'hari-os-chess'] as const;
 
 export interface ChessStats {
   userWins: number;
@@ -41,17 +44,15 @@ export const EMPTY_CHESS_STATS: ChessStats = {
 const isRecord = (v: unknown): v is Record<string, unknown> =>
   typeof v === 'object' && v !== null && !Array.isArray(v);
 
-const migrateSentryElo = (raw: Record<string, unknown>, userWins: number): number => {
-  if (typeof raw.sentryElo === 'number' && Number.isFinite(raw.sentryElo)) {
-    return clampInt(raw.sentryElo, BASE_SENTRY_ELO, ENGINE_ELO_CAP, BASE_SENTRY_ELO);
+/** Drop pre-v2 local saves once per browser (idempotent). */
+export const purgeLegacyChessStorage = (): void => {
+  try {
+    for (const key of LEGACY_CHESS_STORAGE_KEYS) {
+      window.localStorage.removeItem(key);
+    }
+  } catch {
+    /* private mode / blocked storage */
   }
-  // Older saves: reconstruct from wins (one step per win) rather than noisy skill map.
-  return clampInt(
-    BASE_SENTRY_ELO + userWins * SENTRY_ELO_STEP,
-    BASE_SENTRY_ELO,
-    ENGINE_ELO_CAP,
-    BASE_SENTRY_ELO,
-  );
 };
 
 export const parseChessStats = (raw: unknown): ChessStats => {
@@ -72,7 +73,11 @@ export const parseChessStats = (raw: unknown): ChessStats => {
   }
 
   const userWins = clampInt(raw.userWins, 0, 1_000_000, 0);
-  const sentryElo = migrateSentryElo(raw, userWins);
+  // Trust only explicit v2 sentryElo; never reconstruct from legacy skill maps.
+  const sentryElo =
+    typeof raw.sentryElo === 'number' && Number.isFinite(raw.sentryElo)
+      ? clampInt(raw.sentryElo, BASE_SENTRY_ELO, ENGINE_ELO_CAP, BASE_SENTRY_ELO)
+      : BASE_SENTRY_ELO;
 
   return {
     userWins,
@@ -80,7 +85,8 @@ export const parseChessStats = (raw: unknown): ChessStats => {
     draws: clampInt(raw.draws, 0, 1_000_000, 0),
     visitorElo: clampInt(raw.visitorElo, 100, 3000, INITIAL_VISITOR_ELO),
     sentryElo,
-    skillLevel: clampInt(raw.skillLevel, MIN_SKILL, MAX_SKILL, eloToSkill(sentryElo)),
+    // Always derive skill from sentryElo so a stale skillLevel cannot weaken the engine.
+    skillLevel: eloToSkill(sentryElo),
     gamesPlayed: clampInt(raw.gamesPlayed, 0, 1_000_000, 0),
     recentPgns,
     unlockedIds: Array.isArray(raw.unlockedIds)
@@ -91,6 +97,7 @@ export const parseChessStats = (raw: unknown): ChessStats => {
 
 export const readChessStats = (): ChessStats => {
   try {
+    purgeLegacyChessStorage();
     const raw = window.localStorage.getItem(CHESS_STORAGE_KEY);
     if (!raw) return { ...EMPTY_CHESS_STATS };
     return parseChessStats(JSON.parse(raw) as unknown);

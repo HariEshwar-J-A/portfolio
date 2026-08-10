@@ -54,8 +54,18 @@ describe('chessStorage', () => {
     expect(stats.sentryWins).toBe(1_000_000);
     expect(stats.visitorElo).toBe(800);
     expect(stats.sentryElo).toBe(2000);
-    expect(stats.skillLevel).toBe(20);
+    expect(stats.skillLevel).toBe(11); // derived from base 2000, not legacy skillLevel
     expect(stats.recentPgns).toHaveLength(0);
+  });
+
+  it('ignores stale low skillLevel when sentryElo is set', () => {
+    const stats = parseChessStats({
+      sentryElo: 2000,
+      skillLevel: 2,
+      userWins: 0,
+    });
+    expect(stats.sentryElo).toBe(2000);
+    expect(stats.skillLevel).toBe(11);
   });
 });
 
