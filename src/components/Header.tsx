@@ -18,6 +18,18 @@ const dismissIntentWizard = () => {
   window.dispatchEvent(new Event(CLOSE_INTENT_EVENT));
 };
 
+/** Short labels keep generous tab gaps from crowding the bar below 2xl. */
+const SECTION_LABELS: Record<SectionId, { full: string; short: string }> = {
+  about: { full: 'About', short: 'About' },
+  skills: { full: 'Skills', short: 'Skills' },
+  experience: { full: 'Experience', short: 'Work' },
+  education: { full: 'Education', short: 'Edu' },
+  projects: { full: 'Projects', short: 'Build' },
+  products: { full: 'Products', short: 'Apps' },
+  achievements: { full: 'Achievements', short: 'Wins' },
+  contact: { full: 'Contact', short: 'Contact' },
+};
+
 const Header: React.FC = () => {
   const dispatch = useDispatch();
   const { theme } = useTheme();
@@ -49,50 +61,57 @@ const Header: React.FC = () => {
           : 'bg-transparent'
       }`}
     >
-      <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-        <div className="flex items-center gap-2 font-mono text-xl font-bold tracking-tight">
+      <div className="container mx-auto flex items-center justify-between gap-4 px-4 py-3 md:px-6 md:py-4">
+        <div className="flex shrink-0 items-center gap-2 font-mono text-lg font-bold tracking-tight md:text-xl">
           <span className="h-2 w-2 animate-pulse rounded-full" style={{ backgroundColor: 'var(--os-primary)' }} />
           <span className={isDark ? 'text-white' : 'text-slate-900'}>
             hari<span style={{ color: 'var(--os-primary)' }}>.ai</span>
           </span>
         </div>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden xl:flex items-center space-x-4">
-          {sections.map((section) => {
-            const isActive = activeSection === section;
+        {/* Desktop Navigation — same tab rhythm as /ai (breathing room + short/full labels) */}
+        <nav className="hidden min-w-0 flex-1 items-center justify-end gap-3 lg:flex xl:gap-4">
+          <div className="flex min-w-0 items-center justify-center gap-5 px-2 xl:gap-6 2xl:gap-8">
+            {sections.map((section) => {
+              const isActive = activeSection === section;
+              const labels = SECTION_LABELS[section] ?? { full: section, short: section };
 
-            return (
-              <button
-                key={section}
-                onClick={() => handleNavigation(section)}
-                className={`relative pb-1 text-sm font-medium capitalize transition-colors ${
-                  isActive
-                    ? ''
-                    : isDark
-                      ? 'text-slate-300 hover:text-white'
-                      : 'text-slate-700 hover:text-black'
-                }`}
-                style={{ color: isActive ? 'var(--os-primary)' : undefined }}
-              >
-                {section}
-                {isActive && (
-                  <motion.span
-                    layoutId="nav-underline"
-                    className="absolute inset-x-0 -bottom-0.5 h-0.5 rounded-full"
-                    style={{
-                      background: 'linear-gradient(90deg, var(--os-primary), var(--os-secondary))',
-                    }}
-                    transition={{ type: 'spring', stiffness: 380, damping: 32 }}
-                  />
-                )}
-              </button>
-            );
-          })}
+              return (
+                <button
+                  key={section}
+                  type="button"
+                  onClick={() => handleNavigation(section)}
+                  title={labels.full}
+                  className={`relative inline-flex shrink-0 items-center px-2.5 pb-1.5 text-sm font-medium tracking-wide transition-colors xl:px-3 ${
+                    isActive
+                      ? ''
+                      : isDark
+                        ? 'text-slate-300 hover:text-white'
+                        : 'text-slate-700 hover:text-black'
+                  }`}
+                  style={{ color: isActive ? 'var(--os-primary)' : undefined }}
+                  aria-current={isActive ? 'page' : undefined}
+                >
+                  <span className="hidden 2xl:inline">{labels.full}</span>
+                  <span className="2xl:hidden">{labels.short}</span>
+                  {isActive && (
+                    <motion.span
+                      layoutId="nav-underline"
+                      className="absolute inset-x-2.5 -bottom-0.5 h-0.5 rounded-full xl:inset-x-3"
+                      style={{
+                        background: 'linear-gradient(90deg, var(--os-primary), var(--os-secondary))',
+                      }}
+                      transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+                    />
+                  )}
+                </button>
+              );
+            })}
+          </div>
 
           {/* Destinations — the other experiences */}
           <div
-            className={`ml-1 flex items-center gap-2 border-l pl-4 ${
+            className={`flex shrink-0 items-center gap-2.5 border-l pl-4 xl:gap-3 xl:pl-5 ${
               isDark ? 'border-white/10' : 'border-slate-200'
             }`}
           >
@@ -109,7 +128,8 @@ const Header: React.FC = () => {
                 }`}
               >
                 <Gamepad2 size={14} style={{ color: 'var(--os-primary)' }} />
-                Play AI
+                <span className="hidden xl:inline">Play AI</span>
+                <span className="xl:hidden">AI</span>
               </span>
             </Link>
 
@@ -129,7 +149,7 @@ const Header: React.FC = () => {
               href="https://sentry.harieshwar.dev"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold shadow-lg transition hover:-translate-y-0.5 border border-white/20"
+              className="hidden items-center gap-1.5 rounded-full border border-white/20 px-3 py-2 text-xs font-semibold shadow-lg transition hover:-translate-y-0.5 xl:inline-flex"
               style={{
                 backgroundColor: isDark ? 'rgba(30,41,59,0.9)' : 'rgba(255,255,255,0.95)',
                 color: isDark ? '#f1f5f9' : '#0f172a',
@@ -142,7 +162,7 @@ const Header: React.FC = () => {
 
           {/* Controls — concierge, search, density, appearance */}
           <div
-            className={`ml-1 flex items-center gap-1 border-l pl-4 ${
+            className={`flex shrink-0 items-center gap-1.5 border-l pl-4 xl:gap-2 xl:pl-5 ${
               isDark ? 'border-white/10' : 'border-slate-200'
             }`}
           >
@@ -177,7 +197,7 @@ const Header: React.FC = () => {
         </nav>
 
         {/* Mobile Navigation Toggle */}
-        <div className="flex items-center gap-1 xl:hidden">
+        <div className="flex items-center gap-1 lg:hidden">
           <ViewModeToggle />
           <ThemeSwitcher />
 
@@ -204,13 +224,14 @@ const Header: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
-            className={`xl:hidden absolute w-full px-6 py-5 shadow-xl backdrop-blur-xl ${
+            className={`absolute w-full px-6 py-5 shadow-xl backdrop-blur-xl lg:hidden ${
               isDark ? 'bg-slate-950/95 border-t border-white/10' : 'bg-white/95 border-t border-slate-200'
             }`}
           >
             <nav className="flex flex-col gap-1">
               {sections.map((section, index) => {
                 const isActive = activeSection === section;
+                const label = SECTION_LABELS[section]?.full ?? section;
 
                 return (
                   <motion.button
@@ -219,7 +240,7 @@ const Header: React.FC = () => {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.035, duration: 0.18 }}
                     onClick={() => handleNavigation(section)}
-                    className={`rounded-xl px-3 py-2.5 text-left text-base font-medium capitalize transition ${
+                    className={`rounded-xl px-3 py-2.5 text-left text-base font-medium transition ${
                       isActive
                         ? ''
                         : isDark
@@ -235,7 +256,7 @@ const Header: React.FC = () => {
                         : undefined
                     }
                   >
-                    {section}
+                    {label}
                   </motion.button>
                 );
               })}

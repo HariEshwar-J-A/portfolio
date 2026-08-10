@@ -85,7 +85,7 @@ const OsPlaygroundPage: React.FC = () => {
             : 'bg-transparent'
         }`}
       >
-        <div className="container mx-auto flex items-center justify-between gap-3 px-4 py-3 md:px-6 md:py-4">
+        <div className="container mx-auto flex items-center justify-between gap-4 px-4 py-3 md:px-6 md:py-4">
           <Link
             to="/"
             className={`group inline-flex shrink-0 items-center gap-2 font-mono text-sm font-bold tracking-tight md:text-base ${
@@ -100,9 +100,9 @@ const OsPlaygroundPage: React.FC = () => {
             </span>
           </Link>
 
-          {/* Desktop game tabs */}
+          {/* Desktop game tabs — generous gaps; short labels until xl */}
           <nav
-            className="hidden items-center gap-1 lg:flex xl:gap-3"
+            className="hidden min-w-0 flex-1 items-center justify-center gap-5 px-2 md:flex lg:gap-6 xl:gap-8"
             aria-label="Playground games"
           >
             {MODULES.map((module) => {
@@ -113,7 +113,7 @@ const OsPlaygroundPage: React.FC = () => {
                   type="button"
                   onClick={() => selectModule(module.id)}
                   title={module.blurb}
-                  className={`relative inline-flex items-center gap-1.5 pb-1 text-sm font-medium transition-colors ${
+                  className={`relative inline-flex shrink-0 items-center gap-2 px-2.5 pb-1.5 text-sm font-medium tracking-wide transition-colors lg:px-3 ${
                     isActive
                       ? ''
                       : isDark
@@ -123,13 +123,13 @@ const OsPlaygroundPage: React.FC = () => {
                   style={{ color: isActive ? 'var(--os-primary)' : undefined }}
                   aria-current={isActive ? 'page' : undefined}
                 >
-                  {module.icon}
+                  <span className="opacity-80">{module.icon}</span>
                   <span className="hidden xl:inline">{module.label}</span>
                   <span className="xl:hidden">{module.short}</span>
                   {isActive && (
                     <motion.span
                       layoutId="playground-nav-underline"
-                      className="absolute inset-x-0 -bottom-0.5 h-0.5 rounded-full"
+                      className="absolute inset-x-2 -bottom-0.5 h-0.5 rounded-full lg:inset-x-3"
                       style={{
                         background: 'linear-gradient(90deg, var(--os-primary), var(--os-secondary))',
                       }}
@@ -142,9 +142,9 @@ const OsPlaygroundPage: React.FC = () => {
           </nav>
 
           {/* Desktop controls */}
-          <div className="hidden items-center gap-2 lg:flex">
+          <div className="hidden shrink-0 items-center gap-3 md:flex">
             <div
-              className={`hidden items-center gap-2 rounded-full border px-3 py-1.5 font-mono text-[11px] xl:flex ${
+              className={`hidden items-center gap-2 rounded-full border px-3 py-1.5 font-mono text-[11px] 2xl:flex ${
                 isDark ? 'border-white/10 bg-white/5 text-slate-300' : 'border-slate-200 bg-white/70 text-slate-600'
               }`}
               title={`${arcade.stats.xp} XP · ${arcade.xpToNext} to next level`}
@@ -158,9 +158,10 @@ const OsPlaygroundPage: React.FC = () => {
               onClick={() => window.dispatchEvent(new Event(OPEN_COLLAB_EVENT))}
               className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-bold text-white shadow-lg transition hover:-translate-y-0.5"
               style={{ backgroundColor: 'var(--os-primary)' }}
+              title="Collaborate"
             >
               <Handshake size={14} />
-              Collaborate
+              <span className="hidden lg:inline">Collaborate</span>
             </button>
             <ThemeSwitcher />
           </div>
@@ -168,7 +169,7 @@ const OsPlaygroundPage: React.FC = () => {
           {/* Mobile menu toggle */}
           <button
             type="button"
-            className={`rounded-lg p-2 transition lg:hidden ${isDark ? 'hover:bg-white/10' : 'hover:bg-slate-100'}`}
+            className={`rounded-lg p-2 transition md:hidden ${isDark ? 'hover:bg-white/10' : 'hover:bg-slate-100'}`}
             onClick={() => setIsMobileMenuOpen((open) => !open)}
             aria-expanded={isMobileMenuOpen}
             aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
@@ -184,7 +185,7 @@ const OsPlaygroundPage: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -12 }}
               transition={{ duration: 0.2 }}
-              className={`border-t px-4 py-3 lg:hidden ${
+              className={`border-t px-4 py-3 md:hidden ${
                 isDark ? 'border-white/10 bg-slate-950/95' : 'border-slate-200 bg-white/95'
               }`}
             >
