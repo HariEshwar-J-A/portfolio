@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Link, useBlocker, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   Archive,
@@ -54,8 +54,6 @@ const OsPlaygroundPage: React.FC = () => {
   const activeMeta = MODULES.find((module) => module.id === activeModule) ?? MODULES[0];
   const focusChessMatch = activeModule === 'chess' && chessMatchActive;
 
-  const blocker = useBlocker(chessMatchActive);
-
   useEffect(() => {
     document.title = 'HARI.OS Playground | Explore Harieshwar';
     document.body.className = isDark ? 'bg-slate-950 text-white' : 'bg-slate-50 text-slate-900';
@@ -90,22 +88,28 @@ const OsPlaygroundPage: React.FC = () => {
     window.dispatchEvent(new Event(OPEN_COLLAB_EVENT));
   };
 
-  const leaveModalOpen = pendingLeave !== null || blocker.state === 'blocked';
-
   const stayInMatch = useCallback(() => {
     setPendingLeave(null);
-    if (blocker.state === 'blocked') blocker.reset?.();
-  }, [blocker]);
+  }, []);
 
   const confirmLeave = useCallback(() => {
     const next = pendingLeave;
     setPendingLeave(null);
-    if (blocker.state === 'blocked') {
-      blocker.proceed?.();
-      return;
-    }
     next?.();
-  }, [blocker, pendingLeave]);
+  }, [pendingLeave]);
+
+  // Browser back during a live match → confirm before leaving /ai
+  useEffect(() => {
+    if (!chessMatchActive) return;
+    const marker = `${window.location.pathname}${window.location.search}`;
+    window.history.pushState({ chessGuard: true }, '', marker);
+    const onPopState = () => {
+      window.history.pushState({ chessGuard: true }, '', marker);
+      setPendingLeave(() => () => navigate('/'));
+    };
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, [chessMatchActive, navigate]);
 
   const selectModule = (id: ModuleId) => {
     if (id === activeModule) {
@@ -128,7 +132,7 @@ const OsPlaygroundPage: React.FC = () => {
       <AmbientBackground />
       <CollabWizard />
       <LeaveMatchModal
-        open={leaveModalOpen}
+        open={pendingLeave !== null}
         isDark={isDark}
         onStay={stayInMatch}
         onLeave={confirmLeave}
