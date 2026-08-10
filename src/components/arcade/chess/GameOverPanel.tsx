@@ -72,7 +72,8 @@ export const GameOverPanel: React.FC<GameOverPanelProps> = ({
         Result {result ?? '*'} {endReason ? `· ${endReason}` : ''}
       </p>
       <p className="mt-2 font-mono text-xs opacity-70">
-        Match rating settled · You ~{visitorElo} · {AGENT_NAME} ~{sentryElo}
+        Match rating · You ~{visitorElo} · {AGENT_NAME} {sentryElo} Elo
+        {sentryElo > 2000 ? ' (climbed after your wins)' : ' (base 2000)'}
       </p>
     </div>
     <div className="flex flex-wrap gap-2">

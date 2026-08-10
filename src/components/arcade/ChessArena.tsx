@@ -65,9 +65,6 @@ const ChessArena: React.FC = () => {
             <span className="opacity-50">{AGENT_NAME} </span>
             <strong style={{ color: 'var(--os-primary)' }}>{arena.effectiveSentryElo}</strong>
             <span className="opacity-40"> Elo</span>
-            {arena.phase === 'playing' && (
-              <span className="ml-1 text-[9px] uppercase tracking-wider opacity-40">live</span>
-            )}
           </span>
           <span className="opacity-30">·</span>
           <span title={`${HUMAN_NAME}'s arena ceiling`}>
@@ -102,7 +99,7 @@ const ChessArena: React.FC = () => {
             </h3>
             <p className={`mt-3 leading-relaxed ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
               Timed games only against <strong>{AGENT_NAME}</strong> — a chess bot by Harieshwar. Pick your color;
-              {AGENT_NAME} raises strength live as you improve (capped at {HUMAN_NAME}&apos;s ~{HUMAN_RATING_ANCHOR} Elo).
+              {AGENT_NAME} starts at 2000 Elo and gains +100 only when you beat it (cap ~{HUMAN_RATING_ANCHOR}).
               Leaving the page forfeits.
             </p>
 
@@ -130,7 +127,7 @@ const ChessArena: React.FC = () => {
                   <span className="ml-1 text-xs font-bold opacity-50">Elo</span>
                 </p>
                 <p className="mt-0.5 text-[10px] opacity-50">
-                  Stays ahead of you · max {HUMAN_RATING_ANCHOR}
+                  Starts at 2000 · +100 when you win
                 </p>
               </div>
             </div>

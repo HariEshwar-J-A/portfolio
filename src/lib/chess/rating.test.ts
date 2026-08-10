@@ -1,30 +1,29 @@
 import { describe, expect, it } from 'vitest';
 import {
-  chaseSentryRating,
+  BASE_SENTRY_ELO,
+  bumpSentryEloOnUserWin,
   eloToSkill,
   livePerformanceRating,
   settleMatchRating,
   skillToElo,
   updateElo,
 } from './rating';
-import { nextSkillLevel } from './adaptiveSkill';
+import { nextSentryEloAfterGame, nextSkillLevel } from './adaptiveSkill';
 
 describe('rating', () => {
-  it('maps skill to elo within arena band', () => {
-    expect(skillToElo(0)).toBe(800);
-    expect(skillToElo(20)).toBe(3000);
+  it('maps 2000 Elo near mid-high skill', () => {
+    expect(eloToSkill(BASE_SENTRY_ELO)).toBe(11);
+    expect(skillToElo(11)).toBe(2010);
     expect(eloToSkill(3000)).toBe(20);
   });
 
-  it('chases visitor live rating without easing mid-match', () => {
-    expect(chaseSentryRating(1200, 1000)).toBe(1340);
-    expect(chaseSentryRating(1100, 1340)).toBe(1340);
-    expect(chaseSentryRating(2900, 2800)).toBe(3000);
-  });
-
-  it('climbs with the visitor even when already ahead', () => {
-    // Skill floor left Sentry at 1240 while visitor live climbs 800 → 1000
-    expect(chaseSentryRating(1000, 1240, 800)).toBe(1440);
+  it('bumps Sentry by 100 on visitor wins only', () => {
+    expect(bumpSentryEloOnUserWin(2000)).toBe(2100);
+    expect(bumpSentryEloOnUserWin(2900)).toBe(3000);
+    expect(bumpSentryEloOnUserWin(3000)).toBe(3000);
+    expect(nextSentryEloAfterGame(2000, 'win')).toBe(2100);
+    expect(nextSentryEloAfterGame(2100, 'loss')).toBe(2100);
+    expect(nextSentryEloAfterGame(2100, 'draw')).toBe(2100);
   });
 
   it('updates elo after a win vs stronger opponent', () => {
@@ -33,7 +32,7 @@ describe('rating', () => {
   });
 
   it('estimates higher live rating for low CPL vs the bot', () => {
-    const opp = 1040;
+    const opp = 2000;
     const sharp = livePerformanceRating(20, opp);
     const messy = livePerformanceRating(120, opp);
     expect(sharp).toBeGreaterThan(opp);
@@ -48,15 +47,9 @@ describe('rating', () => {
 });
 
 describe('adaptiveSkill', () => {
-  it('raises skill after accurate win', () => {
+  it('no longer slides skill from CPL', () => {
     expect(
-      nextSkillLevel({ currentSkill: 4, meanCpl: 30, accuracy: 90, result: 'win' }),
-    ).toBeGreaterThan(4);
-  });
-
-  it('lowers skill after blunder-heavy loss and clamps per game', () => {
-    const next = nextSkillLevel({ currentSkill: 10, meanCpl: 200, accuracy: 40, result: 'loss' });
-    expect(next).toBeLessThan(10);
-    expect(10 - next).toBeLessThanOrEqual(3);
+      nextSkillLevel({ currentSkill: 11, meanCpl: 30, accuracy: 90, result: 'win' }),
+    ).toBe(11);
   });
 });

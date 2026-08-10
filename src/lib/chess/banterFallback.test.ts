@@ -53,6 +53,7 @@ describe('chessStorage', () => {
     expect(stats.userWins).toBe(0);
     expect(stats.sentryWins).toBe(1_000_000);
     expect(stats.visitorElo).toBe(800);
+    expect(stats.sentryElo).toBe(2000);
     expect(stats.skillLevel).toBe(20);
     expect(stats.recentPgns).toHaveLength(0);
   });
