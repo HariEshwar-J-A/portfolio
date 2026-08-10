@@ -104,6 +104,5 @@ export const GameOverPanel: React.FC<GameOverPanelProps> = ({
         </button>
       )}
     </div>
-    <PlayRealHariCta isDark={isDark} />
   </div>
 );

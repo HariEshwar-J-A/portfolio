@@ -708,7 +708,15 @@ export const useChessArena = () => {
     sendUserChat('draw');
   }, [sendUserChat]);
 
-  useEffect(() => () => engineRef.current?.dispose(), []);
+  useEffect(
+    () => () => {
+      if (activeRef.current && !endingRef.current) {
+        void endGame('forfeit', visitorIsWhiteRef.current ? '0-1' : '1-0');
+      }
+      engineRef.current?.dispose();
+    },
+    [endGame],
+  );
 
   const boardSquares = useMemo(() => {
     const g = new Chess(fen);

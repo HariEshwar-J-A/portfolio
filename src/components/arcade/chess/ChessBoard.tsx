@@ -60,7 +60,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
       aria-colcount={8}
       tabIndex={0}
       onKeyDown={onKeyDown}
-      className="mx-auto w-full max-w-[min(96vw,34rem)] outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+      className="mx-auto w-full max-w-[min(96vw,42rem)] outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
       style={{ ['--tw-ring-color' as string]: 'var(--os-primary)' }}
     >
       <div className="flex items-stretch gap-1">
