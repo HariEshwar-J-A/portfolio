@@ -78,9 +78,11 @@ describe('banter request normalization', () => {
     expect(n?.fen).not.toContain('\u0000');
   });
 
-  it('system prompt identifies Sentry not the human', () => {
+  it('system prompt identifies Sentry not the human and sets voice', () => {
     const p = buildSentrySystemPrompt();
     expect(p).toContain('Sentry');
     expect(p).toContain('NOT Harieshwar');
+    expect(p).toMatch(/competitive/i);
+    expect(p).toMatch(/sarcastic/i);
   });
 });

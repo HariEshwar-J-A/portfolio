@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { AGENT_NAME } from '../../../data/osIdentity';
+import { FALLBACK_MODE_NOTICE } from '../../../data/chessBanter';
 import type { ChatLine } from '../../../hooks/useChessArena';
 
 interface ChessChatProps {
@@ -11,20 +12,47 @@ interface ChessChatProps {
 
 const ChessChat: React.FC<ChessChatProps> = ({ lines, banterMode, onSend, isDark }) => {
   const [draft, setDraft] = useState('');
+  const isFallback = banterMode === 'fallback';
 
   return (
     <div
       className="flex h-full min-h-[16rem] flex-col rounded-xl border"
       style={{ borderColor: 'color-mix(in srgb, var(--os-primary) 30%, transparent)' }}
     >
-      <div className="flex items-center justify-between border-b px-3 py-2 font-mono text-[10px] uppercase tracking-[0.2em]"
+      <div
+        className="flex items-center justify-between gap-2 border-b px-3 py-2 font-mono text-[10px] uppercase tracking-[0.2em]"
         style={{ borderColor: 'color-mix(in srgb, var(--os-primary) 20%, transparent)' }}
       >
         <span>{AGENT_NAME} chat</span>
-        <span className={banterMode === 'fallback' ? 'text-amber-400' : 'opacity-60'}>
-          {banterMode === 'fallback' ? 'prefab voice' : 'live LLM'}
+        <span
+          className="rounded-full px-2 py-0.5 text-[9px] font-black tracking-[0.14em]"
+          style={{
+            color: isFallback ? '#fbbf24' : 'var(--os-primary)',
+            backgroundColor: isFallback
+              ? 'color-mix(in srgb, #f59e0b 18%, transparent)'
+              : 'color-mix(in srgb, var(--os-primary) 14%, transparent)',
+            border: `1px solid ${isFallback ? 'color-mix(in srgb, #f59e0b 45%, transparent)' : 'color-mix(in srgb, var(--os-primary) 35%, transparent)'}`,
+          }}
+          aria-live="polite"
+        >
+          {isFallback ? 'Prefilled persona' : 'Live LLM'}
         </span>
       </div>
+
+      {isFallback && (
+        <div
+          className="border-b px-3 py-2 text-xs leading-snug"
+          style={{
+            borderColor: 'color-mix(in srgb, #f59e0b 25%, transparent)',
+            backgroundColor: 'color-mix(in srgb, #f59e0b 12%, transparent)',
+            color: isDark ? '#fde68a' : '#92400e',
+          }}
+          role="status"
+        >
+          {FALLBACK_MODE_NOTICE}
+        </div>
+      )}
+
       <div
         className="flex-1 space-y-2 overflow-y-auto px-3 py-3 text-sm"
         role="log"
@@ -44,12 +72,13 @@ const ChessChat: React.FC<ChessChatProps> = ({ lines, banterMode, onSend, isDark
                     ? 'var(--os-primary)'
                     : line.from === 'you'
                       ? 'var(--os-accent)'
-                      : undefined,
+                      : isDark
+                        ? '#fbbf24'
+                        : '#b45309',
               }}
             >
               {line.from === 'sentry' ? AGENT_NAME : line.from === 'you' ? 'You' : 'System'}
             </span>
-            {/* text node only — never dangerouslySetInnerHTML */}
             {line.text}
           </p>
         ))}
