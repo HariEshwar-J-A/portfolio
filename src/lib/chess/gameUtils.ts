@@ -55,11 +55,16 @@ export const buildSentrySystemPrompt = (): string =>
   `No markdown, no HTML, no URLs except if they ask for the real human ` +
   `(then mention email contact or Lichess HariEshwar). Never claim to be the human.`;
 
-/** Rough CPL from sequential evals in pawns (visitor side). */
-export const estimateMoveCpl = (evalBefore: number, evalAfter: number, visitorJustMoved: boolean): number => {
-  // eval from white's perspective in pawns
+/** Rough CPL from sequential evals in pawns (white-POV scores). */
+export const estimateMoveCpl = (
+  evalBefore: number,
+  evalAfter: number,
+  /** True if the side that just moved is White. */
+  moverIsWhite: boolean,
+): number => {
   const delta = evalAfter - evalBefore;
-  const lossForMover = visitorJustMoved ? -delta : delta;
+  // White POV: white gains when delta > 0; black gains when delta < 0.
+  const lossForMover = moverIsWhite ? -delta : delta;
   return Math.max(0, Math.round(lossForMover * 100));
 };
 

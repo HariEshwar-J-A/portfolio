@@ -92,7 +92,7 @@ export class StockfishEngine {
     return this.enqueue(async () => {
       await this.init();
       const mt = Math.max(50, Math.min(5000, Math.round(movetimeMs)));
-      this.post('ucinewgame');
+      // Do not send ucinewgame every move — keeps UCI strength options intact mid-match.
       this.post(`position fen ${fen}`);
       let best = '0000';
       let ponder: string | undefined;

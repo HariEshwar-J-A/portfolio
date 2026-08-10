@@ -45,11 +45,21 @@ export const livePerformanceRating = (meanCpl: number, opponentElo: number): num
 
 /**
  * Raise Sentry's live rating as the visitor improves — never easier mid-match.
- * Stay ahead so the user does not win easily; cap at Hari's ceiling.
+ * Keep a margin above the visitor, and when the visitor climbs, climb with them
+ * even if Sentry already started stronger (skill floor).
  */
-export const chaseSentryRating = (visitorLive: number, currentSentry: number): number => {
-  const target = Math.min(ENGINE_ELO_CAP, visitorLive + SENTRY_CHASE_MARGIN);
-  return clampInt(Math.max(currentSentry, target), ENGINE_ELO_FLOOR, ENGINE_ELO_CAP, currentSentry);
+export const chaseSentryRating = (
+  visitorLive: number,
+  currentSentry: number,
+  previousVisitorLive?: number,
+): number => {
+  const live = clampInt(visitorLive, 400, ENGINE_ELO_CAP, currentSentry);
+  const target = Math.min(ENGINE_ELO_CAP, live + SENTRY_CHASE_MARGIN);
+  let next = Math.max(currentSentry, target);
+  if (previousVisitorLive != null && live > previousVisitorLive) {
+    next = Math.max(next, currentSentry + (live - previousVisitorLive));
+  }
+  return clampInt(next, ENGINE_ELO_FLOOR, ENGINE_ELO_CAP, currentSentry);
 };
 
 export const settleMatchRating = (

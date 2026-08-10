@@ -22,6 +22,11 @@ describe('rating', () => {
     expect(chaseSentryRating(2900, 2800)).toBe(3000);
   });
 
+  it('climbs with the visitor even when already ahead', () => {
+    // Skill floor left Sentry at 1240 while visitor live climbs 800 → 1000
+    expect(chaseSentryRating(1000, 1240, 800)).toBe(1440);
+  });
+
   it('updates elo after a win vs stronger opponent', () => {
     const next = updateElo(800, 1400, 1, 32);
     expect(next).toBeGreaterThan(800);
