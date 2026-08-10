@@ -13,3 +13,217 @@
     -ms-overflow-style: none;    /* IE/Edge */
   }
 }
+
+@layer components {
+  /* Keycap chips used in the game HUD controls legend */
+  .hud-kbd {
+    @apply inline-flex min-w-[1.1rem] items-center justify-center rounded border border-slate-400/40 px-1 py-px font-mono text-[9px] font-bold;
+  }
+}
+
+/* Fallback smoothness when Lenis is not driving the scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Lenis takes over scrolling — native smooth behavior must be off */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+/* Ambient aurora blobs drifting behind the content */
+@keyframes aurora-drift-1 {
+  0%,
+  100% {
+    transform: translate(-8%, -4%) scale(1);
+  }
+  50% {
+    transform: translate(10%, 12%) scale(1.18);
+  }
+}
+
+@keyframes aurora-drift-2 {
+  0%,
+  100% {
+    transform: translate(6%, 8%) scale(1.1);
+  }
+  50% {
+    transform: translate(-10%, -6%) scale(0.92);
+  }
+}
+
+@keyframes aurora-drift-3 {
+  0%,
+  100% {
+    transform: translate(0%, 6%) scale(0.95);
+  }
+  50% {
+    transform: translate(8%, -10%) scale(1.15);
+  }
+}
+
+.animate-aurora-1 {
+  animation: aurora-drift-1 28s ease-in-out infinite;
+}
+
+.animate-aurora-2 {
+  animation: aurora-drift-2 34s ease-in-out infinite;
+}
+
+.animate-aurora-3 {
+  animation: aurora-drift-3 40s ease-in-out infinite;
+}
+
+/* Theme persona colors — set by <ThemeVariables/> from the active palette */
+:root {
+  --os-primary: #38bdf8;
+  --os-secondary: #818cf8;
+  --os-accent: #f472b6;
+}
+
+/* Hover color that follows the persona */
+.hover-primary:hover {
+  color: var(--os-primary);
+}
+
+/* Modern glass cards: persona-tinted glow + lift on hover */
+.glass-card {
+  transition:
+    box-shadow 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.3s ease;
+}
+
+.glass-card:hover {
+  border-color: color-mix(in srgb, var(--os-primary) 32%, transparent);
+  box-shadow: 0 8px 32px color-mix(in srgb, var(--os-primary) 14%, transparent);
+}
+
+/* Animated gradient used for borders and accent strips */
+@keyframes border-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+.os-border-flow {
+  background: linear-gradient(
+    90deg,
+    var(--os-primary),
+    var(--os-secondary),
+    var(--os-accent),
+    var(--os-primary)
+  );
+  background-size: 200% 100%;
+  animation: border-flow 6s linear infinite;
+}
+
+/* Vertical scan line sweeping across lab panels */
+@keyframes scan-y {
+  0% {
+    top: -12%;
+  }
+  100% {
+    top: 112%;
+  }
+}
+
+.os-scanline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 18%;
+  background: linear-gradient(180deg, transparent, var(--os-primary), transparent);
+  opacity: 0.14;
+  animation: scan-y 3.2s linear infinite;
+  pointer-events: none;
+}
+
+/* Subtle holographic flicker for lab headings */
+@keyframes glitch-flicker {
+  0%,
+  91%,
+  100% {
+    text-shadow:
+      0.4px 0 var(--os-accent),
+      -0.4px 0 var(--os-secondary);
+    transform: translateX(0);
+  }
+  92% {
+    text-shadow:
+      2px 0 var(--os-accent),
+      -2px 0 var(--os-secondary);
+    transform: translateX(1px);
+  }
+  94% {
+    text-shadow:
+      -2px 0 var(--os-accent),
+      2px 0 var(--os-secondary);
+    transform: translateX(-1px);
+  }
+  96% {
+    text-shadow:
+      1px 0 var(--os-accent),
+      -1px 0 var(--os-secondary);
+    transform: translateX(0);
+  }
+}
+
+.os-glitch {
+  animation: glitch-flicker 5s infinite;
+}
+
+/* Soft breathing glow for interactive lab tiles */
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 18px color-mix(in srgb, var(--os-primary) 22%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 34px color-mix(in srgb, var(--os-primary) 40%, transparent);
+  }
+}
+
+.os-pulse-glow {
+  animation: pulse-glow 3.4s ease-in-out infinite;
+}
+
+/* Gentle vertical float for the hero portrait */
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+.animate-float-slow {
+  animation: float-slow 7s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-aurora-1,
+  .animate-aurora-2,
+  .animate-aurora-3,
+  .animate-float-slow,
+  .os-border-flow,
+  .os-scanline,
+  .os-glitch,
+  .os-pulse-glow {
+    animation: none;
+  }
+}

@@ -1,46 +1,36 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
+import { RootState } from '../../store/store';
 import { useTheme } from '../../hooks/useTheme';
 import { portfolioData } from '../../data/portfolioData';
 import { Calendar, MapPin, GraduationCap } from 'lucide-react';
+import SectionShell, { glassPanel } from '../SectionShell';
 
 const EducationSection: React.FC = () => {
   const { theme } = useTheme();
   const { education } = portfolioData;
-  
+  const isMinimal = useSelector((state: RootState) => state.view.mode) === 'minimal';
+
   return (
-    <section 
-      id="education" 
-      className={`min-h-screen py-20 ${
-        theme.mode === 'dark' ? 'bg-slate-800 text-white' : 'bg-slate-50 text-slate-900'
-      }`}
+    <SectionShell
+      id="education"
+      eyebrow="Foundations"
+      title="Education"
+      subtitle="My academic background and qualifications."
     >
-      <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-12 text-center"
-        >
-          <h2 className="text-4xl font-bold mb-4">Education</h2>
-          <p className="text-lg max-w-2xl mx-auto opacity-80">
-            My academic background and qualifications.
-          </p>
-        </motion.div>
-        
         <div className="space-y-12 max-w-4xl mx-auto">
           {education.map((edu, index) => (
             <motion.div
               key={`${edu.institution}-${edu.degree}`}
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className={`p-6 rounded-lg shadow-lg ${
-                theme.mode === 'dark' ? 'bg-slate-700' : 'bg-white'
-              }`}
+              className={`p-6 ${glassPanel(theme.mode === 'dark')}`}
             >
               <div className="flex flex-col md:flex-row gap-6">
-                {edu.logo && (
+                {edu.logo && !isMinimal && (
                   <div className="w-32 h-32 rounded-lg overflow-hidden flex-shrink-0 bg-white p-2">
                     <img 
                       src={edu.logo} 
@@ -80,7 +70,7 @@ const EducationSection: React.FC = () => {
                     )}
                   </div>
                   
-                  {edu.description && (
+                  {edu.description && !isMinimal && (
                     <p className="mt-4">{edu.description}</p>
                   )}
                 </div>
@@ -88,8 +78,7 @@ const EducationSection: React.FC = () => {
             </motion.div>
           ))}
         </div>
-      </div>
-    </section>
+    </SectionShell>
   );
 };
 

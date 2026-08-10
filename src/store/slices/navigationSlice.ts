@@ -1,6 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export type SectionId = 'about' | 'skills' | 'experience' | 'education' | 'projects' | 'achievements' | 'contact';
+export type SectionId =
+  | 'about'
+  | 'skills'
+  | 'experience'
+  | 'education'
+  | 'projects'
+  | 'products'
+  | 'achievements'
+  | 'contact';
 
 interface NavigationState {
   activeSection: SectionId;
@@ -10,7 +18,7 @@ interface NavigationState {
 
 const initialState: NavigationState = {
   activeSection: 'about',
-  sections: ['about', 'skills', 'experience', 'education', 'projects', 'achievements', 'contact'],
+  sections: ['about', 'skills', 'experience', 'education', 'projects', 'products', 'achievements', 'contact'],
   isAnimating: false,
 };
 
@@ -20,6 +28,10 @@ const navigationSlice = createSlice({
   reducers: {
     setActiveSection: (state, action: PayloadAction<SectionId>) => {
       state.activeSection = action.payload;
+    },
+    /** Reorder sections — used by the intent wizard's personalized views. */
+    setSections: (state, action: PayloadAction<SectionId[]>) => {
+      state.sections = action.payload;
     },
     startAnimation: (state) => {
       state.isAnimating = true;
@@ -37,6 +49,7 @@ const navigationSlice = createSlice({
 
 export const {
   setActiveSection,
+  setSections,
   startAnimation,
   endAnimation,
   navigateTo,
