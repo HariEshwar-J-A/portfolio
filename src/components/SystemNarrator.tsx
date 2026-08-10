@@ -9,7 +9,7 @@ import { getPalette, sectionNarration } from '../data/osPersona';
 const TYPE_SPEED_MS = 18;
 
 /**
- * HARI.AI's voice: a slim floating status line that types a short,
+ * Sentry's voice on HARI.OS: a slim floating status line that types a short,
  * first-person observation about its human for whichever section is in
  * view. Purely informational (pointer-events-none), clamps to the
  * viewport, and slides out of the way when the footer scrolls in so it
@@ -64,7 +64,7 @@ const SystemNarrator: React.FC = () => {
     >
       <Bot size={14} className="shrink-0" style={{ color: palette.primary }} />
       <span className="hidden shrink-0 font-bold tracking-widest sm:inline" style={{ color: palette.primary }}>
-        HARI.AI
+        Sentry
       </span>
       <span className="min-w-0 flex-1 truncate">
         {typed}

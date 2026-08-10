@@ -1,8 +1,10 @@
 /**
- * HARI.AI — Harieshwar's personal AI. It runs this site, narrates its
- * human in first person, hosts the games, and drafts the emails.
+ * HARI.OS — operating system shell for Harieshwar's portfolio.
+ * Sentry — AI agent that manages HARI.OS processes (themes, games, mail).
  * Theme personas, boot sequence, and per-section narration live here.
  */
+
+import { AGENT_NAME, OS_NAME } from './osIdentity';
 
 export type PaletteId = 'aurora' | 'grandmaster' | 'circuit' | 'daylight';
 
@@ -97,9 +99,9 @@ export const getPalette = (id: PaletteId): ThemePalette =>
 
 /** Lines typed out during the first-visit boot overlay. */
 export const bootLines = [
-  'HARI.AI — waking up…',
-  "> hi. I'm Harieshwar's personal AI.",
-  '> I run his portfolio, host his games, draft his emails.',
+  `${OS_NAME} — booting…`,
+  `> hi. I'm ${AGENT_NAME}, the agent that runs ${OS_NAME}.`,
+  '> I manage his portfolio processes: games, themes, mail drafts.',
   '> loading his story ................... OK',
   '> linking his product: InfoSentry ..... OK',
   '> picking an outfit (theme persona) ... OK',
@@ -107,7 +109,7 @@ export const bootLines = [
 ];
 
 /**
- * What HARI.AI says about its human, per section.
+ * What Sentry says about its human, per section.
  * Kept short so the floating bar never overflows on narrow screens.
  */
 export const sectionNarration: Record<string, string> = {

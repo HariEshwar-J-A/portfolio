@@ -131,7 +131,7 @@ const Header: React.FC = () => {
         <div className="relative z-10 flex shrink-0 items-center gap-2 font-mono text-lg font-bold tracking-tight md:text-xl">
           <span className="h-2 w-2 animate-pulse rounded-full" style={{ backgroundColor: 'var(--os-primary)' }} />
           <span className={isDark ? 'text-white' : 'text-slate-900'}>
-            hari<span style={{ color: 'var(--os-primary)' }}>.ai</span>
+                  hari<span style={{ color: 'var(--os-primary)' }}>.os</span>
           </span>
         </div>
 
@@ -411,7 +411,7 @@ const Header: React.FC = () => {
                   }`}
                 >
                   <Gamepad2 size={16} style={{ color: 'var(--os-primary)' }} />
-                  Play with HARI.AI
+                  Play with HARI.OS
                 </span>
               </Link>
 

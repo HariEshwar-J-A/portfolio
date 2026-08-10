@@ -31,13 +31,13 @@ const MODULES: { id: ModuleId; label: string; short: string; blurb: string; icon
   { id: 'sync', label: 'Neural Sync', short: 'Sync', blurb: 'Endless quiz — decode who Hari is', icon: <BrainCircuit size={15} /> },
   { id: 'cipher', label: 'Cipher Scramble', short: 'Cipher', blurb: 'Unscramble his world, forever', icon: <KeyRound size={15} /> },
   { id: 'grid', label: 'Pattern Grid', short: 'Grid', blurb: 'Match the obsessions', icon: <Grid3X3 size={15} /> },
-  { id: 'chess', label: 'Chess Arena', short: 'Chess', blurb: 'Coming soon — bring a board', icon: <Swords size={15} /> },
+  { id: 'chess', label: 'Chess Arena', short: 'Chess', blurb: 'Timed duel vs Sentry', icon: <Swords size={15} /> },
   { id: 'archive', label: 'Fragment Archive', short: 'Archive', blurb: 'Everything decoded so far', icon: <Archive size={15} /> },
 ];
 
 /**
- * HARI.AI Playground — gamified exploration with a portfolio-style top
- * navbar: game modes are tabs, not a card grid.
+ * HARI.OS Playground — gamified exploration with a portfolio-style top
+ * navbar: game modes are tabs, not a card grid. Processes managed by Sentry.
  */
 const OsPlaygroundPage: React.FC = () => {
   const { theme } = useTheme();
@@ -48,12 +48,13 @@ const OsPlaygroundPage: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const activeMeta = MODULES.find((module) => module.id === activeModule) ?? MODULES[0];
-  const mutedText = isDark ? 'text-slate-400' : 'text-slate-500';
 
   useEffect(() => {
-    document.title = 'HARI.AI Playground | Explore Harieshwar';
+    document.title = 'HARI.OS Playground | Explore Harieshwar';
     document.body.className = isDark ? 'bg-slate-950 text-white' : 'bg-slate-50 text-slate-900';
   }, [isDark]);
+
+  const mutedText = isDark ? 'text-slate-400' : 'text-slate-500';
 
   useEffect(() => {
     if (arcade.lastLevelUp === null) return;
@@ -95,7 +96,7 @@ const OsPlaygroundPage: React.FC = () => {
             <ArrowLeft size={15} className="opacity-70 transition group-hover:-translate-x-0.5 group-hover:opacity-100" />
             <span className="h-2 w-2 animate-pulse rounded-full" style={{ backgroundColor: 'var(--os-primary)' }} />
             <span>
-              hari<span style={{ color: 'var(--os-primary)' }}>.ai</span>
+              hari<span style={{ color: 'var(--os-primary)' }}>.os</span>
               <span className={`ml-1.5 hidden font-sans text-xs font-semibold sm:inline ${mutedText}`}>playground</span>
             </span>
           </Link>
@@ -256,7 +257,7 @@ const OsPlaygroundPage: React.FC = () => {
               exploration mode · {activeMeta.label}
             </p>
             <h1 className="os-glitch mt-2 font-mono text-2xl font-black tracking-tight sm:text-3xl md:text-4xl">
-              HARI.AI<span style={{ color: 'var(--os-primary)' }}> PLAYGROUND</span>
+              HARI.OS<span style={{ color: 'var(--os-primary)' }}> PLAYGROUND</span>
             </h1>
             <p className={`mt-2 max-w-xl text-sm leading-relaxed ${mutedText}`}>{activeMeta.blurb}</p>
           </div>

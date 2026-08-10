@@ -1,0 +1,9 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/api/chess-banter"
+  to = "/.netlify/functions/chess-banter"
+  status = 200
