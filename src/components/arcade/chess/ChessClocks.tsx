@@ -1,71 +1,98 @@
 import React from 'react';
 import { AGENT_NAME } from '../../../data/osIdentity';
 
-interface ChessClocksProps {
-  visitorMs: number;
-  sentryMs: number;
-  turn: 'w' | 'b';
-  visitorIsWhite?: boolean;
-  lowThresholdMs?: number;
+interface ClockFaceProps {
+  label: string;
+  rating?: number;
+  ms: number;
+  active: boolean;
+  low: boolean;
+  compact?: boolean;
 }
 
-const formatClock = (ms: number): string => {
+export const formatClock = (ms: number): string => {
   const total = Math.max(0, Math.ceil(ms / 1000));
   const m = Math.floor(total / 60);
   const s = total % 60;
   return `${m}:${String(s).padStart(2, '0')}`;
 };
 
-const ClockFace: React.FC<{
-  label: string;
-  ms: number;
-  active: boolean;
-  low: boolean;
-}> = ({ label, ms, active, low }) => (
+export const ClockFace: React.FC<ClockFaceProps> = ({ label, rating, ms, active, low, compact }) => (
   <div
-    className={`rounded-xl border px-4 py-3 font-mono transition ${active ? 'scale-[1.02]' : 'opacity-75'}`}
+    className={`flex items-center justify-between gap-3 rounded-lg border font-mono transition ${
+      compact ? 'px-3 py-1.5' : 'px-4 py-2'
+    } ${active ? '' : 'opacity-70'}`}
     style={{
       borderColor: active ? 'var(--os-primary)' : 'color-mix(in srgb, var(--os-primary) 25%, transparent)',
       backgroundColor: low
         ? 'color-mix(in srgb, #ef4444 22%, transparent)'
         : active
-          ? 'color-mix(in srgb, var(--os-primary) 16%, transparent)'
-          : 'transparent',
+          ? 'color-mix(in srgb, var(--os-primary) 14%, transparent)'
+          : 'color-mix(in srgb, var(--os-primary) 6%, transparent)',
       animation: low && active ? 'pulse 1s ease-in-out infinite' : undefined,
     }}
-    aria-label={`${label} clock ${formatClock(ms)}${active ? ', ticking' : ''}${low ? ', low time' : ''}`}
+    aria-label={`${label}${rating !== undefined ? ` rating ${rating}` : ''} clock ${formatClock(ms)}${active ? ', ticking' : ''}${low ? ', low time' : ''}`}
   >
-    <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-70">{label}</p>
-    <p className={`mt-1 text-2xl font-black tabular-nums ${low ? 'text-red-400' : ''}`}>
+    <div className="min-w-0">
+      <p className="text-[10px] font-black uppercase tracking-[0.18em] opacity-70">{label}</p>
+      {rating !== undefined && (
+        <p className="mt-0.5 text-[11px] font-bold tabular-nums" style={{ color: 'var(--os-primary)' }}>
+          {rating}
+          <span className="ml-1 font-medium opacity-50">Elo</span>
+        </p>
+      )}
+    </div>
+    <span className={`shrink-0 tabular-nums font-black ${compact ? 'text-lg' : 'text-xl'} ${low ? 'text-red-400' : ''}`}>
       {formatClock(ms)}
-      {low && <span className="ml-2 text-xs font-bold uppercase tracking-wider">Low</span>}
-    </p>
+      {low && <span className="ml-2 text-[10px] font-bold uppercase tracking-wider">Low</span>}
+    </span>
   </div>
 );
+
+interface ChessClocksProps {
+  visitorMs: number;
+  sentryMs: number;
+  turn: 'w' | 'b';
+  visitorIsWhite?: boolean;
+  visitorRating?: number;
+  sentryRating?: number;
+  lowThresholdMs?: number;
+  /** Which clock to render — use separately above/below the board. */
+  which: 'sentry' | 'visitor';
+}
 
 const ChessClocks: React.FC<ChessClocksProps> = ({
   visitorMs,
   sentryMs,
   turn,
   visitorIsWhite = true,
+  visitorRating,
+  sentryRating,
   lowThresholdMs = 20_000,
+  which,
 }) => {
   const visitorActive = visitorIsWhite ? turn === 'w' : turn === 'b';
-  return (
-    <div className="grid grid-cols-2 gap-3" role="group" aria-label="Game clocks">
-      <ClockFace
-        label="You"
-        ms={visitorMs}
-        active={visitorActive}
-        low={visitorMs < lowThresholdMs}
-      />
+  if (which === 'sentry') {
+    return (
       <ClockFace
         label={AGENT_NAME}
+        rating={sentryRating}
         ms={sentryMs}
         active={!visitorActive}
         low={sentryMs < lowThresholdMs}
+        compact
       />
-    </div>
+    );
+  }
+  return (
+    <ClockFace
+      label="You"
+      rating={visitorRating}
+      ms={visitorMs}
+      active={visitorActive}
+      low={visitorMs < lowThresholdMs}
+      compact
+    />
   );
 };
 

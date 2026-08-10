@@ -14,4 +14,6 @@ export const HUMAN_RATING_ANCHOR = 2000;
 export const agentTagline =
   "I run HARI.OS for Harieshwar — themes, mail, playground, and Chess Arena — so he can stay in the physical world.";
 
-export const chessProcessLabel = `${OS_NAME} · Chess Arena · managed by ${AGENT_NAME}`;
+export const chessBotBlurb = `${AGENT_NAME} — a chess bot by ${HUMAN_NAME}`;
+
+export const chessProcessLabel = `${OS_NAME} · Chess Arena · ${chessBotBlurb}`;

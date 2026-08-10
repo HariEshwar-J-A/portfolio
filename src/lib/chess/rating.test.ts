@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { eloToSkill, skillToElo, updateElo } from './rating';
+import { eloToSkill, livePerformanceRating, settleMatchRating, skillToElo, updateElo } from './rating';
 import { nextSkillLevel } from './adaptiveSkill';
 
 describe('rating', () => {
@@ -12,6 +12,20 @@ describe('rating', () => {
   it('updates elo after a win vs stronger opponent', () => {
     const next = updateElo(800, 1400, 1, 32);
     expect(next).toBeGreaterThan(800);
+  });
+
+  it('estimates higher live rating for low CPL vs the bot', () => {
+    const opp = 1040;
+    const sharp = livePerformanceRating(20, opp);
+    const messy = livePerformanceRating(120, opp);
+    expect(sharp).toBeGreaterThan(opp);
+    expect(messy).toBeLessThan(opp);
+  });
+
+  it('settles match rating near performance with a result nudge', () => {
+    const settled = settleMatchRating(1400, 1200, 1);
+    expect(settled).toBeGreaterThan(1300);
+    expect(settled).toBeLessThan(1500);
   });
 });
 
