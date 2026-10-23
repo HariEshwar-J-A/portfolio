@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { HAT_LIST } from './hats';
 import { MarketingData, OfferingsData, portfolioData } from './portfolioData';
 import { DEFAULT_SECTION_ORDER } from './personalization';
-import { applyOrder, splitLeadBullets } from '../lib/hatView';
+import { applyOrder, bulletsForHat, projectShortLine, splitLeadBullets } from '../lib/hatView';
 
 const factCorpus = JSON.stringify({
   personal: portfolioData.personal,
@@ -51,6 +51,16 @@ describe('hat views', () => {
 
     for (const point of hat.proofPoints) {
       expect(factCorpus, point.metric).toContain(point.metric);
+      const labelWords = point.label.trim().split(/\s+/);
+      expect(labelWords.length, point.label).toBeGreaterThanOrEqual(2);
+      expect(labelWords.length, point.label).toBeLessThanOrEqual(4);
+    }
+
+    expect(hat.summary.trim().split(/\s+/).length).toBeLessThanOrEqual(20);
+    expect(hat.roleLine.toLowerCase().includes(hat.roleTitle.toLowerCase())).toBe(false);
+    for (const leads of Object.values(hat.leadBullets)) {
+      expect(leads.length).toBeGreaterThanOrEqual(1);
+      expect(leads.length).toBeLessThanOrEqual(3);
     }
   });
 
@@ -62,6 +72,39 @@ describe('hat views', () => {
       'b',
       'd',
     ]);
+  });
+
+  it('keeps a short project line inside the existing description', () => {
+    for (const project of portfolioData.projects) {
+      const line = projectShortLine(project.description);
+      const normalized = project.description.replace(/\s+/g, ' ').trim();
+      if (line.endsWith('…')) {
+        expect(normalized.startsWith(line.slice(0, -1))).toBe(true);
+      } else {
+        expect(line).toBe(normalized);
+      }
+    }
+  });
+
+  it('caps hat bullets and shows every bullet off a hat', () => {
+    const bullets = ['a', 'b', 'c', 'd', 'e'];
+    expect(bulletsForHat(bullets, undefined, false)).toEqual({ lead: bullets, rest: [] });
+    expect(bulletsForHat(bullets, undefined, true)).toEqual({
+      lead: ['a', 'b'],
+      rest: ['c', 'd', 'e'],
+    });
+    expect(
+      bulletsForHat(
+        bullets,
+        [
+          { index: 4, includes: 'e' },
+          { index: 1, includes: 'b' },
+          { index: 0, includes: 'a' },
+          { index: 2, includes: 'c' },
+        ],
+        true
+      )
+    ).toEqual({ lead: ['e', 'b', 'a'], rest: ['c', 'd'] });
   });
 
   it('folds non-lead bullets after the configured ones', () => {

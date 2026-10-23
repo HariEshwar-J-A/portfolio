@@ -106,7 +106,7 @@ const HomePage: React.FC = () => {
         <ScrollProgress />
         <SectionDots />
         <SceneTransition />
-        <SystemNarrator />
+        {!hat && <SystemNarrator />}
 
         <main>
           {sectionOrder.map((sectionId) => {

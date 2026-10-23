@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
+import HatDisclosure from '../HatDisclosure';
 import { RootState } from '../../store/store';
 import { useTheme } from '../../hooks/useTheme';
 import { portfolioData } from '../../data/portfolioData';
 import { useHat } from '../../context/hat-context';
-import { splitLeadBullets } from '../../lib/hatView';
+import { bulletsForHat } from '../../lib/hatView';
 import type { LeadBullet } from '../../data/hats';
 import { Calendar, MapPin, Globe, Baseline as Timeline } from 'lucide-react';
 import Plot from 'react-plotly.js';
@@ -137,27 +138,36 @@ const CareerGantt: React.FC<{ isDark: boolean }> = ({ isDark }) => {
 };
 
 const RoleBullets: React.FC<{ bullets: string[]; leads?: LeadBullet[] }> = ({ bullets, leads }) => {
+  const hat = useHat();
   const [expanded, setExpanded] = useState(false);
-  const { lead, rest } = splitLeadBullets(bullets, leads);
-  const visible = expanded ? [...lead, ...rest] : lead;
+  const { lead, rest } = bulletsForHat(bullets, leads, Boolean(hat));
 
   return (
     <div className="mt-4">
       <h5 className="font-semibold mb-2">Key Achievements:</h5>
-      <ul className="list-disc pl-5 space-y-1">
-        {visible.map((achievement) => (
+      <ul className="list-disc pl-5 space-y-2">
+        {lead.map((achievement) => (
           <li key={achievement}>{achievement}</li>
         ))}
       </ul>
       {rest.length > 0 && (
-        <button
-          type="button"
-          onClick={() => setExpanded((open) => !open)}
-          className="mt-3 text-sm font-semibold"
-          style={{ color: 'var(--os-primary)' }}
-        >
-          {expanded ? 'Show less' : 'Show all'}
-        </button>
+        <>
+          <HatDisclosure open={expanded}>
+            <ul className="list-disc space-y-2 pl-5 pt-2">
+              {rest.map((achievement) => (
+                <li key={achievement}>{achievement}</li>
+              ))}
+            </ul>
+          </HatDisclosure>
+          <button
+            type="button"
+            onClick={() => setExpanded((open) => !open)}
+            className="mt-3 text-sm font-semibold"
+            style={{ color: 'var(--os-primary)' }}
+          >
+            {expanded ? 'Show less' : 'Show all'}
+          </button>
+        </>
       )}
     </div>
   );
@@ -168,6 +178,7 @@ const ExperienceSection: React.FC = () => {
   const { experience } = portfolioData;
   const hat = useHat();
   const [viewMode, setViewMode] = useState<'timeline' | 'map'>('timeline');
+  const [showSpan, setShowSpan] = useState(false);
   const isMinimal = useSelector((state: RootState) => state.view.mode) === 'minimal';
 
   // Get unique locations with their associated experiences
@@ -251,7 +262,7 @@ const ExperienceSection: React.FC = () => {
       title="Work Experience"
       subtitle="My professional journey and the companies I've worked with."
       headerExtra={
-        isMinimal ? undefined : (
+        isMinimal || hat ? undefined : (
         <div className="flex justify-center gap-4 mt-8">
           <button
             onClick={() => setViewMode('timeline')}
@@ -310,6 +321,17 @@ const ExperienceSection: React.FC = () => {
           </div>
         ) : (
         <>
+        {hat && (
+          <button
+            type="button"
+            onClick={() => setShowSpan((open) => !open)}
+            className="mb-4 text-sm font-semibold"
+            style={{ color: 'var(--os-primary)' }}
+          >
+            {showSpan ? 'Hide career span' : 'Show career span'}
+          </button>
+        )}
+        <HatDisclosure open={!hat || showSpan} instant={!hat}>
         <div className={`${glassPanel(theme.mode === 'dark')} mb-16 overflow-x-auto p-4 md:p-6`}>
           {viewMode === 'timeline' ? (
             <CareerGantt isDark={theme.mode === 'dark'} />
@@ -369,16 +391,19 @@ const ExperienceSection: React.FC = () => {
             />
           )}
         </div>
+        </HatDisclosure>
         
-        <div className="space-y-12">
+        <div className={hat ? 'space-y-16' : 'space-y-12'}>
           {experience.map((exp) => (
             <motion.div
               key={`${exp.company}-${exp.startDate}`}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.15 }}
-              transition={{ duration: 0.5 }}
-              className={`p-6 ${glassPanel(theme.mode === 'dark')}`}
+              transition={{ duration: hat ? 0.32 : 0.5, ease: 'easeOut' }}
+              whileHover={hat ? { y: -3 } : undefined}
+              whileTap={hat ? { scale: 0.995 } : undefined}
+              className={`p-6 md:p-8 ${glassPanel(theme.mode === 'dark')}`}
             >
               <div className="flex flex-col md:flex-row md:items-center gap-6">
                 <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-white p-2">

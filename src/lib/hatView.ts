@@ -20,6 +20,11 @@ export const applyOrder = <T>(
     .map(({ item }) => item);
 };
 
+export const HAT_LEAD_CAP = 3;
+export const HAT_FALLBACK_BULLETS = 2;
+export const HAT_PROJECT_PREVIEW = 3;
+export const HAT_ACHIEVEMENT_PREVIEW = 3;
+
 /** Lead bullets first, in the configured order. The rest stay in source order. */
 export const splitLeadBullets = (
   bullets: readonly string[],
@@ -32,4 +37,28 @@ export const splitLeadBullets = (
     .map((entry) => bullets[entry.index]);
   const rest = bullets.filter((_, index) => !leadIndexes.has(index));
   return { lead, rest };
+};
+
+/**
+ * On a hat, show at most three configured leads (or the first two bullets
+ * when a role has no lead list). Off a hat, show every bullet.
+ */
+export const bulletsForHat = (
+  bullets: readonly string[],
+  leads: readonly LeadBullet[] | undefined,
+  active: boolean
+): { lead: string[]; rest: string[] } => {
+  if (!active) return splitLeadBullets(bullets, leads);
+  const source =
+    leads && leads.length > 0
+      ? leads.slice(0, HAT_LEAD_CAP)
+      : bullets.slice(0, HAT_FALLBACK_BULLETS).map((includes, index) => ({ index, includes }));
+  return splitLeadBullets(bullets, source);
+};
+
+/** First words of an existing description. Nothing is added. */
+export const projectShortLine = (description: string, maxWords = 12): string => {
+  const words = description.replace(/\s+/g, ' ').trim().split(' ');
+  if (words.length <= maxWords) return words.join(' ');
+  return `${words.slice(0, maxWords).join(' ').replace(/[,:;–—-]+$/, '')}…`;
 };

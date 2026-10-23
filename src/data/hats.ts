@@ -21,8 +21,12 @@ export interface HatConfig {
   path: string;
   label: string;
   roleTitle: string;
+  /** Short line under the name. Does not repeat roleTitle. */
+  roleLine: string;
   headline: string;
+  /** On-screen support line. seo.description can be longer. */
   summary: string;
+  primaryCta: { label: string; section: SectionId };
   sectionOrder: SectionId[];
   /** Per role id. Roles stay in date order; only these bullets move up. */
   leadBullets: Record<string, LeadBullet[]>;
@@ -48,9 +52,10 @@ const fullStack: HatConfig = {
   path: '/full-stack',
   label: 'Full-stack',
   roleTitle: 'Full-Stack Developer',
-  headline:
-    'Full-stack developer: React, Angular and Node.js on PostgreSQL, from enterprise operations software to production SaaS.',
-  summary: FULL_STACK_SUMMARY,
+  roleLine: 'React, Angular, and Node.js',
+  headline: 'Full-stack developer for enterprise software and SaaS.',
+  summary: 'Six years with React, Angular, and Node.js on PostgreSQL.',
+  primaryCta: { label: 'See the work', section: 'experience' },
   sectionOrder: [
     'about',
     'experience',
@@ -66,7 +71,6 @@ const fullStack: HatConfig = {
       { index: 0, includes: 'Angular (v15), Node.js (v20+), and PostgreSQL' },
       { index: 7, includes: '3 new enterprise applications' },
       { index: 3, includes: 'Salesforce data streams' },
-      { index: 1, includes: 'Azure DevOps CI/CD pipelines' },
     ],
     npx: [
       { index: 1, includes: 'Modernized a React codebase' },
@@ -77,22 +81,20 @@ const fullStack: HatConfig = {
       { index: 7, includes: 'World Sports Academy' },
       { index: 8, includes: 'full Stripe revenue stack' },
       { index: 5, includes: 'Contentful CMS and Shopify Plus' },
-      { index: 6, includes: 'headless-CMS blog' },
     ],
     'soliton-senior': [
       { index: 0, includes: 'micro-frontends' },
       { index: 2, includes: 'Node.js REST APIs' },
       { index: 6, includes: 'React.js, Node.js, PostgreSQL, and AWS' },
-      { index: 3, includes: 'Standardized React.js structures' },
     ],
   },
   projectOrder: ['world-sports-academy', 'expense-tracker', 'habit-tracker', 'portfolio'],
   skillCategoryOrder: ['Frontend', 'Backend & APIs', 'Cloud & DevOps', 'AI & LLM'],
   achievementOrder: ['ecam-recognition', 'star-soliton', 'internal-hackathon'],
   proofPoints: [
-    { metric: '18%', label: 'Azure infra spend reduced at ECAM' },
-    { metric: '99.9%', label: 'uptime across live streaming & cloud' },
-    { metric: '3', label: 'new enterprise applications delivered at ECAM' },
+    { metric: '18%', label: 'Azure spend cut' },
+    { metric: '99.9%', label: 'Streaming uptime' },
+    { metric: '3', label: 'Enterprise apps' },
   ],
   seo: {
     title: 'Harieshwar J A | Full-Stack Developer',
@@ -105,9 +107,10 @@ const aiEngineer: HatConfig = {
   path: '/ai-engineer',
   label: 'AI Engineer',
   roleTitle: 'AI Engineer',
-  headline:
-    'Engineer building LLM systems (multi-agent orchestration, RAG and MCP tooling) on a full-stack base.',
-  summary: AI_ENGINEER_SUMMARY,
+  roleLine: 'Multi-agent, RAG, and MCP',
+  headline: 'LLM systems on a full-stack base.',
+  summary: 'InfoSentry runs eight agents and RAG under $7.30 a month.',
+  primaryCta: { label: 'See InfoSentry', section: 'products' },
   sectionOrder: [
     'about',
     'products',
@@ -135,9 +138,9 @@ const aiEngineer: HatConfig = {
   skillCategoryOrder: ['AI & LLM', 'Backend & APIs', 'Frontend', 'Cloud & DevOps'],
   achievementOrder: ['langchain-academy', 'google-ai-hackathon'],
   proofPoints: [
-    { metric: '8', label: 'LLM agents in InfoSentry' },
-    { metric: '$7.30', label: 'max InfoSentry LLM spend / month' },
-    { metric: '60%', label: 'dev productivity lift from AI pilot' },
+    { metric: '8', label: 'LLM agents' },
+    { metric: '$7.30', label: 'Monthly LLM cap' },
+    { metric: '60%', label: 'Pilot productivity' },
   ],
   seo: {
     title: 'Harieshwar J A | AI Engineer',
