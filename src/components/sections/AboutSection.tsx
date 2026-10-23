@@ -89,13 +89,15 @@ const HatHero: React.FC<{ hat: HatConfig }> = ({ hat }) => {
                 {hat.primaryCta.label}
                 <ArrowRight size={18} className="transition group-hover:translate-x-1" />
               </motion.button>
-              <button
-                type="button"
-                onClick={() => dispatch(navigateTo('products'))}
-                className={`text-sm font-semibold underline-offset-4 hover:underline ${isDark ? 'text-slate-300' : 'text-slate-600'}`}
-              >
-                InfoSentry
-              </button>
+              {hat.primaryCta.section !== 'products' && (
+                <button
+                  type="button"
+                  onClick={() => dispatch(navigateTo('products'))}
+                  className={`text-sm font-semibold underline-offset-4 hover:underline ${isDark ? 'text-slate-300' : 'text-slate-600'}`}
+                >
+                  InfoSentry
+                </button>
+              )}
               <a
                 href={infoSentry}
                 target="_blank"
