@@ -4,6 +4,8 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { store } from './store/store';
 import HomePage from './pages/HomePage';
+import { HAT_LIST } from './data/hats';
+import { HatProvider } from './context/HatContext';
 import ThemeVariables from './components/ThemeVariables';
 import AiRouteLoader from './components/AiRouteLoader';
 import ScrollToTop from './components/ScrollToTop';
@@ -76,6 +78,19 @@ const AppRoutes: React.FC = () => {
           </PageEnter>
         }
       />
+      {HAT_LIST.map((hat) => (
+        <Route
+          key={hat.id}
+          path={hat.path}
+          element={
+            <PageEnter>
+              <HatProvider hat={hat}>
+                <HomePage />
+              </HatProvider>
+            </PageEnter>
+          }
+        />
+      ))}
       <Route
         path="/3d"
         element={

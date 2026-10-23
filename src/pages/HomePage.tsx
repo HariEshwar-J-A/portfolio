@@ -8,6 +8,8 @@ import { useScroll } from '../hooks/useScroll';
 import { useKeyboardNav } from '../hooks/useKeyboardNav';
 import { useSmoothScroll } from '../hooks/useSmoothScroll';
 import { DEFAULT_SECTION_ORDER, FOCUS_CONFIGS } from '../data/personalization';
+import { useHat } from '../context/hat-context';
+import { applyPageMeta } from '../lib/pageMeta';
 import { scrollDocumentToTop } from '../components/ScrollToTop';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -45,25 +47,28 @@ const HomePage: React.FC = () => {
   const dispatch = useDispatch();
   const { theme } = useTheme();
   const focus = useSelector((state: RootState) => state.view.focus);
+  const hat = useHat();
 
   // Immersive base layer: Lenis smooth scrolling, scroll-spy, game-style keys.
   useSmoothScroll();
   useScroll();
   useKeyboardNav();
 
-  // The intent wizard personalizes the section order; nav/dots follow it.
-  const sectionOrder = useMemo(
-    () => (focus ? FOCUS_CONFIGS[focus].order : DEFAULT_SECTION_ORDER),
-    [focus]
-  );
+  // Hat route wins over a saved visit intent, which wins over the default order.
+  const sectionOrder = useMemo(() => {
+    if (hat) return hat.sectionOrder;
+    if (focus) return FOCUS_CONFIGS[focus].order;
+    return DEFAULT_SECTION_ORDER;
+  }, [hat, focus]);
 
   useEffect(() => {
     dispatch(setSections(sectionOrder));
   }, [dispatch, sectionOrder]);
 
   useEffect(() => {
-    document.title = 'Harieshwar J A | Senior Full-Stack Developer';
-  }, []);
+    applyPageMeta(hat);
+    return () => applyPageMeta(null);
+  }, [hat]);
 
   // Pin the hero on first paint (and after Lenis boots) so a restored
   // scroll offset never opens the page mid-Experience.

@@ -9,6 +9,7 @@ import { getPalette } from '../../data/osPersona';
 import TypewriterText from '../TypewriterText';
 import { glassPanel } from '../SectionShell';
 import { OPEN_COLLAB_EVENT } from '../CollabWizard';
+import { useHat } from '../../context/hat-context';
 import {
   ArrowRight,
   ArrowUpRight,
@@ -24,8 +25,13 @@ const AboutSection: React.FC = () => {
   const palette = getPalette(useSelector((state: RootState) => state.theme.palette));
   const isMinimal = useSelector((state: RootState) => state.view.mode) === 'minimal';
   const isDark = theme.mode === 'dark';
-  const { name, title, photo, socialLinks } = portfolioData.personal;
-  const { headline, tagline, heroOrbitLabels, proofPoints } = MarketingData;
+  const { name, photo, socialLinks } = portfolioData.personal;
+  const hat = useHat();
+  const title = hat?.roleTitle ?? portfolioData.personal.title;
+  const headline = hat?.headline ?? MarketingData.headline;
+  const tagline = hat?.summary ?? MarketingData.tagline;
+  const proofPoints = hat?.proofPoints ?? MarketingData.proofPoints;
+  const { heroOrbitLabels } = MarketingData;
 
   // Gentle parallax: copy drifts up, portrait drifts down as the visitor scrolls away.
   const { scrollY } = useScrollMotion();

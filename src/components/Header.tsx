@@ -24,6 +24,7 @@ import { OPEN_PALETTE_EVENT } from './CommandPalette';
 import { CLOSE_INTENT_EVENT, OPEN_INTENT_EVENT } from './IntentWizard';
 import ThemeSwitcher from './ThemeSwitcher';
 import { prefetchThreeDRoute, prefetchPlaygroundRoute } from '../lib/experienceRoutes';
+import { isHatPath } from '../data/hats';
 
 /** Dismiss the visit concierge before leaving for Games/3D. */
 const dismissIntentWizard = () => {
@@ -72,7 +73,7 @@ const Header: React.FC = () => {
   const moreRef = useRef<HTMLDivElement>(null);
   const isDark = theme.mode === 'dark';
   const isMinimal = viewMode === 'minimal';
-  const isHome = location.pathname === '/';
+  const isHome = location.pathname === '/' || isHatPath(location.pathname);
 
   useEffect(() => {
     const handleScroll = () => {

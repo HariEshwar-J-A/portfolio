@@ -4,12 +4,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { RootState } from '../../store/store';
 import { useTheme } from '../../hooks/useTheme';
 import { portfolioData } from '../../data/portfolioData';
+import { useHat } from '../../context/hat-context';
+import { applyOrder } from '../../lib/hatView';
 import { Award, Medal, Trophy } from 'lucide-react';
 import SectionShell, { glassPanel } from '../SectionShell';
 
 const AchievementsSection: React.FC = () => {
   const { theme } = useTheme();
-  const { achievements } = portfolioData;
+  const hat = useHat();
+  const achievements = hat
+    ? applyOrder(portfolioData.achievements, hat.achievementOrder, (item) => item.id)
+    : portfolioData.achievements;
   const [selectedAchievement, setSelectedAchievement] = useState<number | null>(null);
   const isMinimal = useSelector((state: RootState) => state.view.mode) === 'minimal';
   

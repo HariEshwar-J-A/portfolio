@@ -4,6 +4,9 @@ import { motion } from 'framer-motion';
 import { RootState } from '../../store/store';
 import { useTheme } from '../../hooks/useTheme';
 import { portfolioData } from '../../data/portfolioData';
+import { useHat } from '../../context/hat-context';
+import { splitLeadBullets } from '../../lib/hatView';
+import type { LeadBullet } from '../../data/hats';
 import { Calendar, MapPin, Globe, Baseline as Timeline } from 'lucide-react';
 import Plot from 'react-plotly.js';
 import SectionShell, { glassPanel } from '../SectionShell';
@@ -133,9 +136,37 @@ const CareerGantt: React.FC<{ isDark: boolean }> = ({ isDark }) => {
   );
 };
 
+const RoleBullets: React.FC<{ bullets: string[]; leads?: LeadBullet[] }> = ({ bullets, leads }) => {
+  const [expanded, setExpanded] = useState(false);
+  const { lead, rest } = splitLeadBullets(bullets, leads);
+  const visible = expanded ? [...lead, ...rest] : lead;
+
+  return (
+    <div className="mt-4">
+      <h5 className="font-semibold mb-2">Key Achievements:</h5>
+      <ul className="list-disc pl-5 space-y-1">
+        {visible.map((achievement) => (
+          <li key={achievement}>{achievement}</li>
+        ))}
+      </ul>
+      {rest.length > 0 && (
+        <button
+          type="button"
+          onClick={() => setExpanded((open) => !open)}
+          className="mt-3 text-sm font-semibold"
+          style={{ color: 'var(--os-primary)' }}
+        >
+          {expanded ? 'Show less' : 'Show all'}
+        </button>
+      )}
+    </div>
+  );
+};
+
 const ExperienceSection: React.FC = () => {
   const { theme } = useTheme();
   const { experience } = portfolioData;
+  const hat = useHat();
   const [viewMode, setViewMode] = useState<'timeline' | 'map'>('timeline');
   const isMinimal = useSelector((state: RootState) => state.view.mode) === 'minimal';
 
@@ -384,14 +415,7 @@ const ExperienceSection: React.FC = () => {
               
               <div className="mt-6">
                 <p className="mb-4">{exp.description}</p>
-                <div className="mt-4">
-                  <h5 className="font-semibold mb-2">Key Achievements:</h5>
-                  <ul className="list-disc pl-5 space-y-1">
-                    {exp.achievements.map((achievement, i) => (
-                      <li key={i}>{achievement}</li>
-                    ))}
-                  </ul>
-                </div>
+                <RoleBullets bullets={exp.achievements} leads={hat?.leadBullets[exp.id]} />
               </div>
             </motion.div>
           ))}

@@ -4,12 +4,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { RootState } from '../../store/store';
 import { useTheme } from '../../hooks/useTheme';
 import { portfolioData } from '../../data/portfolioData';
+import { useHat } from '../../context/hat-context';
+import { applyOrder } from '../../lib/hatView';
 import { ExternalLink, Github, ChevronLeft, ChevronRight } from 'lucide-react';
 import SectionShell, { glassPanel } from '../SectionShell';
 
 const ProjectsSection: React.FC = () => {
   const { theme } = useTheme();
-  const { projects } = portfolioData;
+  const hat = useHat();
+  const projects = hat
+    ? applyOrder(portfolioData.projects, hat.projectOrder, (project) => project.id)
+    : portfolioData.projects;
   const [filter, setFilter] = useState<string | null>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
   const isMinimal = useSelector((state: RootState) => state.view.mode) === 'minimal';

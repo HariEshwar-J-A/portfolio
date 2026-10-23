@@ -5,6 +5,8 @@ import { Boxes, Briefcase, Package, Server } from 'lucide-react';
 import { RootState } from '../../store/store';
 import { useTheme } from '../../hooks/useTheme';
 import { portfolioData } from '../../data/portfolioData';
+import { useHat } from '../../context/hat-context';
+import { applyOrder } from '../../lib/hatView';
 import SectionShell, { glassPanel } from '../SectionShell';
 
 /** Real, defensible numbers pulled from the career record — not vanity percentages. */
@@ -57,7 +59,10 @@ const CountUp: React.FC<{ value: number; suffix?: string }> = ({ value, suffix =
 
 const SkillsSection: React.FC = () => {
   const { theme } = useTheme();
-  const { skills } = portfolioData;
+  const hat = useHat();
+  const skills = hat
+    ? applyOrder(portfolioData.skills, hat.skillCategoryOrder, (category) => category.category)
+    : portfolioData.skills;
   const isDark = theme.mode === 'dark';
   const isMinimal = useSelector((state: RootState) => state.view.mode) === 'minimal';
   const mutedText = isDark ? 'text-slate-400' : 'text-slate-500';

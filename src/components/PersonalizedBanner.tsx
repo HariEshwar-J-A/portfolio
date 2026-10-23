@@ -9,6 +9,7 @@ import { navigateTo } from '../store/slices/navigationSlice';
 import { useTheme } from '../hooks/useTheme';
 import { FOCUS_CONFIGS } from '../data/personalization';
 import { OPEN_COLLAB_EVENT } from './CollabWizard';
+import { useHat } from '../context/hat-context';
 
 /**
  * Sticky strip under the header while a visit intent is active: shows
@@ -20,11 +21,44 @@ const PersonalizedBanner: React.FC = () => {
   const { theme } = useTheme();
   const isDark = theme.mode === 'dark';
   const { focus, focusDetail } = useSelector((state: RootState) => state.view);
+  const hat = useHat();
   const config = focus ? FOCUS_CONFIGS[focus] : null;
+  const cardClass = `pointer-events-auto mx-auto flex max-w-4xl flex-wrap items-center gap-x-4 gap-y-2 rounded-2xl border px-4 py-2.5 shadow-xl backdrop-blur-xl ${
+    isDark ? 'border-white/10 bg-slate-950/80' : 'border-slate-200 bg-white/90'
+  }`;
 
   return (
     <AnimatePresence>
-      {focus && focus !== 'explore' && config && (
+      {hat && (
+        <motion.div
+          initial={{ opacity: 0, y: -16 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -16 }}
+          transition={{ duration: 0.25, ease: 'easeOut' }}
+          className="pointer-events-none fixed inset-x-0 top-[64px] z-40 px-3 sm:px-6"
+        >
+          <div
+            className={cardClass}
+            style={{ borderColor: 'color-mix(in srgb, var(--os-primary) 35%, transparent)' }}
+            role="status"
+          >
+            <p className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-xs">
+              <Bot size={14} className="shrink-0" style={{ color: 'var(--os-primary)' }} />
+              <span className={isDark ? 'text-slate-200' : 'text-slate-800'}>
+                Viewing as{' '}
+                <span className="font-mono font-black uppercase tracking-[0.15em]" style={{ color: 'var(--os-primary)' }}>
+                  {hat.label}
+                </span>
+                <span className={isDark ? 'text-slate-400' : 'text-slate-500'}> · </span>
+                <Link to="/" className="font-semibold underline-offset-2 hover:underline">
+                  See full portfolio
+                </Link>
+              </span>
+            </p>
+          </div>
+        </motion.div>
+      )}
+      {!hat && focus && focus !== 'explore' && config && (
         <motion.div
           initial={{ opacity: 0, y: -16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -34,9 +68,7 @@ const PersonalizedBanner: React.FC = () => {
         >
           {/* Only the card itself catches taps — the strip's margins pass through */}
           <div
-            className={`pointer-events-auto mx-auto flex max-w-4xl flex-wrap items-center gap-x-4 gap-y-2 rounded-2xl border px-4 py-2.5 shadow-xl backdrop-blur-xl ${
-              isDark ? 'border-white/10 bg-slate-950/80' : 'border-slate-200 bg-white/90'
-            }`}
+            className={cardClass}
             style={{ borderColor: 'color-mix(in srgb, var(--os-primary) 35%, transparent)' }}
             role="status"
           >
