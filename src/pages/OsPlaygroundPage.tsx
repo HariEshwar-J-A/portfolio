@@ -1,10 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   Archive,
   ArrowLeft,
+  Box,
   BrainCircuit,
+  Gamepad2,
   Grid3X3,
   Handshake,
   KeyRound,
@@ -25,6 +27,10 @@ import MemoryModule from '../components/arcade/MemoryModule';
 import ChessArena from '../components/arcade/ChessArena';
 import LeaveMatchModal from '../components/arcade/chess/LeaveMatchModal';
 import FragmentArchive from '../components/arcade/FragmentArchive';
+import NavMenu from '../components/nav/NavMenu';
+import { HAT_LIST } from '../data/hats';
+import { PLAY_LINKS } from '../lib/siteNav';
+import { prefetchThreeDRoute } from '../lib/experienceRoutes';
 
 type ModuleId = 'sync' | 'cipher' | 'grid' | 'chess' | 'archive';
 
@@ -45,7 +51,15 @@ const OsPlaygroundPage: React.FC = () => {
   const isDark = theme.mode === 'dark';
   const arcade = useArcade();
   const navigate = useNavigate();
-  const [activeModule, setActiveModule] = useState<ModuleId>('sync');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialGame = searchParams.get('game');
+  const [activeModule, setActiveModule] = useState<ModuleId>(
+    initialGame === 'cipher' || initialGame === 'grid' || initialGame === 'chess' || initialGame === 'archive'
+      ? initialGame
+      : 'sync'
+  );
+  const [playOpen, setPlayOpen] = useState(false);
+  const [viewOpen, setViewOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [chessMatchActive, setChessMatchActive] = useState(false);
@@ -111,6 +125,13 @@ const OsPlaygroundPage: React.FC = () => {
     return () => window.removeEventListener('popstate', onPopState);
   }, [chessMatchActive, navigate]);
 
+  useEffect(() => {
+    const game = searchParams.get('game');
+    if (game === 'sync' || game === 'cipher' || game === 'grid' || game === 'chess' || game === 'archive') {
+      setActiveModule(game);
+    }
+  }, [searchParams]);
+
   const selectModule = (id: ModuleId) => {
     if (id === activeModule) {
       setIsMobileMenuOpen(false);
@@ -119,7 +140,15 @@ const OsPlaygroundPage: React.FC = () => {
     requestLeave(() => {
       setActiveModule(id);
       setIsMobileMenuOpen(false);
+      const next = new URLSearchParams(searchParams);
+      if (id === 'sync') next.delete('game');
+      else next.set('game', id);
+      setSearchParams(next, { replace: true });
     });
+  };
+
+  const leaveTo = (to: string) => {
+    requestLeave(() => navigate(to));
   };
 
   const goHome = (e: React.MouseEvent) => {
@@ -162,7 +191,7 @@ const OsPlaygroundPage: React.FC = () => {
             </span>
           </Link>
 
-          {/* Desktop game tabs — generous gaps; short labels until xl */}
+          {/* Desktop game tabs — short labels; full names are on the button. */}
           <nav
             className="hidden min-w-0 flex-1 items-center justify-center gap-5 px-2 md:flex lg:gap-6 xl:gap-8"
             aria-label="Playground games"
@@ -174,8 +203,7 @@ const OsPlaygroundPage: React.FC = () => {
                   key={module.id}
                   type="button"
                   onClick={() => selectModule(module.id)}
-                  title={module.blurb}
-                  className={`relative inline-flex shrink-0 items-center gap-2 px-2.5 pb-1.5 text-sm font-medium tracking-wide transition-colors lg:px-3 ${
+                  className={`relative inline-flex shrink-0 items-center gap-2 px-2.5 pb-1.5 text-sm font-medium tracking-wide transition-colors lg:px-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--os-primary)] ${
                     isActive
                       ? ''
                       : isDark
@@ -183,11 +211,12 @@ const OsPlaygroundPage: React.FC = () => {
                         : 'text-slate-700 hover:text-black'
                   }`}
                   style={{ color: isActive ? 'var(--os-primary)' : undefined }}
-                  aria-current={isActive ? 'page' : undefined}
+                  aria-label={module.label}
+                  title={`${module.label} — ${module.blurb}`}
+                  aria-current={isActive ? 'true' : undefined}
                 >
                   <span className="opacity-80">{module.icon}</span>
-                  <span className="hidden xl:inline">{module.label}</span>
-                  <span className="xl:hidden">{module.short}</span>
+                  <span>{module.short}</span>
                   {isActive && (
                     <motion.span
                       layoutId="playground-nav-underline"
@@ -204,7 +233,85 @@ const OsPlaygroundPage: React.FC = () => {
           </nav>
 
           {/* Desktop controls */}
-          <div className="hidden shrink-0 items-center gap-3 md:flex">
+          <div className="hidden shrink-0 items-center gap-2 md:flex">
+            <NavMenu
+              kind="listbox"
+              menuLabel="View as role"
+              className="hidden lg:block"
+              trigger={
+                <span className={`font-mono text-[10px] font-bold uppercase tracking-[0.14em] ${mutedText}`}>
+                  View as
+                </span>
+              }
+              triggerClassName={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--os-primary)] ${
+                isDark ? 'border-slate-700 bg-slate-800/80 text-slate-200' : 'border-slate-300 bg-white/80 text-slate-700'
+              }`}
+              panelClassName={isDark ? 'border-white/10 bg-slate-950/95 text-slate-200' : 'border-slate-200 bg-white/95 text-slate-700'}
+              itemClassName={isDark ? 'hover:bg-white/5' : 'hover:bg-slate-100'}
+              open={viewOpen}
+              onOpenChange={(next) => {
+                setViewOpen(next);
+                if (next) setPlayOpen(false);
+              }}
+              groups={[
+                {
+                  id: 'roles',
+                  label: 'Role',
+                  items: [
+                    { id: 'full', label: 'Full portfolio', description: 'Back to the full site', onSelect: () => leaveTo('/') },
+                    ...HAT_LIST.map((hat) => ({
+                      id: hat.id,
+                      label: hat.label,
+                      description: hat.roleLine,
+                      onSelect: () => leaveTo(hat.path),
+                    })),
+                  ],
+                },
+              ]}
+            />
+            <NavMenu
+              className="hidden lg:block"
+              menuLabel="Play"
+              trigger={
+                <span
+                  className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold ${
+                    isDark ? 'bg-slate-950/90 text-white' : 'bg-white/95 text-slate-900'
+                  }`}
+                >
+                  <Gamepad2 size={14} style={{ color: 'var(--os-primary)' }} />
+                  Play
+                </span>
+              }
+              triggerClassName="os-border-flow inline-flex rounded-full p-[1.5px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--os-primary)]"
+              panelClassName={isDark ? 'border-white/10 bg-slate-950/95 text-slate-200' : 'border-slate-200 bg-white/95 text-slate-700'}
+              itemClassName={isDark ? 'hover:bg-white/5' : 'hover:bg-slate-100'}
+              open={playOpen}
+              onOpenChange={(next) => {
+                setPlayOpen(next);
+                if (next) setViewOpen(false);
+              }}
+              groups={[
+                {
+                  id: 'play',
+                  items: PLAY_LINKS.map((link) => ({
+                    id: link.id,
+                    label: link.label,
+                    description: link.description,
+                    selected: (link.id === 'chess' && activeModule === 'chess') || (link.id === 'playground' && activeModule !== 'chess'),
+                    icon: link.id === '3d' ? <Box size={16} /> : link.id === 'chess' ? <Swords size={16} /> : <Gamepad2 size={16} />,
+                    onSelect: () => {
+                      if (link.id === '3d') {
+                        prefetchThreeDRoute();
+                        leaveTo(link.to);
+                        return;
+                      }
+                      if (link.id === 'chess') selectModule('chess');
+                      else selectModule('sync');
+                    },
+                  })),
+                },
+              ]}
+            />
             {!focusChessMatch && (
               <div
                 className={`hidden items-center gap-2 rounded-full border px-3 py-1.5 font-mono text-[11px] 2xl:flex ${
@@ -286,6 +393,35 @@ const OsPlaygroundPage: React.FC = () => {
                   );
                 })}
               </nav>
+              <p className={`mb-1 mt-3 px-1 font-mono text-[10px] font-black uppercase tracking-[0.22em] ${mutedText}`}>
+                View as
+              </p>
+              <button
+                type="button"
+                onClick={() => leaveTo('/')}
+                className={`flex w-full items-center rounded-xl px-3 py-2.5 text-left text-sm font-semibold ${isDark ? 'hover:bg-white/5' : 'hover:bg-slate-100'}`}
+              >
+                Full portfolio
+              </button>
+              {HAT_LIST.map((hat) => (
+                <button
+                  key={hat.id}
+                  type="button"
+                  onClick={() => leaveTo(hat.path)}
+                  className={`flex w-full items-center rounded-xl px-3 py-2.5 text-left text-sm font-semibold ${isDark ? 'hover:bg-white/5' : 'hover:bg-slate-100'}`}
+                >
+                  {hat.label}
+                </button>
+              ))}
+              <button
+                type="button"
+                onClick={() => leaveTo('/3d')}
+                onMouseEnter={prefetchThreeDRoute}
+                className={`mt-2 flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-semibold ${isDark ? 'hover:bg-white/5' : 'hover:bg-slate-100'}`}
+              >
+                <Box size={16} style={{ color: 'var(--os-primary)' }} />
+                3D Portfolio
+              </button>
               <div className={`mt-3 flex items-center justify-between gap-2 border-t pt-3 ${isDark ? 'border-white/10' : 'border-slate-200'}`}>
                 <p className={`font-mono text-[11px] ${mutedText}`}>
                   LV {arcade.level} · {arcade.stats.xp} xp · {arcade.stats.fragments.length} fragments

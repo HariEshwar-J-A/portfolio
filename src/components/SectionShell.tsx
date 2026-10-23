@@ -45,7 +45,7 @@ const SectionShell: React.FC<SectionShellProps> = ({
   );
 
   return (
-    <section id={id} className={hat ? 'relative py-24 md:py-32' : 'relative min-h-screen py-24'}>
+    <section id={id} className={hat ? 'relative scroll-mt-24 py-24 md:py-32' : 'relative min-h-screen scroll-mt-24 py-24'}>
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: hat ? 16 : 28 }}

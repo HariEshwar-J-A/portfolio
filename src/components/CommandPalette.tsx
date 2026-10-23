@@ -30,6 +30,7 @@ import { themePalettes } from '../data/osPersona';
 import { buildSearchIndex, matchSnippet } from '../data/personalization';
 import { OPEN_COLLAB_EVENT } from './CollabWizard';
 import { OPEN_INTENT_EVENT } from './IntentWizard';
+import { HAT_LIST } from '../data/hats';
 
 const SEARCH_INDEX = buildSearchIndex();
 
@@ -136,6 +137,27 @@ const CommandPalette: React.FC = () => {
         perform: () => openExternal(project.demoLink ?? project.sourceLink ?? '#'),
       }));
 
+    const viewItems: PaletteItem[] = [
+      {
+        id: 'view-full',
+        group: 'View as',
+        label: 'Full portfolio',
+        hint: 'Original order, every section',
+        keywords: 'hat view role home full portfolio',
+        icon: <User size={16} />,
+        perform: () => navigate('/', { state: { keepSection: true } }),
+      },
+      ...HAT_LIST.map((hat) => ({
+        id: `view-${hat.id}`,
+        group: 'View as',
+        label: `View as ${hat.label}`,
+        hint: hat.roleLine,
+        keywords: `hat view role ${hat.roleTitle} ${hat.label}`,
+        icon: <User size={16} />,
+        perform: () => navigate(hat.path, { state: { keepSection: true } }),
+      })),
+    ];
+
     const actionItems: PaletteItem[] = [
       {
         id: 'action-intent',
@@ -172,6 +194,15 @@ const CommandPalette: React.FC = () => {
         keywords: 'play game arcade playground quiz puzzle chess explore ai os sentry',
         icon: <Layers size={16} />,
         perform: () => navigate('/ai'),
+      },
+      {
+        id: 'action-chess',
+        group: 'Actions',
+        label: 'Chess Arena',
+        hint: 'Timed duel vs Sentry',
+        keywords: 'play chess arena sentry game duel',
+        icon: <Layers size={16} />,
+        perform: () => navigate('/ai?game=chess'),
       },
       {
         id: 'action-3d',
@@ -227,7 +258,7 @@ const CommandPalette: React.FC = () => {
       },
     ];
 
-    return [...sectionItems, ...offeringItems, ...projectItems, ...actionItems, ...connectItems];
+    return [...sectionItems, ...viewItems, ...offeringItems, ...projectItems, ...actionItems, ...connectItems];
   }, [dispatch, navigate]);
 
   const viewMode = useSelector((state: RootState) => state.view.mode);
