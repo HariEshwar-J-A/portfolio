@@ -60,6 +60,11 @@ const AppRoutes: React.FC = () => {
         exit={{ opacity: 0 }}
         transition={{ duration: 0.22, ease: 'easeOut' }}
       >
+        {/* Inner presence keeps header layoutId (and other motion nodes)
+            from registering on this exit. Without it, mode="wait" never
+            finishes and the next route stays unmounted. */}
+        <AnimatePresence initial={false}>
+          <div key="page">
         <Routes location={location}>
           <Route path="/" element={<HomePage />} />
           {HAT_LIST.map((hat) => (
@@ -91,6 +96,8 @@ const AppRoutes: React.FC = () => {
           />
           <Route path="/os" element={<Navigate to="/ai" replace />} />
         </Routes>
+          </div>
+        </AnimatePresence>
       </m.div>
     </AnimatePresence>
   );
