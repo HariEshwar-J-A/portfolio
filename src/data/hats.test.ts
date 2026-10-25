@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { HAT_LIST } from './hats';
+import { sectionNarration } from './osPersona';
 import { MarketingData, OfferingsData, portfolioData } from './portfolioData';
 import { DEFAULT_SECTION_ORDER } from './personalization';
 import { applyOrder, bulletsForHat, projectShortLine, splitLeadBullets } from '../lib/hatView';
@@ -105,6 +106,20 @@ describe('hat views', () => {
         true
       )
     ).toEqual({ lead: ['e', 'b', 'a'], rest: ['c', 'd'] });
+  });
+
+  it('does not publish freelance client names or client sites', () => {
+    const published = JSON.stringify({
+      experience: portfolioData.experience,
+      projects: portfolioData.projects,
+      achievements: portfolioData.achievements,
+      personal: portfolioData.personal,
+      offerings: OfferingsData,
+      marketing: MarketingData,
+      hats: HAT_LIST,
+      narration: sectionNarration,
+    });
+    expect(published).not.toMatch(/world sports|worldsports|worldsportsacademy|\bWSA\b/i);
   });
 
   it('folds non-lead bullets after the configured ones', () => {

@@ -117,7 +117,7 @@ export const sectionNarration: Record<string, string> = {
   skills: "I've indexed his stack. React, Next, Node, Angular, RAG, MCP, cloud.",
   experience: 'His career log: Zoho → Soliton → SOTI → NPX → ECAM. Only up.',
   education: 'Credentials: M.Eng @ McMaster (3.9 GPA) · B.E. EEE.',
-  projects: 'InfoSentry, WSA, node-jhora, HoraMind — everything here shipped.',
+  projects: 'InfoSentry, node-jhora, HoraMind — everything here shipped.',
   products: 'InfoSentry — his multi-agent flagship. I consider it family.',
   achievements: 'Hackathon mentor win, 2× Star awards, chess captain. My human.',
   contact: 'I draft the email. You just hit send.',
