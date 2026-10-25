@@ -318,6 +318,9 @@ export const MarketingData = {
     "Senior full-stack developer shipping React, Node.js, and production AI systems across enterprise, IoT, and SaaS.",
   tagline:
     "Six-plus years of measurable impact: 18% cloud cost reduction, 99.9% streaming uptime, 60% developer productivity gains from AI-assisted workflows, and 65% faster initial loads — from industrial edge to multi-agent platforms.",
+  /** Visible hero line. Must stay a clause already in personal.bio. */
+  heroSupport:
+    "6+ years delivering production web platforms across enterprise security, industrial IoT, and consumer SaaS.",
   /** Short labels orbiting the hero portrait in 3D (keep concise for readability). */
   heroOrbitLabels: [
     "AI & Agentic Systems",
@@ -331,9 +334,9 @@ export const MarketingData = {
     "Industrial IoT",
   ],
   proofPoints: [
-    { metric: "18%", label: "Azure infra spend reduced at ECAM" },
-    { metric: "60%", label: "dev productivity lift from AI pilot" },
-    { metric: "99.9%", label: "uptime across live streaming & cloud" },
+    { metric: "18%", label: "Azure infra spend reduced at ECAM", shortLabel: "Azure spend" },
+    { metric: "60%", label: "dev productivity lift from AI pilot", shortLabel: "Pilot productivity" },
+    { metric: "99.9%", label: "uptime across live streaming & cloud", shortLabel: "Streaming uptime" },
   ],
   pillars: [
     "Production AI/LLM systems — multi-agent orchestration, RAG, and MCP tooling",

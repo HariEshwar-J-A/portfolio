@@ -1,7 +1,8 @@
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { HAT_LIST, PROFILE_IMAGE_PATH, SITE_ORIGIN } from '../src/data/hats.ts';
+import { hatHtmlName, hatRedirectRules } from '../src/lib/hatUrls.ts';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const distIndexPath = resolve(root, 'dist/index.html');
@@ -43,8 +44,24 @@ for (const hat of HAT_LIST) {
     page = page.replace('</head>', `    ${canonical}\n  </head>`);
   }
 
-  const directory = resolve(root, 'dist', hat.path.slice(1));
-  mkdirSync(directory, { recursive: true });
-  writeFileSync(resolve(directory, 'index.html'), page);
-  console.log(`prerendered ${hat.path} -> dist${hat.path}/index.html`);
+  const fileName = hatHtmlName(hat.path);
+  writeFileSync(resolve(root, 'dist', fileName), page);
+  console.log(`prerendered ${hat.path} -> dist/${fileName}`);
+}
+
+const redirectsPath = resolve(root, 'dist/_redirects');
+const marker = '/* /index.html  200';
+const redirects = readFileSync(redirectsPath, 'utf8');
+if (!redirects.includes(marker)) {
+  throw new Error('dist/_redirects is missing the SPA fallback');
+}
+const block = [
+  '# Hat pages are dist/<id>.html, not a directory index.',
+  '# A directory index makes Netlify Pretty URLs 301 the no-slash path to the slash form.',
+  '# These rules keep the no-slash URL that canonical, og:url, and in-app links already use.',
+  hatRedirectRules(HAT_LIST.map((hat) => hat.path)),
+  '',
+].join('\n');
+if (!redirects.includes(block)) {
+  writeFileSync(redirectsPath, redirects.replace(marker, `${block}${marker}`));
 }
