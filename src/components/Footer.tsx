@@ -1,7 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useTheme } from '../hooks/useTheme';
 import { Github as GitHub, Linkedin, Twitter, Globe } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
+import { OPS_PATH } from '../lib/siteNav';
 
 const Footer: React.FC = () => {
   const { theme } = useTheme();
@@ -25,7 +27,10 @@ const Footer: React.FC = () => {
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="mb-4 md:mb-0">
             <p className={theme.mode === 'dark' ? 'text-slate-400' : 'text-slate-600'}>
-              © {year} {portfolioData.personal.name}. All rights reserved.
+              © {year} {portfolioData.personal.name}. All rights reserved.{' '}
+              <Link to={OPS_PATH} className="underline-offset-4 hover:underline">
+                Ops
+              </Link>
             </p>
           </div>
           

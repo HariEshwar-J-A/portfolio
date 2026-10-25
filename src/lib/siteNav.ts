@@ -1,5 +1,8 @@
 import type { SectionId } from '../store/slices/navigationSlice';
 import { HAT_LIST, isHatPath, type HatConfig } from '../data/hats';
+import { OPS_PATH } from './ops/copy';
+
+export { OPS_PATH };
 
 export interface SectionLink {
   id: SectionId;
