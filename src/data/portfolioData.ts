@@ -164,7 +164,7 @@ export const WorkData: WorkExperience[] = [
       "Deployed to AWS EC2/S3/Lambda and Azure App Services with Grafana & Datadog monitoring at 99.9% uptime",
       "Integrated Contentful CMS and Shopify Plus over GraphQL, lifting conversion by 12%",
       "Built a headless-CMS blog with GraphQL, Apollo Client, and Next.js SSR, cutting page load by 30%",
-      "Designed and shipped World Sports Academy — a Next.js 15 court-booking platform with 24 pages, 22 API handlers, and a 15-table PostgreSQL schema under 53 RLS policies",
+      "Designed and shipped a sports academy platform for a freelance client — a Next.js 15 court-booking platform with 24 pages, 22 API handlers, and a 15-table PostgreSQL schema under 53 RLS policies",
       "Implemented the full Stripe revenue stack (subscriptions, Payment Intents with 3-D Secure, portal, refunds, idempotent webhooks) with Twilio, Resend, and Slack alerting",
       "Mentored a junior team to a winning Google AI Hackathon entry for a voice-first elderly-care companion",
     ],
@@ -467,10 +467,10 @@ export const portfolioData: PortfolioData = {
       featured: true,
     },
     {
-      id: "world-sports-academy",
-      title: "World Sports Academy",
+      id: "freelance-booking",
+      title: "Sports academy platform",
       description:
-        "Production Next.js 15 court-booking and membership platform for a Toronto sports academy (~26,000 LOC): 24 pages, 22 API route handlers, ~40 server actions, and a 15-table PostgreSQL schema under 53 RLS policies. Full Stripe revenue stack, timezone-aware availability engine, Supabase Realtime admin dashboard, and installable PWA.",
+        "Next.js 15 court-booking and membership platform for a freelance client (~26,000 LOC): 24 pages, 22 API route handlers, ~40 server actions, and a 15-table PostgreSQL schema under 53 RLS policies. Full Stripe revenue stack, timezone-aware availability engine, Supabase Realtime admin dashboard, and installable PWA.",
       technologies: [
         "Next.js 15",
         "React 19",
@@ -485,7 +485,6 @@ export const portfolioData: PortfolioData = {
         "Vercel",
       ],
       image: "https://images.pexels.com/photos/209977/pexels-photo-209977.jpeg",
-      demoLink: "https://worldsportsacademy.com",
       featured: true,
     },
     {

@@ -42,7 +42,7 @@ export interface HatConfig {
 }
 
 const FULL_STACK_SUMMARY =
-  '6+ years building web platforms across enterprise security, industrial IoT and consumer SaaS. At ECAM | GardaWorld I build Angular, Node.js and PostgreSQL apps; as a freelancer I shipped World Sports Academy, a Next.js 15 booking platform with a full Stripe stack.';
+  '6+ years building web platforms across enterprise security, industrial IoT and consumer SaaS. At ECAM | GardaWorld I build Angular, Node.js and PostgreSQL apps; as a freelancer I shipped a sports academy booking platform on Next.js 15 with a full Stripe stack.';
 
 const AI_ENGINEER_SUMMARY =
   'Built InfoSentry, a self-hosted platform with eight LLM agents, RAG on ChromaDB and budget-aware model routing under $7.30/month. At ECAM I led an organization-wide Cursor and GitHub Copilot pilot (60% productivity lift) and a Figma MCP design-to-code workflow.';
@@ -78,7 +78,7 @@ const fullStack: HatConfig = {
       { index: 3, includes: 'Standardized React/Node.js patterns' },
     ],
     freelance: [
-      { index: 7, includes: 'World Sports Academy' },
+      { index: 7, includes: 'sports academy platform' },
       { index: 8, includes: 'full Stripe revenue stack' },
       { index: 5, includes: 'Contentful CMS and Shopify Plus' },
     ],
@@ -88,7 +88,7 @@ const fullStack: HatConfig = {
       { index: 6, includes: 'React.js, Node.js, PostgreSQL, and AWS' },
     ],
   },
-  projectOrder: ['world-sports-academy', 'expense-tracker', 'habit-tracker', 'portfolio'],
+  projectOrder: ['freelance-booking', 'expense-tracker', 'habit-tracker', 'portfolio'],
   skillCategoryOrder: ['Frontend', 'Backend & APIs', 'Cloud & DevOps', 'AI & LLM'],
   achievementOrder: ['ecam-recognition', 'star-soliton', 'internal-hackathon'],
   proofPoints: [
