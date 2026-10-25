@@ -7,3 +7,8 @@
   from = "/api/chess-banter"
   to = "/.netlify/functions/chess-banter"
   status = 200
+
+[[redirects]]
+  from = "/api/ops"
+  to = "/.netlify/functions/ops"
+  status = 200

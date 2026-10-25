@@ -18,6 +18,7 @@ import {
 
 const ThreeDPortfolioPage = lazy(threeDImport);
 const OsPlaygroundPage = lazy(playgroundImport);
+const OpsPage = lazy(() => import('./pages/OpsPage'));
 
 /**
  * Suspense is per-route so a lazy suspend cannot tear down the router shell.
@@ -90,6 +91,14 @@ const AppRoutes: React.FC = () => {
             }
           />
           <Route path="/os" element={<Navigate to="/ai" replace />} />
+          <Route
+            path="/ops"
+            element={
+              <LazyPage pathname="/ops">
+                <OpsPage />
+              </LazyPage>
+            }
+          />
         </Routes>
           </div>
         </AnimatePresence>

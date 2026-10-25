@@ -6,6 +6,8 @@
 # "Failed to fetch dynamically imported module".
 /assets/*  /asset-missing.txt  404
 
+/api/ops  /.netlify/functions/ops  200
+
 # SPA fallback for client routes (/ai, /3d, …).
 # Hat paths are appended at build time by scripts/prerender-hats.mjs:
 # /<hat>/ 301s to /<hat>, and /<hat> rewrites to /<hat>.html.

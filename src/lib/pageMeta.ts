@@ -1,4 +1,5 @@
 import { PROFILE_IMAGE_PATH, SITE_ORIGIN, type HatConfig } from '../data/hats';
+import { OPS_DESCRIPTION, OPS_PATH, OPS_TITLE } from './ops/copy';
 
 const DEFAULT_TITLE = 'Harieshwar J A | Senior Full-Stack Developer';
 const DEFAULT_DESCRIPTION =
@@ -53,6 +54,22 @@ export const applyPageMeta = (hat: HatConfig | null) => {
   setMeta('property', 'og:image', image);
   setMeta('name', 'twitter:title', hat.seo.title);
   setMeta('name', 'twitter:description', hat.seo.description);
+  setMeta('name', 'twitter:image', image);
+  setCanonical(url);
+};
+
+/** `/ops` uses the same no-slash canonical as the hat pages. */
+export const applyOpsMeta = () => {
+  const url = `${SITE_ORIGIN}${OPS_PATH}`;
+  const image = `${SITE_ORIGIN}${PROFILE_IMAGE_PATH}`;
+  document.title = OPS_TITLE;
+  setMeta('name', 'description', OPS_DESCRIPTION);
+  setMeta('property', 'og:title', OPS_TITLE);
+  setMeta('property', 'og:description', OPS_DESCRIPTION);
+  setMeta('property', 'og:url', url);
+  setMeta('property', 'og:image', image);
+  setMeta('name', 'twitter:title', OPS_TITLE);
+  setMeta('name', 'twitter:description', OPS_DESCRIPTION);
   setMeta('name', 'twitter:image', image);
   setCanonical(url);
 };

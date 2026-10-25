@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import {
+  Activity,
   Box,
   ChevronDown,
   Command,
@@ -29,6 +30,7 @@ import { OfferingsData } from '../data/portfolioData';
 import { useHat } from '../context/hat-context';
 import {
   MORE_SECTIONS,
+  OPS_PATH,
   PLAY_LINKS,
   PRIMARY_SECTIONS,
   activePlayId,
@@ -137,7 +139,7 @@ const Header: React.FC = () => {
   const goPlay = (to: string) => {
     dismissIntentWizard();
     if (to.startsWith('/3d')) prefetchThreeDRoute();
-    else prefetchPlaygroundRoute();
+    else if (to.startsWith('/ai')) prefetchPlaygroundRoute();
     navigate(to);
     setIsMobileMenuOpen(false);
     setOpenMenu(null);
@@ -229,6 +231,13 @@ const Header: React.FC = () => {
             dispatch(toggleViewMode());
             setOpenMenu(null);
           },
+        },
+        {
+          id: 'ops',
+          label: 'Ops',
+          description: 'Site analytics',
+          icon: <Activity size={16} />,
+          onSelect: () => goPlay(OPS_PATH),
         },
         {
           id: 'infosentry',
@@ -493,6 +502,10 @@ const Header: React.FC = () => {
             >
               {isMinimal ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
               {isMinimal ? 'Switch to full view' : 'Switch to minimal view'}
+            </button>
+            <button type="button" onClick={() => goPlay(OPS_PATH)} className={`${mobileLinkClass} inline-flex items-center gap-2 text-sm`}>
+              <Activity size={16} style={{ color: 'var(--os-primary)' }} />
+              Ops
             </button>
           </motion.div>
         )}
