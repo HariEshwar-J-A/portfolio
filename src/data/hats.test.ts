@@ -74,7 +74,25 @@ describe('hat views', () => {
     expect(chess!.links?.map((link) => link.href)).toEqual(['/ai?game=chess', LICHESS_URL]);
     expect(chess!.detail).toContain('Stockfish');
     expect(chess!.detail).toContain('chess-banter');
-    expect(HAT_LIST.map((hat) => hat.path)).toEqual(['/full-stack', '/ai-engineer', '/sde', '/chess']);
+  });
+
+  it('does not invent an FDE or PM title', () => {
+    const positions = portfolioData.experience.map((role) => role.position).join('\n');
+    expect(positions).not.toMatch(/forward deployed|product manager/i);
+    const fde = HAT_LIST.find((hat) => hat.id === 'fde');
+    const pm = HAT_LIST.find((hat) => hat.id === 'pm');
+    expect(fde?.summary).toContain('freelance client');
+    expect(fde?.summary).toContain('inside ECAM');
+    expect(pm?.roleTitle).toBe('Product-minded engineer');
+    expect(pm?.summary).toContain('No product-manager title');
+    expect(HAT_LIST.map((hat) => hat.path)).toEqual([
+      '/full-stack',
+      '/ai-engineer',
+      '/sde',
+      '/chess',
+      '/fde',
+      '/pm',
+    ]);
   });
 
   it('puts requested ids first and keeps the rest in original order', () => {

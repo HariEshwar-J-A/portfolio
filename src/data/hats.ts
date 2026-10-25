@@ -3,7 +3,7 @@ import type { SectionId } from '../store/slices/navigationSlice';
 export const SITE_ORIGIN = 'https://harieshwar.dev';
 export const PROFILE_IMAGE_PATH = '/assets/images/profile-picture.jpg';
 
-export type HatId = 'full-stack' | 'ai-engineer' | 'sde' | 'chess';
+export type HatId = 'full-stack' | 'ai-engineer' | 'sde' | 'chess' | 'fde' | 'pm';
 
 /** A bullet to surface first. `includes` is a phrase already in that bullet. */
 export interface LeadBullet {
@@ -273,11 +273,111 @@ const aiEngineer: HatConfig = {
   },
 };
 
+const FDE_SUMMARY =
+  'Sports academy platform for a freelance client: 24 pages, 22 API handlers, 53 RLS policies. ECAM pilot stayed inside ECAM.';
+
+const PM_SUMMARY =
+  'Owned end-to-end delivery of 3 enterprise apps. No product-manager title is listed.';
+
+const fde: HatConfig = {
+  id: 'fde',
+  path: '/fde',
+  label: 'FDE',
+  roleTitle: 'Freelance delivery',
+  roleLine: 'A booking platform and an internal pilot',
+  headline: 'Client work from freelance, plus the ECAM pilot.',
+  summary: FDE_SUMMARY,
+  primaryCta: { label: 'See the platform', section: 'projects' },
+  sectionOrder: [
+    'about',
+    'projects',
+    'experience',
+    'products',
+    'skills',
+    'achievements',
+    'education',
+    'contact',
+  ],
+  leadBullets: {
+    freelance: [
+      { index: 7, includes: 'sports academy platform' },
+      { index: 8, includes: 'full Stripe revenue stack' },
+      { index: 5, includes: 'Contentful CMS and Shopify Plus' },
+    ],
+    ecam: [
+      { index: 5, includes: 'Cursor and GitHub Copilot' },
+      { index: 6, includes: 'Figma MCP design-to-code' },
+    ],
+  },
+  projectOrder: ['freelance-booking'],
+  skillCategoryOrder: ['Backend & APIs', 'Frontend', 'Cloud & DevOps', 'AI & LLM'],
+  achievementOrder: ['ecam-recognition'],
+  proofPoints: [
+    { metric: '24', label: 'Platform pages' },
+    { metric: '22', label: 'API handlers' },
+    { metric: '53', label: 'RLS policies' },
+  ],
+  seo: {
+    title: 'Harieshwar J A | Freelance delivery',
+    description:
+      'Freelance delivery includes a sports academy platform for a freelance client: a Next.js 15 court-booking platform with 24 pages, 22 API handlers, a 15-table PostgreSQL schema under 53 RLS policies, and a full Stripe stack, plus Contentful and Shopify Plus. The Cursor and GitHub Copilot pilot and the Figma MCP workflow were inside ECAM | GardaWorld, not a separate client deployment.',
+  },
+};
+
+const pm: HatConfig = {
+  id: 'pm',
+  path: '/pm',
+  label: 'Product-minded',
+  roleTitle: 'Product-minded engineer',
+  roleLine: 'Scope, priorities, and what shipped',
+  headline: 'Delivery ownership, without a PM title.',
+  summary: PM_SUMMARY,
+  primaryCta: { label: 'See the work', section: 'experience' },
+  sectionOrder: [
+    'about',
+    'experience',
+    'products',
+    'projects',
+    'achievements',
+    'skills',
+    'education',
+    'contact',
+  ],
+  leadBullets: {
+    ecam: [
+      { index: 7, includes: '3 new enterprise applications' },
+      { index: 8, includes: 'cost-effective solutions' },
+      { index: 9, includes: 'Mentored interns' },
+    ],
+    'soliton-engineer': [{ index: 6, includes: 'story-point completion by 30%' }],
+    'soliton-senior': [
+      { index: 4, includes: 'Owned Agile end-to-end delivery' },
+      { index: 7, includes: 'pull-request checklist' },
+      { index: 3, includes: 'sprint velocity by 15%' },
+    ],
+  },
+  projectOrder: ['info-sentry', 'freelance-booking'],
+  skillCategoryOrder: ['Frontend', 'Backend & APIs', 'AI & LLM', 'Cloud & DevOps'],
+  achievementOrder: ['ecam-recognition', 'google-ai-hackathon', 'star-soliton'],
+  proofPoints: [
+    { metric: '3', label: 'Enterprise apps' },
+    { metric: '30%', label: 'Story-point lift' },
+    { metric: '15%', label: 'Sprint velocity' },
+  ],
+  seo: {
+    title: 'Harieshwar J A | Product-minded engineer',
+    description:
+      'No product-manager title is listed. The record that is here: end-to-end delivery of 3 enterprise applications at ECAM, formal recognition for cost-effective prioritization, a Scrum change that raised story-point completion by 30%, a 15% sprint-velocity lift, and the pull-request checklist at Soliton.',
+  },
+};
+
 export const HATS: Record<HatId, HatConfig> = {
   'full-stack': fullStack,
   'ai-engineer': aiEngineer,
   sde,
   chess,
+  fde,
+  pm,
 };
 
 export const HAT_LIST: HatConfig[] = Object.values(HATS);
