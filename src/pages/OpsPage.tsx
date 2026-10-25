@@ -71,7 +71,7 @@ const Trend: React.FC<{ points: { visits: number | null }[] }> = ({ points }) =>
     .filter((point): point is string => point != null);
 
   return (
-    <svg viewBox={`0 0 ${width} ${height}`} className="mt-3 h-16 w-full" role="img" aria-label="Visits by day">
+    <svg viewBox={`0 0 ${width} ${height}`} className="mt-3 block h-16 w-full max-w-full" role="img" aria-label="Visits by day">
       <polyline fill="none" stroke="currentColor" strokeWidth="2" points={coords.join(' ')} />
     </svg>
   );
@@ -137,6 +137,7 @@ const OpsPage: React.FC = () => {
   const live = body?.ok ? body : null;
   const countries = live?.traffic.countries ?? [];
   const hiddenCountries = countries.slice(4);
+  const rowClass = 'flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1';
 
   const rise = reduce ? 0 : 10;
   const fade = {
@@ -145,17 +146,17 @@ const OpsPage: React.FC = () => {
   };
 
   return (
-    <div className={`relative min-h-screen ${isDark ? 'bg-slate-950 text-white' : 'bg-slate-50 text-slate-900'}`}>
+    <div className={`relative min-h-screen max-w-full ${isDark ? 'bg-slate-950 text-white' : 'bg-slate-50 text-slate-900'}`}>
       <AmbientBackground />
       <header
         className={`fixed left-0 top-0 z-[130] w-full shadow-md ${
           isDark ? 'bg-slate-950/85 backdrop-blur-md' : 'bg-white/85 backdrop-blur-md'
         }`}
       >
-        <div className="container mx-auto flex items-center justify-between gap-4 px-4 py-3 md:px-6 md:py-4">
+        <div className="container mx-auto flex min-w-0 items-center justify-between gap-3 px-4 py-3 md:px-6 md:py-4">
           <Link
             to="/"
-            className={`group inline-flex shrink-0 items-center gap-2 font-mono text-sm font-bold tracking-tight md:text-base ${
+            className={`group inline-flex min-w-0 items-center gap-2 font-mono text-sm font-bold tracking-tight md:text-base ${
               isDark ? 'text-white' : 'text-slate-900'
             }`}
           >
@@ -170,9 +171,9 @@ const OpsPage: React.FC = () => {
         </div>
       </header>
 
-      <main className="relative z-10 px-4 pb-8 pt-28">
+      <main className="relative z-10 min-w-0 px-4 pb-8 pt-28">
       <m.div
-        className="mx-auto max-w-3xl"
+        className="mx-auto min-w-0 max-w-3xl"
         variants={{ show: { transition: { staggerChildren: reduce ? 0 : 0.08 } } }}
         initial="hidden"
         animate="show"
@@ -192,7 +193,7 @@ const OpsPage: React.FC = () => {
         {mock && (
           <m.p
             variants={fade}
-            className="mt-6 rounded-2xl border px-4 py-3 text-sm font-semibold"
+            className="mt-6 break-words rounded-2xl border px-4 py-3 text-sm font-semibold"
             style={{
               color: 'var(--os-primary)',
               borderColor: 'color-mix(in srgb, var(--os-primary) 45%, transparent)',
@@ -225,7 +226,7 @@ const OpsPage: React.FC = () => {
           ))}
         </m.div>
 
-        <m.div variants={fade} className="no-scrollbar-y mt-6 flex gap-5 overflow-x-auto overflow-y-hidden" role="tablist" aria-label="Ops">
+        <m.div variants={fade} className="mt-6 grid grid-cols-5 gap-1" role="tablist" aria-label="Ops">
           {TABS.map((item) => (
             <button
               key={item.id}
@@ -233,12 +234,12 @@ const OpsPage: React.FC = () => {
               role="tab"
               aria-selected={tab === item.id}
               onClick={() => setTab(item.id)}
-              className={`relative shrink-0 px-1 pb-2 text-sm font-medium tracking-wide ${tab === item.id ? '' : muted}`}
+              className={`relative min-w-0 px-0.5 pb-2 text-center text-xs font-medium tracking-wide sm:text-sm ${tab === item.id ? '' : muted}`}
               style={tab === item.id ? { color: 'var(--os-primary)' } : undefined}
             >
               {item.label}
               {tab === item.id && (
-                <span className="absolute inset-x-0 -bottom-px h-0.5 rounded-full" style={{ backgroundColor: 'var(--os-primary)' }} />
+                <span className="absolute bottom-0 left-1/2 h-0.5 w-6 -translate-x-1/2 rounded-full" style={{ backgroundColor: 'var(--os-primary)' }} />
               )}
             </button>
           ))}
@@ -252,13 +253,13 @@ const OpsPage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={reduce ? { opacity: 0 } : { opacity: 0, y: -6 }}
             transition={{ duration: reduce ? 0.01 : 0.2, ease: 'easeOut' }}
-            className={`${glassPanel(isDark)} mt-4 p-5`}
+            className={`${glassPanel(isDark)} mt-4 min-w-0 p-4 sm:p-5`}
           >
             {!live && <p>Warming up. Counts show here once Cloudflare analytics is connected.</p>}
 
             {live && tab === 'traffic' && (
-              <div>
-                <div className="grid grid-cols-2 gap-4">
+              <div className="min-w-0">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
                     <p className="text-3xl font-black">{countText(live.traffic.visits)}</p>
                     <p className={`text-sm ${muted}`}>Visits</p>
@@ -271,8 +272,8 @@ const OpsPage: React.FC = () => {
                 <Trend points={live.traffic.trend} />
                 <ul className="mt-4 space-y-2 text-sm">
                   {countries.slice(0, 4).map((country) => (
-                    <li key={country.name} className="flex justify-between gap-4">
-                      <span>{country.name}</span>
+                    <li key={country.name} className={rowClass}>
+                      <span className="min-w-0 break-words">{country.name}</span>
                       <span className="font-semibold">{country.visits}</span>
                     </li>
                   ))}
@@ -282,8 +283,8 @@ const OpsPage: React.FC = () => {
                     <HatDisclosure open={countriesOpen}>
                       <ul className="space-y-2 pt-2 text-sm">
                         {hiddenCountries.map((country) => (
-                          <li key={country.name} className="flex justify-between gap-4">
-                            <span>{country.name}</span>
+                          <li key={country.name} className={rowClass}>
+                            <span className="min-w-0 break-words">{country.name}</span>
                             <span className="font-semibold">{country.visits}</span>
                           </li>
                         ))}
@@ -300,8 +301,8 @@ const OpsPage: React.FC = () => {
             {live && tab === 'hats' && (
               <ul className="space-y-2 text-sm">
                 {live.hats.map((hat) => (
-                  <li key={hat.path} className="flex justify-between gap-4">
-                    <span>{HAT_LABELS[hat.path] ?? hat.path}</span>
+                  <li key={hat.path} className={rowClass}>
+                    <span className="min-w-0 break-words">{HAT_LABELS[hat.path] ?? hat.path}</span>
                     <span className="font-semibold">{countText(hat.visits)}</span>
                   </li>
                 ))}
@@ -311,8 +312,8 @@ const OpsPage: React.FC = () => {
             {live && tab === 'sources' && (
               <ul className="space-y-2 text-sm">
                 {live.sources.map((source) => (
-                  <li key={source.bucket} className="flex justify-between gap-4">
-                    <span>{SOURCE_LABELS[source.bucket]}</span>
+                  <li key={source.bucket} className={rowClass}>
+                    <span className="min-w-0 break-words">{SOURCE_LABELS[source.bucket]}</span>
                     <span className="font-semibold">{source.visits}</span>
                   </li>
                 ))}
@@ -321,7 +322,7 @@ const OpsPage: React.FC = () => {
             )}
 
             {live && tab === 'speed' && (
-              <div className="grid grid-cols-3 gap-3 text-center">
+              <div className="grid grid-cols-1 gap-4 text-center sm:grid-cols-3 sm:gap-3">
                 {[
                   ['LCP', live.speed.lcpMs == null ? '—' : `${live.speed.lcpMs} ms`],
                   ['INP', live.speed.inpMs == null ? '—' : `${live.speed.inpMs} ms`],
@@ -337,27 +338,27 @@ const OpsPage: React.FC = () => {
 
             {live && tab === 'health' && (
               <dl className="space-y-3 text-sm">
-                <div className="flex justify-between gap-4">
+                <div className={rowClass}>
                   <dt className={muted}>HTTP status</dt>
                   <dd className="font-semibold">{live.health.httpStatus ?? 'Unreachable'}</dd>
                 </div>
-                <div className="flex justify-between gap-4">
+                <div className={rowClass}>
                   <dt className={muted}>Commit</dt>
-                  <dd className="font-semibold">{live.health.sha ?? 'Not in this build'}</dd>
+                  <dd className="min-w-0 break-all font-semibold">{live.health.sha ?? 'Not in this build'}</dd>
                 </div>
-                <div className="flex justify-between gap-4">
+                <div className={rowClass}>
                   <dt className={muted}>Committed</dt>
-                  <dd className="font-semibold">
+                  <dd className="min-w-0 break-words text-right font-semibold">
                     {live.health.committedAt ? new Date(live.health.committedAt).toLocaleString() : '—'}
                   </dd>
                 </div>
                 <div>
                   <dt className={muted}>Subject</dt>
-                  <dd className="mt-1 font-semibold">{live.health.subject ?? '—'}</dd>
+                  <dd className="mt-1 break-words font-semibold">{live.health.subject ?? '—'}</dd>
                 </div>
-                <div className="flex justify-between gap-4">
+                <div className={rowClass}>
                   <dt className={muted}>Main bundle</dt>
-                  <dd className="font-semibold">
+                  <dd className="min-w-0 break-words text-right font-semibold">
                     {bundle ? `${kb(bundle.jsBytes)} / ${kb(bundle.jsGzipBytes)} gzip` : 'Not in this build'}
                   </dd>
                 </div>
