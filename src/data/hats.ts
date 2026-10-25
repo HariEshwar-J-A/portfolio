@@ -3,7 +3,7 @@ import type { SectionId } from '../store/slices/navigationSlice';
 export const SITE_ORIGIN = 'https://harieshwar.dev';
 export const PROFILE_IMAGE_PATH = '/assets/images/profile-picture.jpg';
 
-export type HatId = 'full-stack' | 'ai-engineer';
+export type HatId = 'full-stack' | 'ai-engineer' | 'sde' | 'chess';
 
 /** A bullet to surface first. `includes` is a phrase already in that bullet. */
 export interface LeadBullet {
@@ -35,6 +35,16 @@ export interface HatConfig {
   skillCategoryOrder: string[];
   achievementOrder: string[];
   proofPoints: HatProofPoint[];
+  /** Quiet text links under the primary button. */
+  links?: { label: string; href: string }[];
+  /**
+   * Verified rating only. Leave null when the repo has none.
+   * TODO(harieshwar): chess has no verified rating in this repo.
+   * osIdentity.HUMAN_RATING_ANCHOR is a site persona, not a rating. Do not render it.
+   */
+  rating?: string | null;
+  /** One extra sentence of existing facts. Omitted on screen when unset. */
+  detail?: string;
   seo: {
     title: string;
     description: string;
@@ -102,6 +112,121 @@ const fullStack: HatConfig = {
   },
 };
 
+const SDE_SUMMARY =
+  'Mocha, Playwright, and Jest in CI, plus 99.9% streaming uptime.';
+
+const CHESS_SUMMARY =
+  'Led RMDEC Boys Chess team to top-3 zonal finishes for 3 consecutive years.';
+
+const sde: HatConfig = {
+  id: 'sde',
+  path: '/sde',
+  label: 'SDE',
+  roleTitle: 'Software Engineer',
+  roleLine: 'Systems, reliability, and scale',
+  headline: 'CI, tests, and uptime on production systems.',
+  summary: SDE_SUMMARY,
+  primaryCta: { label: 'See the work', section: 'experience' },
+  sectionOrder: [
+    'about',
+    'experience',
+    'skills',
+    'projects',
+    'achievements',
+    'education',
+    'products',
+    'contact',
+  ],
+  leadBullets: {
+    ecam: [
+      { index: 1, includes: 'Mocha and Playwright' },
+      { index: 4, includes: '99.9% uptime' },
+      { index: 2, includes: 'reduced recurring monthly infrastructure spend by 18%' },
+    ],
+    npx: [
+      { index: 2, includes: 'zero regressions' },
+      { index: 3, includes: 'Husky + lint-staged' },
+    ],
+    freelance: [
+      { index: 3, includes: 'Jest, React Testing Library, and Cypress' },
+      { index: 4, includes: '99.9% uptime' },
+      { index: 2, includes: 'reducing manual deployment effort by 40%' },
+    ],
+    soti: [
+      { index: 0, includes: 'Jenkins using Groovy' },
+      { index: 3, includes: 'GoCD to Jenkins' },
+      { index: 2, includes: 'BDD testing' },
+    ],
+    'soliton-engineer': [
+      { index: 1, includes: 'Jest & React Testing Library' },
+      { index: 3, includes: '5M+' },
+      { index: 5, includes: 'OPC UA to Azure' },
+    ],
+    'soliton-senior': [
+      { index: 0, includes: 'micro-frontends' },
+      { index: 2, includes: 'reducing response times by 25%' },
+      { index: 7, includes: 'pull-request checklist' },
+    ],
+    zoho: [{ index: 0, includes: 'Java backend' }],
+  },
+  projectOrder: ['freelance-booking', 'node-jhora', 'info-sentry'],
+  skillCategoryOrder: ['Cloud & DevOps', 'Backend & APIs', 'Frontend', 'AI & LLM'],
+  achievementOrder: ['internal-hackathon', 'ecam-recognition', 'star-soliton'],
+  proofPoints: [
+    { metric: '99.9%', label: 'Streaming uptime' },
+    { metric: '18%', label: 'Azure spend' },
+    { metric: '65%', label: 'Faster first load' },
+  ],
+  seo: {
+    title: 'Harieshwar J A | Software Engineer',
+    description:
+      'CI and tests across the same roles: Mocha, Playwright, and Snyk on Azure DevOps; Jest, React Testing Library, and Cypress; Jenkins and a GoCD migration; 99.9% streaming uptime; an 18% Azure spend cut; 5M+ logs a day on an Elastic stack.',
+  },
+};
+
+const chess: HatConfig = {
+  id: 'chess',
+  path: '/chess',
+  label: 'Chess',
+  roleTitle: 'Chess captain',
+  roleLine: 'Zonal boards and a 50-player program',
+  headline: 'College captain, and a Stockfish arena on this site.',
+  summary: CHESS_SUMMARY,
+  detail:
+    'Chess Arena at /ai?game=chess plays Stockfish. Sentry lines come from the chess-banter function.',
+  // TODO(harieshwar): no verified rating is stored. Do not fill this with HUMAN_RATING_ANCHOR.
+  rating: null,
+  links: [
+    { label: 'Chess Arena', href: '/ai?game=chess' },
+    { label: 'Lichess', href: 'https://lichess.org/@/HariEshwar' },
+  ],
+  primaryCta: { label: 'See the record', section: 'achievements' },
+  sectionOrder: [
+    'about',
+    'achievements',
+    'projects',
+    'experience',
+    'skills',
+    'education',
+    'products',
+    'contact',
+  ],
+  leadBullets: {},
+  projectOrder: [],
+  skillCategoryOrder: ['Frontend', 'Backend & APIs', 'Cloud & DevOps', 'AI & LLM'],
+  achievementOrder: ['chess-captain'],
+  proofPoints: [
+    { metric: '3', label: 'Zonal top-3s' },
+    { metric: '4', label: 'Players at start' },
+    { metric: '50', label: 'Players in program' },
+  ],
+  seo: {
+    title: 'Harieshwar J A | Chess',
+    description:
+      'Captained the RMDEC Boys Chess team to top-3 zonal finishes for 3 consecutive years and grew the program from 4 to 50 players. Chess Arena (/ai?game=chess) plays Stockfish; the chess-banter function writes Sentry lines. Lichess handle HariEshwar. No rating is published here.',
+  },
+};
+
 const aiEngineer: HatConfig = {
   id: 'ai-engineer',
   path: '/ai-engineer',
@@ -151,6 +276,8 @@ const aiEngineer: HatConfig = {
 export const HATS: Record<HatId, HatConfig> = {
   'full-stack': fullStack,
   'ai-engineer': aiEngineer,
+  sde,
+  chess,
 };
 
 export const HAT_LIST: HatConfig[] = Object.values(HATS);

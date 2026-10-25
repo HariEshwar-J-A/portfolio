@@ -69,6 +69,19 @@ const HatHero: React.FC<{ hat: HatConfig }> = ({ hat }) => {
             >
               {hat.summary}
             </motion.p>
+            {hat.detail ? (
+              <motion.p
+                variants={fade}
+                className={`mt-2 max-w-xl text-sm leading-relaxed ${isDark ? 'text-slate-400' : 'text-slate-600'}`}
+              >
+                {hat.detail}
+              </motion.p>
+            ) : null}
+            {hat.rating ? (
+              <motion.p variants={fade} className="mt-2 text-sm font-semibold">
+                {hat.rating}
+              </motion.p>
+            ) : null}
 
             <motion.div variants={fade} className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
               <motion.button
@@ -86,6 +99,20 @@ const HatHero: React.FC<{ hat: HatConfig }> = ({ hat }) => {
                 {hat.primaryCta.label}
                 <ArrowRight size={18} className="transition group-hover:translate-x-1" />
               </motion.button>
+              {hat.links?.map((link) => {
+                const external = link.href.startsWith('http');
+                return (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    target={external ? '_blank' : undefined}
+                    rel={external ? 'noopener noreferrer' : undefined}
+                    className={`text-sm font-semibold underline-offset-4 hover:underline ${isDark ? 'text-slate-300' : 'text-slate-600'}`}
+                  >
+                    {link.label}
+                  </a>
+                );
+              })}
               {hat.primaryCta.section !== 'products' && (
                 <button
                   type="button"
