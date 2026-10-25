@@ -12,8 +12,8 @@ import Footer from '../components/Footer';
 import { glassPanel } from '../components/SectionShell';
 import HatDisclosure from '../components/HatDisclosure';
 import { applyOpsMeta } from '../lib/pageMeta';
-import { OPS_FOOTNOTE } from '../lib/ops/copy';
-import type { OpsBody } from '../lib/ops/buildOps';
+import { OPS_FOOTNOTE, OPS_WARMING_MESSAGE } from '../lib/ops/copy';
+import type { OpsBody, OpsHealth } from '../lib/ops/buildOps';
 import type { SourceBucket } from '../lib/ops/privacy';
 
 type Tab = 'traffic' | 'hats' | 'sources' | 'speed' | 'health';
@@ -54,6 +54,40 @@ const countText = (visits: number | null) => (visits == null ? 'Under 5' : visit
 
 const kb = (bytes: number) => `${(bytes / 1024).toFixed(1)} kB`;
 
+const HealthFacts: React.FC<{
+  health: OpsHealth;
+  bundle: BundleMeta | null;
+  muted: string;
+  rowClass: string;
+}> = ({ health, bundle, muted, rowClass }) => (
+  <dl className="space-y-3 text-sm">
+    <div className={rowClass}>
+      <dt className={muted}>HTTP status</dt>
+      <dd className="font-semibold">{health.httpStatus ?? 'Unreachable'}</dd>
+    </div>
+    <div className={rowClass}>
+      <dt className={muted}>Commit</dt>
+      <dd className="min-w-0 break-all font-semibold">{health.sha ?? 'Not in this build'}</dd>
+    </div>
+    <div className={rowClass}>
+      <dt className={muted}>Committed</dt>
+      <dd className="min-w-0 break-words text-right font-semibold">
+        {health.committedAt ? new Date(health.committedAt).toLocaleString() : '—'}
+      </dd>
+    </div>
+    <div>
+      <dt className={muted}>Subject</dt>
+      <dd className="mt-1 break-words font-semibold">{health.subject ?? '—'}</dd>
+    </div>
+    <div className={rowClass}>
+      <dt className={muted}>Main bundle</dt>
+      <dd className="min-w-0 break-words text-right font-semibold">
+        {bundle ? `${kb(bundle.jsBytes)} / ${kb(bundle.jsGzipBytes)} gzip` : 'Not in this build'}
+      </dd>
+    </div>
+  </dl>
+);
+
 const Trend: React.FC<{ points: { visits: number | null }[] }> = ({ points }) => {
   const values = points.map((point) => point.visits).filter((value): value is number => value != null);
   if (values.length < 2) return <p className="text-sm opacity-70">Not enough days to draw.</p>;
@@ -84,8 +118,9 @@ const OpsPage: React.FC = () => {
   const isDark = theme.mode === 'dark';
   const [tab, setTab] = useState<Tab>('traffic');
   const [range, setRange] = useState<'7d' | '30d'>('7d');
-  const [body, setBody] = useState<OpsBody | null>(null);
+  const [body, setBody] = useState<(OpsBody & { mock?: boolean }) | null>(null);
   const [mock, setMock] = useState(false);
+  const [failed, setFailed] = useState(false);
   const [bundle, setBundle] = useState<BundleMeta | null>(null);
   const [countriesOpen, setCountriesOpen] = useState(false);
   const muted = isDark ? 'text-slate-400' : 'text-slate-500';
@@ -103,16 +138,17 @@ const OpsPage: React.FC = () => {
     const load = async () => {
       try {
         const response = await fetch(`/api/ops?range=${range}`);
-        const payload = response.ok ? ((await response.json()) as OpsBody) : null;
+        const payload = response.ok ? ((await response.json()) as OpsBody & { mock?: boolean }) : null;
         if (cancel) return;
-        if (payload?.ok) {
+        // A JSON body is authoritative, including { ok: false, reason: 'warming' }.
+        if (payload) {
           setBody(payload);
-          setMock(false);
+          setMock(Boolean(payload.ok && payload.mock));
+          setFailed(false);
           const metaResponse = await fetch('/ops-meta.json');
           if (!cancel && metaResponse.ok) setBundle((await metaResponse.json()) as BundleMeta);
           return;
         }
-        if (payload && !payload.ok) setBody(payload);
       } catch {
         /* The dev server has no function. Fall through. */
       }
@@ -122,11 +158,16 @@ const OpsPage: React.FC = () => {
         if (!cancel) {
           setBody({ ...fixture.OPS_FIXTURE, range });
           setMock(true);
+          setFailed(false);
           setBundle(fixture.OPS_SAMPLE_BUNDLE);
         }
         return;
       }
-      if (!cancel) setMock(false);
+      if (!cancel) {
+        setBody(null);
+        setMock(false);
+        setFailed(true);
+      }
     };
     void load();
     return () => {
@@ -135,6 +176,7 @@ const OpsPage: React.FC = () => {
   }, [range]);
 
   const live = body?.ok ? body : null;
+  const warming = body != null && !body.ok;
   const countries = live?.traffic.countries ?? [];
   const hiddenCountries = countries.slice(4);
   const rowClass = 'flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1';
@@ -146,7 +188,7 @@ const OpsPage: React.FC = () => {
   };
 
   return (
-    <div className={`relative min-h-screen max-w-full ${isDark ? 'bg-slate-950 text-white' : 'bg-slate-50 text-slate-900'}`}>
+    <div className={`relative flex min-h-screen max-w-full flex-col ${isDark ? 'bg-slate-950 text-white' : 'bg-slate-50 text-slate-900'}`}>
       <AmbientBackground />
       <header
         className={`fixed left-0 top-0 z-[130] w-full shadow-md ${
@@ -171,7 +213,7 @@ const OpsPage: React.FC = () => {
         </div>
       </header>
 
-      <main className="relative z-10 min-w-0 px-4 pb-8 pt-28">
+      <main className="relative z-10 min-w-0 flex-1 px-4 pb-8 pt-28">
       <m.div
         className="mx-auto min-w-0 max-w-3xl"
         variants={{ show: { transition: { staggerChildren: reduce ? 0 : 0.08 } } }}
@@ -255,7 +297,12 @@ const OpsPage: React.FC = () => {
             transition={{ duration: reduce ? 0.01 : 0.2, ease: 'easeOut' }}
             className={`${glassPanel(isDark)} mt-4 min-w-0 p-4 sm:p-5`}
           >
-            {!live && <p>Warming up. Counts show here once Cloudflare analytics is connected.</p>}
+            {failed && <p>Ops is unreachable right now.</p>}
+            {!failed && !body && <p className={muted}>Loading.</p>}
+            {warming && <p className={tab === 'health' ? 'mb-4' : undefined}>{OPS_WARMING_MESSAGE}</p>}
+            {warming && tab === 'health' && body && (
+              <HealthFacts health={body.health} bundle={bundle} muted={muted} rowClass={rowClass} />
+            )}
 
             {live && tab === 'traffic' && (
               <div className="min-w-0">
@@ -337,42 +384,17 @@ const OpsPage: React.FC = () => {
             )}
 
             {live && tab === 'health' && (
-              <dl className="space-y-3 text-sm">
-                <div className={rowClass}>
-                  <dt className={muted}>HTTP status</dt>
-                  <dd className="font-semibold">{live.health.httpStatus ?? 'Unreachable'}</dd>
-                </div>
-                <div className={rowClass}>
-                  <dt className={muted}>Commit</dt>
-                  <dd className="min-w-0 break-all font-semibold">{live.health.sha ?? 'Not in this build'}</dd>
-                </div>
-                <div className={rowClass}>
-                  <dt className={muted}>Committed</dt>
-                  <dd className="min-w-0 break-words text-right font-semibold">
-                    {live.health.committedAt ? new Date(live.health.committedAt).toLocaleString() : '—'}
-                  </dd>
-                </div>
-                <div>
-                  <dt className={muted}>Subject</dt>
-                  <dd className="mt-1 break-words font-semibold">{live.health.subject ?? '—'}</dd>
-                </div>
-                <div className={rowClass}>
-                  <dt className={muted}>Main bundle</dt>
-                  <dd className="min-w-0 break-words text-right font-semibold">
-                    {bundle ? `${kb(bundle.jsBytes)} / ${kb(bundle.jsGzipBytes)} gzip` : 'Not in this build'}
-                  </dd>
-                </div>
-              </dl>
+              <HealthFacts health={live.health} bundle={bundle} muted={muted} rowClass={rowClass} />
             )}
           </m.section>
         </AnimatePresence>
 
         <m.p variants={fade} className={`mt-4 text-xs leading-relaxed ${muted}`}>
-          {OPS_FOOTNOTE}
+          {body?.footnote ?? OPS_FOOTNOTE}
         </m.p>
       </m.div>
       </main>
-      <div className="relative z-10">
+      <div className="relative z-10 mt-auto">
         <Footer />
       </div>
     </div>

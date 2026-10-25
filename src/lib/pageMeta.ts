@@ -1,6 +1,9 @@
 import { PROFILE_IMAGE_PATH, SITE_ORIGIN, type HatConfig } from '../data/hats';
 import { OPS_DESCRIPTION, OPS_PATH, OPS_TITLE } from './ops/copy';
 
+/** Home canonical and og:url. Hat and `/ops` URLs stay slash-free. */
+export const HOME_URL = `${SITE_ORIGIN}/`;
+
 const DEFAULT_TITLE = 'Harieshwar J A | Senior Full-Stack Developer';
 const DEFAULT_DESCRIPTION =
   'Harieshwar J A — Senior Full-Stack Developer. Interactive portfolio featuring InfoSentry (multi-agent AI), a 3D WebGL experience, and production work across React, Node.js, AI/LLM systems, and cloud.';
@@ -35,12 +38,12 @@ export const applyPageMeta = (hat: HatConfig | null) => {
     setMeta('name', 'description', DEFAULT_DESCRIPTION);
     setMeta('property', 'og:title', DEFAULT_OG_TITLE);
     setMeta('property', 'og:description', DEFAULT_OG_DESCRIPTION);
-    setMeta('property', 'og:url', SITE_ORIGIN);
+    setMeta('property', 'og:url', HOME_URL);
     setMeta('property', 'og:image', PROFILE_IMAGE_PATH);
     setMeta('name', 'twitter:title', DEFAULT_OG_TITLE);
     setMeta('name', 'twitter:description', DEFAULT_OG_DESCRIPTION);
     setMeta('name', 'twitter:image', PROFILE_IMAGE_PATH);
-    setCanonical(`${SITE_ORIGIN}/`);
+    setCanonical(HOME_URL);
     return;
   }
 
