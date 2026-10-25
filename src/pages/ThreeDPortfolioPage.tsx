@@ -24,6 +24,7 @@ import { motion, useMotionValue, useSpring } from 'framer-motion';
 import {
   ArrowLeft,
   ArrowRight,
+  Gamepad2,
   Check,
   ChevronDown,
   Copy,
@@ -556,13 +557,22 @@ const ThreeDPortfolioPage: React.FC = () => {
       <div className="pointer-events-none fixed inset-0 z-[1] bg-[radial-gradient(ellipse_90%_60%_at_50%_40%,rgba(34,211,238,0.08),transparent_58%),radial-gradient(ellipse_75%_55%_at_50%_70%,rgba(168,85,247,0.07),transparent_52%),linear-gradient(180deg,rgba(2,6,23,0.28)_0%,rgba(2,6,23,0.06)_42%,rgba(2,6,23,0.32)_100%)]" />
 
       <div className="fixed left-0 right-0 top-0 z-50 flex items-center justify-between px-5 py-5 md:px-10">
-        <Link
-          to="/"
-          className="group inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm font-semibold text-white backdrop-blur-xl transition hover:border-cyan-200/60 hover:bg-white/15"
-        >
-          <ArrowLeft size={16} className="transition group-hover:-translate-x-1" />
-          Classic site
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            to="/"
+            className="group inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm font-semibold text-white backdrop-blur-xl transition hover:border-cyan-200/60 hover:bg-white/15"
+          >
+            <ArrowLeft size={16} className="transition group-hover:-translate-x-1" />
+            Classic site
+          </Link>
+          <Link
+            to="/ai"
+            className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm font-semibold text-white backdrop-blur-xl transition hover:border-cyan-200/60 hover:bg-white/15"
+          >
+            <Gamepad2 size={16} />
+            Playground
+          </Link>
+        </div>
         <a
           href={`mailto:${contact.email}`}
           className="inline-flex rounded-full bg-cyan-300 px-5 py-2 text-sm font-bold text-slate-950 shadow-lg shadow-cyan-400/20 transition hover:bg-white"

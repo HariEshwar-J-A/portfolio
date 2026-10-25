@@ -3,9 +3,9 @@ import { Provider } from 'react-redux';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { AnimatePresence, LazyMotion, MotionConfig, domAnimation, m } from 'framer-motion';
 import { store } from './store/store';
-import HomePage from './pages/HomePage';
+import PortfolioShell from './pages/PortfolioShell';
 import { HAT_LIST } from './data/hats';
-import { HatProvider } from './context/HatContext';
+import { portfolioShellKey } from './lib/siteNav';
 import ThemeVariables from './components/ThemeVariables';
 import AiRouteLoader from './components/AiRouteLoader';
 import ScrollToTop from './components/ScrollToTop';
@@ -37,6 +37,7 @@ const LazyPage: React.FC<{ pathname: string; children: React.ReactNode }> = ({
 
 const AppRoutes: React.FC = () => {
   const location = useLocation();
+  const shellKey = portfolioShellKey(location.pathname);
   // Prefetch the small Games chunk on idle; 3D waits for hover (see Header).
   useEffect(() => {
     const ric = window.requestIdleCallback as
@@ -54,7 +55,7 @@ const AppRoutes: React.FC = () => {
   return (
     <AnimatePresence mode="wait">
       <m.div
-        key={location.pathname}
+        key={shellKey}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -66,18 +67,12 @@ const AppRoutes: React.FC = () => {
         <AnimatePresence initial={false}>
           <div key="page">
         <Routes location={location}>
-          <Route path="/" element={<HomePage />} />
-          {HAT_LIST.map((hat) => (
-            <Route
-              key={hat.id}
-              path={hat.path}
-              element={
-                <HatProvider hat={hat}>
-                  <HomePage />
-                </HatProvider>
-              }
-            />
-          ))}
+          <Route element={<PortfolioShell />}>
+            <Route path="/" />
+            {HAT_LIST.map((hat) => (
+              <Route key={hat.id} path={hat.path} />
+            ))}
+          </Route>
           <Route
             path="/3d"
             element={
