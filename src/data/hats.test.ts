@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { HAT_LIST } from './hats';
+import { LICHESS_URL } from './osIdentity';
 import { sectionNarration } from './osPersona';
 import { MarketingData, OfferingsData, portfolioData } from './portfolioData';
 import { DEFAULT_SECTION_ORDER } from './personalization';
@@ -63,6 +64,17 @@ describe('hat views', () => {
       expect(leads.length).toBeGreaterThanOrEqual(1);
       expect(leads.length).toBeLessThanOrEqual(3);
     }
+  });
+
+  it('publishes the chess handle and leaves the rating empty', () => {
+    const chess = HAT_LIST.find((hat) => hat.id === 'chess');
+    expect(chess).toBeDefined();
+    expect(chess!.rating).toBeNull();
+    expect(JSON.stringify(chess)).not.toContain('3000');
+    expect(chess!.links?.map((link) => link.href)).toEqual(['/ai?game=chess', LICHESS_URL]);
+    expect(chess!.detail).toContain('Stockfish');
+    expect(chess!.detail).toContain('chess-banter');
+    expect(HAT_LIST.map((hat) => hat.path)).toEqual(['/full-stack', '/ai-engineer', '/sde', '/chess']);
   });
 
   it('puts requested ids first and keeps the rest in original order', () => {
