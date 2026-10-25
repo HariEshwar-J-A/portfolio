@@ -4,13 +4,22 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { RootState } from '../../store/store';
 import { useTheme } from '../../hooks/useTheme';
 import { portfolioData } from '../../data/portfolioData';
+import { useHat } from '../../context/hat-context';
+import { applyOrder, HAT_ACHIEVEMENT_PREVIEW } from '../../lib/hatView';
+import HatDisclosure from '../HatDisclosure';
 import { Award, Medal, Trophy } from 'lucide-react';
 import SectionShell, { glassPanel } from '../SectionShell';
 
 const AchievementsSection: React.FC = () => {
   const { theme } = useTheme();
-  const { achievements } = portfolioData;
+  const hat = useHat();
+  const achievements = hat
+    ? applyOrder(portfolioData.achievements, hat.achievementOrder, (item) => item.id)
+    : portfolioData.achievements;
   const [selectedAchievement, setSelectedAchievement] = useState<number | null>(null);
+  const [showAllAchievements, setShowAllAchievements] = useState(false);
+  const preview = hat ? achievements.slice(0, HAT_ACHIEVEMENT_PREVIEW) : achievements;
+  const hidden = hat ? achievements.slice(HAT_ACHIEVEMENT_PREVIEW) : [];
   const isMinimal = useSelector((state: RootState) => state.view.mode) === 'minimal';
   
   const getIcon = (title: string) => {
@@ -29,14 +38,17 @@ const AchievementsSection: React.FC = () => {
     >
         {isMinimal ? (
           /* Quick peek: recognition as a compact grid, no timeline */
+          <>
           <div className="mx-auto grid max-w-3xl gap-3 sm:grid-cols-2">
-            {achievements.map((achievement) => (
+            {preview.map((achievement) => (
               <motion.div
                 key={achievement.title}
                 initial={{ opacity: 0, y: 12 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.3 }}
+                whileHover={hat ? { y: -2 } : undefined}
+                whileTap={hat ? { scale: 0.99 } : undefined}
                 className={`flex items-start gap-3 rounded-2xl border p-4 ${
                   theme.mode === 'dark' ? 'border-white/10 bg-white/5' : 'border-slate-200 bg-white/70'
                 }`}
@@ -49,6 +61,27 @@ const AchievementsSection: React.FC = () => {
               </motion.div>
             ))}
           </div>
+          {hat && hidden.length > 0 && (
+            <HatDisclosure open={showAllAchievements}>
+              <div className="mx-auto mt-3 grid max-w-3xl gap-3 sm:grid-cols-2">
+                {hidden.map((achievement) => (
+                  <div
+                    key={achievement.title}
+                    className={`flex items-start gap-3 rounded-2xl border p-4 ${
+                      theme.mode === 'dark' ? 'border-white/10 bg-white/5' : 'border-slate-200 bg-white/70'
+                    }`}
+                  >
+                    <span style={{ color: theme.colors.primary }}>{getIcon(achievement.title)}</span>
+                    <span>
+                      <p className="text-sm font-bold leading-snug">{achievement.title}</p>
+                      <p className="mt-0.5 text-xs opacity-60">{achievement.date}</p>
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </HatDisclosure>
+          )}
+          </>
         ) : (
         <div className="max-w-4xl mx-auto relative">
           {/* Timeline Line */}
@@ -61,7 +94,7 @@ const AchievementsSection: React.FC = () => {
           
           {/* Achievement Items */}
           <div className="relative space-y-8">
-            {achievements.map((achievement, index) => (
+            {preview.map((achievement, index) => (
               <motion.div
                 key={achievement.title}
                 initial={{ opacity: 0, x: -20 }}
@@ -130,8 +163,48 @@ const AchievementsSection: React.FC = () => {
                 </motion.div>
               </motion.div>
             ))}
+            {hat && hidden.length > 0 && (
+              <HatDisclosure open={showAllAchievements}>
+                <div className="space-y-8 pt-8">
+                  {hidden.map((achievement) => (
+                    <div key={achievement.title} className="relative flex items-center">
+                      <div
+                        className="absolute left-4 top-1/2 h-6 w-6 -translate-y-1/2 rounded-full border-4 md:left-1/2 md:-translate-x-1/2"
+                        style={{
+                          backgroundColor: theme.mode === 'dark' ? theme.colors.dark.surface : theme.colors.light.surface,
+                          borderColor: theme.colors.primary,
+                        }}
+                      />
+                      <div className="ml-auto w-full cursor-default pl-12 md:w-5/12 md:pl-8">
+                        <div className={`p-6 ${glassPanel(theme.mode === 'dark')}`}>
+                          <div className="mb-4 flex items-center gap-2">
+                            <span style={{ color: theme.colors.primary }}>{getIcon(achievement.title)}</span>
+                            <h3 className="text-xl font-bold">{achievement.title}</h3>
+                          </div>
+                          <span className="text-sm" style={{ color: theme.colors.primary }}>
+                            {achievement.date}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </HatDisclosure>
+            )}
           </div>
         </div>
+        )}
+        {hat && hidden.length > 0 && (
+          <div className="mt-8 text-center">
+            <button
+              type="button"
+              onClick={() => setShowAllAchievements((open) => !open)}
+              className="text-sm font-semibold"
+              style={{ color: 'var(--os-primary)' }}
+            >
+              {showAllAchievements ? 'Show less' : `Show all (${achievements.length})`}
+            </button>
+          </div>
         )}
     </SectionShell>
   );

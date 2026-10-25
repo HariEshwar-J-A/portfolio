@@ -1,10 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
+import HatDisclosure from '../HatDisclosure';
 import { useSelector } from 'react-redux';
 import { motion, useInView } from 'framer-motion';
 import { Boxes, Briefcase, Package, Server } from 'lucide-react';
 import { RootState } from '../../store/store';
 import { useTheme } from '../../hooks/useTheme';
 import { portfolioData } from '../../data/portfolioData';
+import { useHat } from '../../context/hat-context';
+import { applyOrder } from '../../lib/hatView';
 import SectionShell, { glassPanel } from '../SectionShell';
 
 /** Real, defensible numbers pulled from the career record — not vanity percentages. */
@@ -57,10 +60,15 @@ const CountUp: React.FC<{ value: number; suffix?: string }> = ({ value, suffix =
 
 const SkillsSection: React.FC = () => {
   const { theme } = useTheme();
-  const { skills } = portfolioData;
+  const hat = useHat();
+  const skills = hat
+    ? applyOrder(portfolioData.skills, hat.skillCategoryOrder, (category) => category.category)
+    : portfolioData.skills;
   const isDark = theme.mode === 'dark';
   const isMinimal = useSelector((state: RootState) => state.view.mode) === 'minimal';
   const mutedText = isDark ? 'text-slate-400' : 'text-slate-500';
+  const [showAllSkills, setShowAllSkills] = useState(false);
+  const visibleSkills = hat && !showAllSkills ? skills.slice(0, 1) : skills;
 
   return (
     <SectionShell
@@ -107,6 +115,7 @@ const SkillsSection: React.FC = () => {
         </div>
       ) : (
         <>
+      <HatDisclosure open={!hat || showAllSkills} instant={!hat}>
       {/* Domain depth widget */}
       <motion.div
         initial={{ opacity: 0, y: 18 }}
@@ -143,10 +152,11 @@ const SkillsSection: React.FC = () => {
           ))}
         </div>
       </motion.div>
+      </HatDisclosure>
 
       {/* Stack breakdown by category */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {skills.map((category, index) => (
+        {visibleSkills.map((category, index) => (
           <motion.div
             key={category.category}
             initial={{ opacity: 0, y: 20 }}
@@ -181,6 +191,16 @@ const SkillsSection: React.FC = () => {
           </motion.div>
         ))}
       </div>
+      {hat && skills.length > 1 && (
+        <button
+          type="button"
+          onClick={() => setShowAllSkills((open) => !open)}
+          className="mt-8 text-sm font-semibold"
+          style={{ color: 'var(--os-primary)' }}
+        >
+          {showAllSkills ? 'Show less' : 'Show all'}
+        </button>
+      )}
         </>
       )}
     </SectionShell>

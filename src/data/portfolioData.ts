@@ -23,6 +23,7 @@ export interface PersonalInfo {
 }
 
 export interface WorkExperience {
+  id: string;
   company: string;
   position: string;
   startDate: string;
@@ -59,6 +60,7 @@ export interface Skill {
 }
 
 export interface Project {
+  id: string;
   title: string;
   description: string;
   technologies: string[];
@@ -69,6 +71,7 @@ export interface Project {
 }
 
 export interface Achievement {
+  id: string;
   title: string;
   date: string;
   description: string;
@@ -105,6 +108,7 @@ export interface ColorScheme {
 
 export const WorkData: WorkExperience[] = [
   {
+    id: "ecam",
     company: "ECAM | GardaWorld",
     position: "Full Stack Developer – Full Time",
     startDate: "Feb-2026",
@@ -127,6 +131,7 @@ export const WorkData: WorkExperience[] = [
     location: "Hamilton, ON, Canada",
   },
   {
+    id: "npx",
     company: "Nuclear Promise X",
     position: "Innovation Catalyst, Full Stack Developer – Full Time",
     startDate: "Jul-2025",
@@ -144,6 +149,7 @@ export const WorkData: WorkExperience[] = [
     website: "https://www.npxinnovation.ca/",
   },
   {
+    id: "freelance",
     company: "Freelance",
     position: "Freelance Full Stack React Developer – Part Time",
     startDate: "Aug-2023",
@@ -166,6 +172,7 @@ export const WorkData: WorkExperience[] = [
     location: "Remote",
   },
   {
+    id: "soti",
     company: "SOTI Inc.",
     position: "DevOps Engineer Coop – Full Time",
     startDate: "May-2024",
@@ -185,6 +192,7 @@ export const WorkData: WorkExperience[] = [
   },
   {
     company: "Soliton Technologies",
+    id: "soliton-senior",
     position: "Senior Project Engineer – Full Time",
     startDate: "Jun-2022",
     endDate: "Jul-2023",
@@ -207,6 +215,7 @@ export const WorkData: WorkExperience[] = [
   },
   {
     company: "Soliton Technologies",
+    id: "soliton-engineer",
     position: "Project Engineer – Full Time",
     startDate: "Aug-2020",
     endDate: "Jun-2022",
@@ -227,6 +236,7 @@ export const WorkData: WorkExperience[] = [
   },
   {
     company: "Soliton Technologies",
+    id: "soliton-intern",
     position: "Project Engineer – Intern",
     startDate: "Jan-2020",
     endDate: "Mar-2020",
@@ -240,6 +250,7 @@ export const WorkData: WorkExperience[] = [
     website: "https://www.solitontech.com",
   },
   {
+    id: "zoho",
     company: "Zoho Corporation",
     position: "Backend Developer – Intern",
     startDate: "May-2019",
@@ -430,6 +441,7 @@ export const portfolioData: PortfolioData = {
   skills: SkillsData,
   projects: [
     {
+      id: "info-sentry",
       title: "Info Sentry",
       description:
         "Self-hosted multi-agent AI intelligence platform (~24,000 LOC, 186 files) that autonomously discovers, scrapes, summarises, and forecasts news across 4 discovery engines, GitHub, and YouTube. Eight LLM agents behind OpenClaw with budget-aware 4-tier model routing under $7.30/month, RAG on ChromaDB, and a Next.js 15 dashboard with 55 REST endpoints and SSE streaming.",
@@ -452,6 +464,7 @@ export const portfolioData: PortfolioData = {
       featured: true,
     },
     {
+      id: "world-sports-academy",
       title: "World Sports Academy",
       description:
         "Production Next.js 15 court-booking and membership platform for a Toronto sports academy (~26,000 LOC): 24 pages, 22 API route handlers, ~40 server actions, and a 15-table PostgreSQL schema under 53 RLS policies. Full Stripe revenue stack, timezone-aware availability engine, Supabase Realtime admin dashboard, and installable PWA.",
@@ -473,6 +486,7 @@ export const portfolioData: PortfolioData = {
       featured: true,
     },
     {
+      id: "node-jhora",
       title: "node-jhora",
       description:
         "Seven-package TypeScript monorepo (~12,500 LOC) delivering a professional astronomical and Vedic astrology computation SDK. Pure-TypeScript JPL DE440s SPK ephemeris reader (no Swiss Ephemeris copyleft), 16 divisional charts, Shadbala, Ashtakavarga, 4 Dasha systems, 263 Jest tests, and a Fastify + Zod REST API.",
@@ -491,6 +505,7 @@ export const portfolioData: PortfolioData = {
       featured: true,
     },
     {
+      id: "horamind",
       title: "HoraMind & JyotishBase",
       description:
         "Autonomous Telegram AI agent fusing live node-jhora chart computation with RAG-grounded classical interpretation. Four custom agent tools, ~6,600 ChromaDB embeddings from JyotishBase (~20,900 lines), and cost-tiered routing between Gemini Flash and Claude Sonnet.",
@@ -507,6 +522,7 @@ export const portfolioData: PortfolioData = {
       featured: true,
     },
     {
+      id: "portfolio",
       title: "Portfolio Website",
       description:
         "~9,600 LOC TypeScript engineering site with HARI.AI persona layer, intent-based personalisation, Cmd/Ctrl+K command palette, lazy-loaded React Three Fiber 3D route, /ai mini-game playground, Plotly career map, and EmailJS collaboration wizard — deployed on Netlify.",
@@ -528,6 +544,7 @@ export const portfolioData: PortfolioData = {
       featured: true,
     },
     {
+      id: "expense-tracker",
       title: "Expense Tracker",
       description:
         "Full-stack finance platform (~7,200 LOC, 24 REST endpoints) with JWT HttpOnly auth, two-tier OCR receipt ingestion, Knex adapters for SQLite/PostgreSQL, D3.js analytics (safe-to-spend and velocity), and PDFKit report generation.",
@@ -548,6 +565,7 @@ export const portfolioData: PortfolioData = {
       featured: false,
     },
     {
+      id: "habit-tracker",
       title: "Habit Tracker PWA",
       description:
         "Installable Progressive Web App with Supabase PKCE OAuth (Google, GitHub, email), server-side streak computation via PL/pgSQL triggers, 10 accent themes in Dexie/IndexedDB, and Workbox offline caching — first release in 5 days across 142 commits.",
@@ -567,6 +585,7 @@ export const portfolioData: PortfolioData = {
       featured: false,
     },
     {
+      id: "valorant-spike-timer",
       title: "Valorant Spike Timer",
       description:
         "Transparent Overwolf in-game overlay that auto-starts a 45-second countdown on bomb-plant detection, cancels on defuse or round end, and plays a Web Audio warning at the 10-second threshold — with configurable settings and a browser demo mode.",
@@ -576,6 +595,7 @@ export const portfolioData: PortfolioData = {
       featured: false,
     },
     {
+      id: "bridgecare",
       title: "BridgeCare — Google AI Hackathon",
       description:
         "Technical mentor for a winning voice-first elderly-care companion: 6-model Gemini fallback chain, trigger-phrase memory extraction with 50-memory contextual retrieval, Web Speech capture with silence detection, and healthcare-adjacent safety constraints.",
@@ -593,42 +613,49 @@ export const portfolioData: PortfolioData = {
   ],
   achievements: [
     {
+      id: "ecam-recognition",
       title: "ECAM Formal Recognition",
       date: "2026",
       description:
         "Recognized within 6 months at ECAM | GardaWorld for driving project success, cost-effective technical prioritization, and a company-wide growth mindset",
     },
     {
+      id: "google-ai-hackathon",
       title: "Google AI Hackathon — Winning Mentor",
       date: "2026",
       description:
         "Mentored a junior developer team to a winning BridgeCare entry: voice-first elderly-care companion with Gemini agent architecture and safety constraints",
     },
     {
+      id: "langchain-academy",
       title: "LangChain Academy",
       date: "2026",
       description:
         "Completed Introduction to LangChain (Python): LangGraph agent workflows, MCP servers, RAG pipelines, multi-agent systems, and human-in-the-loop middleware",
     },
     {
+      id: "star-soliton",
       title: "Star Soliton Award",
       date: "2023",
       description:
         "Received two Star Soliton awards for exceptional hard work and significant value addition to projects",
     },
     {
+      id: "best-alumni",
       title: "Best Alumni (2020 – 2023)",
       date: "2023",
       description:
         "Won Best Alumni from R.M.D Engineering College for training students and faculty in software engineering and guiding technical research",
     },
     {
+      id: "internal-hackathon",
       title: "Internal Hackathon — 2nd Place",
       date: "2021",
       description:
         "Second place for an Elastic Stack / AWS ELK PoC ingesting 5M+ semiconductor logs/day, helping secure a major partner offering",
     },
     {
+      id: "chess-captain",
       title: "Chess Team Captain",
       date: "2016 – 2020",
       description:

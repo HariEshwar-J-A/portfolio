@@ -17,6 +17,7 @@ import { setFocus, setViewMode } from '../store/slices/viewSlice';
 import type { FocusId, ViewMode } from '../store/slices/viewSlice';
 import UnderConstruction from './UnderConstruction';
 import { OPEN_COLLAB_EVENT } from './CollabWizard';
+import { useHat } from '../context/hat-context';
 
 /** Dispatch this event (header, palette, banner) to reopen the wizard. */
 export const OPEN_INTENT_EVENT = 'portfolio:open-intent';
@@ -74,8 +75,11 @@ const IntentWizard: React.FC = () => {
   const dispatch = useDispatch();
   const { theme } = useTheme();
   const isDark = theme.mode === 'dark';
+  const hat = useHat();
 
   const [isOpen, setIsOpen] = useState(() => {
+    // A hat URL is already a chosen view. Don't cover it with the concierge.
+    if (hat) return false;
     try {
       return window.sessionStorage.getItem(SEEN_KEY) !== 'true';
     } catch {

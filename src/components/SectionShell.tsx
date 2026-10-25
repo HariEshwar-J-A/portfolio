@@ -5,6 +5,7 @@ import { Sparkles } from 'lucide-react';
 import { RootState } from '../store/store';
 import type { SectionId } from '../store/slices/navigationSlice';
 import { useTheme } from '../hooks/useTheme';
+import { useHat } from '../context/hat-context';
 import { FOCUS_CONFIGS } from '../data/personalization';
 
 /** Shared glass-panel styling so every card floats consistently above the ambient layer. */
@@ -38,18 +39,19 @@ const SectionShell: React.FC<SectionShellProps> = ({
   const { theme } = useTheme();
   const isDark = theme.mode === 'dark';
   const focus = useSelector((state: RootState) => state.view.focus);
+  const hat = useHat();
   const isEmphasized = Boolean(
     focus && focus !== 'explore' && FOCUS_CONFIGS[focus].emphasized.includes(id as SectionId)
   );
 
   return (
-    <section id={id} className="relative min-h-screen py-24">
+    <section id={id} className={hat ? 'relative py-24 md:py-32' : 'relative min-h-screen py-24'}>
       <div className="container mx-auto px-4">
         <motion.div
-          initial={{ opacity: 0, y: 28 }}
+          initial={{ opacity: 0, y: hat ? 16 : 28 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
+          transition={{ duration: hat ? 0.35 : 0.6, ease: 'easeOut' }}
           className="mb-14 text-center"
         >
           {isEmphasized && (
@@ -77,7 +79,7 @@ const SectionShell: React.FC<SectionShellProps> = ({
             initial={{ width: 0, opacity: 0 }}
             whileInView={{ width: '4rem', opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.25, ease: 'easeOut' }}
+            transition={{ duration: hat ? 0.35 : 0.7, delay: hat ? 0.08 : 0.25, ease: 'easeOut' }}
             className="os-border-flow mx-auto mt-5 block h-1 rounded-full"
           />
           {subtitle && (
