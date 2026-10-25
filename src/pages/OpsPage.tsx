@@ -225,7 +225,7 @@ const OpsPage: React.FC = () => {
           ))}
         </m.div>
 
-        <m.div variants={fade} className="mt-6 flex gap-5 overflow-x-auto" role="tablist" aria-label="Ops">
+        <m.div variants={fade} className="no-scrollbar-y mt-6 flex gap-5 overflow-x-auto overflow-y-hidden" role="tablist" aria-label="Ops">
           {TABS.map((item) => (
             <button
               key={item.id}
