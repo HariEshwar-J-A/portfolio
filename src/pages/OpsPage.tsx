@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { AnimatePresence, useReducedMotion, m } from 'framer-motion';
+import { ArrowLeft } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
+import { RootState } from '../store/store';
+import { getPalette } from '../data/osPersona';
+import AmbientBackground from '../components/AmbientBackground';
+import ThemeSwitcher from '../components/ThemeSwitcher';
+import Footer from '../components/Footer';
 import { glassPanel } from '../components/SectionShell';
 import HatDisclosure from '../components/HatDisclosure';
 import { applyOpsMeta } from '../lib/pageMeta';
@@ -73,6 +80,7 @@ const Trend: React.FC<{ points: { visits: number | null }[] }> = ({ points }) =>
 const OpsPage: React.FC = () => {
   const { theme } = useTheme();
   const reduce = useReducedMotion();
+  const palette = getPalette(useSelector((state: RootState) => state.theme.palette));
   const isDark = theme.mode === 'dark';
   const [tab, setTab] = useState<Tab>('traffic');
   const [range, setRange] = useState<'7d' | '30d'>('7d');
@@ -85,6 +93,10 @@ const OpsPage: React.FC = () => {
   useEffect(() => {
     applyOpsMeta();
   }, []);
+
+  useEffect(() => {
+    document.body.className = isDark ? 'bg-slate-950 text-white' : 'bg-slate-50 text-slate-900';
+  }, [isDark]);
 
   useEffect(() => {
     let cancel = false;
@@ -126,45 +138,94 @@ const OpsPage: React.FC = () => {
   const countries = live?.traffic.countries ?? [];
   const hiddenCountries = countries.slice(4);
 
+  const rise = reduce ? 0 : 10;
+  const fade = {
+    hidden: { opacity: 0, y: rise },
+    show: { opacity: 1, y: 0, transition: { duration: reduce ? 0 : 0.32, ease: 'easeOut' as const } },
+  };
+
   return (
-    <main className={`min-h-screen px-4 pb-16 pt-8 ${isDark ? 'text-slate-100' : 'text-slate-900'}`}>
-      <div className="mx-auto max-w-3xl">
-        <div className="flex items-center justify-between gap-4">
-          <p className={`font-mono text-[10px] font-bold uppercase tracking-[0.22em] ${muted}`}>hari.os</p>
-          <Link to="/" className={`text-sm font-semibold underline-offset-4 hover:underline ${muted}`}>
-            Portfolio
-          </Link>
-        </div>
-
-        <h1 className="mt-6 text-4xl font-black tracking-tight">Ops</h1>
-        <p className={`mt-2 max-w-xl text-base ${muted}`}>Build in public. Aggregates only, from Cloudflare Web Analytics.</p>
-
-        {mock && (
-          <p
-            className={`mt-4 rounded-2xl border px-4 py-3 text-sm ${
-              isDark ? 'border-amber-300/30 bg-amber-300/10 text-amber-100' : 'border-amber-700/20 bg-amber-50 text-amber-950'
+    <div className={`relative min-h-screen ${isDark ? 'bg-slate-950 text-white' : 'bg-slate-50 text-slate-900'}`}>
+      <AmbientBackground />
+      <header
+        className={`fixed left-0 top-0 z-[130] w-full shadow-md ${
+          isDark ? 'bg-slate-950/85 backdrop-blur-md' : 'bg-white/85 backdrop-blur-md'
+        }`}
+      >
+        <div className="container mx-auto flex items-center justify-between gap-4 px-4 py-3 md:px-6 md:py-4">
+          <Link
+            to="/"
+            className={`group inline-flex shrink-0 items-center gap-2 font-mono text-sm font-bold tracking-tight md:text-base ${
+              isDark ? 'text-white' : 'text-slate-900'
             }`}
           >
+            <ArrowLeft size={15} className="opacity-70 transition group-hover:-translate-x-0.5 group-hover:opacity-100" />
+            <span className="h-2 w-2 animate-pulse rounded-full" style={{ backgroundColor: 'var(--os-primary)' }} />
+            <span>
+              hari<span style={{ color: 'var(--os-primary)' }}>.os</span>
+              <span className={`ml-1.5 font-sans text-xs font-semibold ${muted}`}>Portfolio</span>
+            </span>
+          </Link>
+          <ThemeSwitcher />
+        </div>
+      </header>
+
+      <main className="relative z-10 px-4 pb-8 pt-28">
+      <m.div
+        className="mx-auto max-w-3xl"
+        variants={{ show: { transition: { staggerChildren: reduce ? 0 : 0.08 } } }}
+        initial="hidden"
+        animate="show"
+      >
+        <m.p variants={fade} className={`text-xs font-bold uppercase tracking-[0.22em] ${muted}`}>
+          hari.os
+        </m.p>
+        <m.h1 variants={fade} className="mt-4 text-4xl font-black leading-[0.95] tracking-tight md:text-6xl">
+          <span className="bg-clip-text text-transparent" style={{ backgroundImage: palette.heroGradient }}>
+            Ops
+          </span>
+        </m.h1>
+        <m.p variants={fade} className={`mt-3 max-w-xl text-base leading-relaxed md:text-lg ${muted}`}>
+          Build in public. Aggregates only, from Cloudflare Web Analytics.
+        </m.p>
+
+        {mock && (
+          <m.p
+            variants={fade}
+            className="mt-6 rounded-2xl border px-4 py-3 text-sm font-semibold"
+            style={{
+              color: 'var(--os-primary)',
+              borderColor: 'color-mix(in srgb, var(--os-primary) 45%, transparent)',
+              backgroundColor: 'color-mix(in srgb, var(--os-primary) 10%, transparent)',
+            }}
+          >
             Sample data for local preview. Not live Cloudflare numbers.
-          </p>
+          </m.p>
         )}
 
-        <div className="mt-6 flex flex-wrap items-center gap-2">
+        <m.div variants={fade} className="mt-8 flex flex-wrap items-center gap-3">
           {(['7d', '30d'] as const).map((value) => (
-            <button
+            <m.button
               key={value}
               type="button"
               onClick={() => setRange(value)}
               aria-pressed={range === value}
-              className={`rounded-full px-3 py-1 text-sm font-semibold ${range === value ? 'text-white' : muted}`}
-              style={range === value ? { backgroundColor: theme.colors.primary } : undefined}
+              whileHover={reduce ? undefined : { y: -2 }}
+              whileTap={reduce ? undefined : { scale: 0.98 }}
+              transition={{ duration: 0.16 }}
+              className={`rounded-2xl px-4 py-2 text-sm font-bold ${range === value ? 'text-white shadow-xl' : muted}`}
+              style={
+                range === value
+                  ? { backgroundColor: theme.colors.primary, boxShadow: `0 12px 36px ${theme.colors.primary}55` }
+                  : undefined
+              }
             >
               {value}
-            </button>
+            </m.button>
           ))}
-        </div>
+        </m.div>
 
-        <div className="mt-4 flex gap-1 overflow-x-auto" role="tablist" aria-label="Ops">
+        <m.div variants={fade} className="mt-6 flex gap-5 overflow-x-auto" role="tablist" aria-label="Ops">
           {TABS.map((item) => (
             <button
               key={item.id}
@@ -172,13 +233,16 @@ const OpsPage: React.FC = () => {
               role="tab"
               aria-selected={tab === item.id}
               onClick={() => setTab(item.id)}
-              className={`rounded-full px-3 py-1.5 text-sm font-semibold ${tab === item.id ? '' : muted}`}
-              style={tab === item.id ? { color: theme.colors.primary } : undefined}
+              className={`relative shrink-0 px-1 pb-2 text-sm font-medium tracking-wide ${tab === item.id ? '' : muted}`}
+              style={tab === item.id ? { color: 'var(--os-primary)' } : undefined}
             >
               {item.label}
+              {tab === item.id && (
+                <span className="absolute inset-x-0 -bottom-px h-0.5 rounded-full" style={{ backgroundColor: 'var(--os-primary)' }} />
+              )}
             </button>
           ))}
-        </div>
+        </m.div>
 
         <AnimatePresence mode="wait" initial={false}>
           <m.section
@@ -302,9 +366,15 @@ const OpsPage: React.FC = () => {
           </m.section>
         </AnimatePresence>
 
-        <p className={`mt-4 text-xs leading-relaxed ${muted}`}>{OPS_FOOTNOTE}</p>
+        <m.p variants={fade} className={`mt-4 text-xs leading-relaxed ${muted}`}>
+          {OPS_FOOTNOTE}
+        </m.p>
+      </m.div>
+      </main>
+      <div className="relative z-10">
+        <Footer />
       </div>
-    </main>
+    </div>
   );
 };
 
