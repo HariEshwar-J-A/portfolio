@@ -98,7 +98,7 @@ const fullStack: HatConfig = {
       { index: 6, includes: 'React.js, Node.js, PostgreSQL, and AWS' },
     ],
   },
-  projectOrder: ['freelance-booking', 'expense-tracker', 'habit-tracker', 'portfolio'],
+  projectOrder: ['freelance-booking', 'expense-tracker', 'habit-tracker', 'portfolio', 'harbour'],
   skillCategoryOrder: ['Frontend', 'Backend & APIs', 'Cloud & DevOps', 'AI & LLM'],
   achievementOrder: ['ecam-recognition', 'star-soliton', 'internal-hackathon'],
   proofPoints: [
@@ -259,7 +259,7 @@ const aiEngineer: HatConfig = {
     ],
     'soliton-engineer': [{ index: 4, includes: 'ML anomaly-detection' }],
   },
-  projectOrder: ['info-sentry', 'horamind', 'bridgecare'],
+  projectOrder: ['info-sentry', 'horamind', 'bridgecare', 'harbour'],
   skillCategoryOrder: ['AI & LLM', 'Backend & APIs', 'Frontend', 'Cloud & DevOps'],
   achievementOrder: ['langchain-academy', 'google-ai-hackathon'],
   proofPoints: [

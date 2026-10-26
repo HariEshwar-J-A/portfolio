@@ -66,6 +66,8 @@ export interface Project {
   technologies: string[];
   image: string;
   demoLink?: string;
+  /** Visible label for demoLink. Defaults to "Demo". */
+  demoLabel?: string;
   sourceLink?: string;
   featured: boolean;
 }
@@ -544,6 +546,30 @@ export const portfolioData: PortfolioData = {
       demoLink: "https://harieshwar.dev",
       sourceLink: "https://github.com/HariEshwar-J-A/portfolio",
       featured: true,
+    },
+    {
+      id: "harbour",
+      title: "Harbour",
+      description:
+        "Agent-fed data app for Canadian stores, prices in CAD. A separate assistant checks whitelisted stores once a day and writes price snapshots and deals into Supabase. Anyone can browse the watchlist, stores, deals, item history, and analytics. Only the owner can edit.",
+      technologies: [
+        "React",
+        "TypeScript",
+        "Supabase",
+        "Vite",
+        "Tailwind",
+        "Radix UI",
+        "Motion",
+        "Recharts",
+        "GitHub Pages",
+        "Vitest",
+        "Playwright",
+      ],
+      image: "/assets/images/harbour.jpg",
+      demoLink: "https://harieshwar-ai.github.io/deal-tracker/",
+      demoLabel: "Live demo",
+      sourceLink: "https://github.com/harieshwar-ai/deal-tracker",
+      featured: false,
     },
     {
       id: "expense-tracker",
