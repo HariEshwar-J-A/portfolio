@@ -84,6 +84,7 @@ html.lenis body {
   --os-primary: #38bdf8;
   --os-secondary: #818cf8;
   --os-accent: #f472b6;
+  --os-on-primary: #0f172a;
 }
 
 /* Hover color that follows the persona */

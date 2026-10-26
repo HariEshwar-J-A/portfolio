@@ -76,19 +76,21 @@ const AnalyticsNotice: React.FC = () => {
       initial={reduce ? false : { opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: reduce ? 0 : 0.35, ease: 'easeOut' }}
-      className={`fixed right-3 z-50 w-[min(14.5rem,calc(100vw-5rem))] rounded-2xl border p-3 text-sm shadow-xl backdrop-blur-xl ${
-        footerVisible ? 'bottom-28 sm:bottom-24' : 'bottom-20 xl:bottom-4'
+      className={`fixed z-50 border shadow-xl backdrop-blur-xl max-md:inset-x-3 max-md:flex max-md:items-center max-md:gap-2 max-md:rounded-full max-md:px-3 max-md:py-1.5 max-md:text-xs md:right-3 md:block md:w-[min(14.5rem,calc(100vw-5rem))] md:rounded-2xl md:p-3 md:text-sm ${
+        footerVisible ? 'max-md:bottom-44 md:bottom-24' : 'max-md:bottom-[4.75rem] md:bottom-20 xl:bottom-4'
       } ${
         isDark
-          ? 'border-white/10 bg-slate-950/75 text-slate-200 shadow-black/20'
-          : 'border-white/70 bg-white/80 text-slate-800 shadow-slate-300/30'
+          ? 'border-white/10 bg-slate-950 text-slate-200 shadow-black/20'
+          : 'border-slate-200 bg-white text-slate-800 shadow-slate-300/30'
       }`}
     >
-      <p className="leading-snug">This site uses cookieless analytics. No tracking cookies.</p>
-      <div className="mt-2.5 flex items-center gap-2">
+      <p className="leading-snug max-md:min-w-0 max-md:flex-1 max-md:truncate">
+        This site uses cookieless analytics. No tracking cookies.
+      </p>
+      <div className="flex shrink-0 items-center gap-1.5 md:mt-2.5 md:gap-2">
         <Link
           to={PRIVACY_PATH}
-          className={`rounded-lg px-2.5 py-1.5 text-sm font-semibold underline-offset-4 hover:underline ${focusRing}`}
+          className={`rounded-lg px-2 py-1 text-xs font-semibold underline-offset-4 hover:underline md:px-2.5 md:py-1.5 md:text-sm ${focusRing}`}
           style={{ color: 'var(--os-primary)' }}
         >
           Privacy
@@ -96,8 +98,8 @@ const AnalyticsNotice: React.FC = () => {
         <button
           type="button"
           onClick={dismiss}
-          className={`ml-auto rounded-lg px-3 py-1.5 text-sm font-semibold text-white ${focusRing}`}
-          style={{ backgroundColor: 'var(--os-primary)' }}
+          className={`ml-auto rounded-lg px-2.5 py-1 text-xs font-semibold md:px-3 md:py-1.5 md:text-sm ${focusRing}`}
+          style={{ backgroundColor: 'var(--os-primary)', color: 'var(--os-on-primary)' }}
         >
           OK
         </button>

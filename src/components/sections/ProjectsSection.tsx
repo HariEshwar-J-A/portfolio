@@ -206,11 +206,12 @@ const ProjectsSection: React.FC = () => {
             onClick={() => handleTechFilter(null)}
             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
               filter === null
-                ? 'text-white'
+                ? ''
                 : theme.mode === 'dark' ? 'text-slate-300 hover:text-white' : 'text-slate-700 hover:text-black'
             }`}
             style={{ 
               backgroundColor: filter === null ? theme.colors.primary : 'transparent',
+              color: filter === null ? 'var(--os-on-primary)' : undefined,
               border: `1px solid ${filter === null ? theme.colors.primary : theme.mode === 'dark' ? '#4B5563' : '#D1D5DB'}`
             }}
           >
@@ -222,11 +223,12 @@ const ProjectsSection: React.FC = () => {
               onClick={() => handleTechFilter(tech)}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                 filter === tech
-                  ? 'text-white'
+                  ? ''
                   : theme.mode === 'dark' ? 'text-slate-300 hover:text-white' : 'text-slate-700 hover:text-black'
               }`}
               style={{ 
                 backgroundColor: filter === tech ? theme.colors.primary : 'transparent',
+                color: filter === tech ? 'var(--os-on-primary)' : undefined,
                 border: `1px solid ${filter === tech ? theme.colors.primary : theme.mode === 'dark' ? '#4B5563' : '#D1D5DB'}`
               }}
             >
@@ -250,7 +252,7 @@ const ProjectsSection: React.FC = () => {
                   aria-label="Previous projects"
                   onClick={() => scrollCarousel('left')}
                   className="hidden md:flex items-center justify-center absolute left-0 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full shadow"
-                  style={{ backgroundColor: theme.colors.primary, color: 'white' }}
+                  style={{ backgroundColor: theme.colors.primary, color: 'var(--os-on-primary)' }}
                   disabled={filteredProjects.length < 4}
                   aria-disabled={filteredProjects.length < 4}
                 >
@@ -282,7 +284,7 @@ const ProjectsSection: React.FC = () => {
                       {project.featured && (
                         <div
                           className="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold"
-                          style={{ backgroundColor: theme.colors.primary, color: 'white' }}
+                          style={{ backgroundColor: theme.colors.primary, color: 'var(--os-on-primary)' }}
                         >
                           Featured
                         </div>
@@ -323,7 +325,7 @@ const ProjectsSection: React.FC = () => {
                   aria-label="Next projects"
                   onClick={() => scrollCarousel('right')}
                   className="hidden md:flex items-center justify-center absolute right-0 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full shadow"
-                  style={{ backgroundColor: theme.colors.primary, color: 'white' }}
+                  style={{ backgroundColor: theme.colors.primary, color: 'var(--os-on-primary)' }}
                 >
                   <ChevronRight />
                 </button>

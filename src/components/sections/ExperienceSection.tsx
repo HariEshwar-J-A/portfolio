@@ -58,7 +58,7 @@ const CareerGantt: React.FC<{ isDark: boolean }> = ({ isDark }) => {
   const rangeStart = roles[0].start.getTime();
   const rangeEnd = Math.max(...roles.map((role) => role.end.getTime()));
   const span = rangeEnd - rangeStart;
-  const mutedText = isDark ? 'text-slate-500' : 'text-slate-400';
+  const mutedText = isDark ? 'text-slate-300' : 'text-slate-400';
 
   const startYear = new Date(rangeStart).getFullYear();
   const endYear = new Date(rangeEnd).getFullYear();
@@ -274,10 +274,13 @@ const ExperienceSection: React.FC = () => {
             onClick={() => setViewMode('timeline')}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all backdrop-blur ${
               viewMode === 'timeline'
-                ? 'text-white shadow-lg'
+                ? 'shadow-lg'
                 : theme.mode === 'dark' ? 'bg-white/5 border border-white/10' : 'bg-white/60 border border-slate-200'
             }`}
-            style={{ backgroundColor: viewMode === 'timeline' ? theme.colors.primary : undefined }}
+            style={{
+              backgroundColor: viewMode === 'timeline' ? theme.colors.primary : undefined,
+              color: viewMode === 'timeline' ? 'var(--os-on-primary)' : undefined,
+            }}
           >
             <Timeline size={20} />
             Timeline View
@@ -288,10 +291,13 @@ const ExperienceSection: React.FC = () => {
             onFocus={preloadExperienceMap}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all backdrop-blur ${
               viewMode === 'map'
-                ? 'text-white shadow-lg'
+                ? 'shadow-lg'
                 : theme.mode === 'dark' ? 'bg-white/5 border border-white/10' : 'bg-white/60 border border-slate-200'
             }`}
-            style={{ backgroundColor: viewMode === 'map' ? theme.colors.primary : undefined }}
+            style={{
+              backgroundColor: viewMode === 'map' ? theme.colors.primary : undefined,
+              color: viewMode === 'map' ? 'var(--os-on-primary)' : undefined,
+            }}
           >
             <Globe size={20} />
             Map View

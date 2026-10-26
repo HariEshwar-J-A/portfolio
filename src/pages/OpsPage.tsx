@@ -256,10 +256,10 @@ const OpsPage: React.FC = () => {
               whileHover={reduce ? undefined : { y: -2 }}
               whileTap={reduce ? undefined : { scale: 0.98 }}
               transition={{ duration: 0.16 }}
-              className={`rounded-2xl px-4 py-2 text-sm font-bold ${range === value ? 'text-white shadow-xl' : muted}`}
+              className={`rounded-2xl px-4 py-2 text-sm font-bold ${range === value ? 'shadow-xl' : muted}`}
               style={
                 range === value
-                  ? { backgroundColor: theme.colors.primary, boxShadow: `0 12px 36px ${theme.colors.primary}55` }
+                  ? { backgroundColor: theme.colors.primary, color: 'var(--os-on-primary)', boxShadow: `0 12px 36px ${theme.colors.primary}55` }
                   : undefined
               }
             >

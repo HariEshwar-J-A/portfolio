@@ -327,8 +327,8 @@ const OsPlaygroundPage: React.FC = () => {
             <button
               type="button"
               onClick={openCollab}
-              className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-bold text-white shadow-lg transition hover:-translate-y-0.5"
-              style={{ backgroundColor: 'var(--os-primary)' }}
+              className="inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-bold shadow-lg transition hover:-translate-y-0.5"
+              style={{ backgroundColor: 'var(--os-primary)', color: 'var(--os-on-primary)' }}
               title="Collaborate"
             >
               <Handshake size={14} />

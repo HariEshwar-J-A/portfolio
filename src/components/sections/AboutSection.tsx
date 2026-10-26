@@ -90,9 +90,10 @@ const HatHero: React.FC<{ hat: HatConfig }> = ({ hat }) => {
                 whileHover={reduce ? undefined : { y: -2 }}
                 whileTap={reduce ? undefined : { scale: 0.98 }}
                 transition={{ duration: 0.16 }}
-                className="group inline-flex items-center gap-2 rounded-2xl px-6 py-3.5 font-bold text-white shadow-xl"
+                className="group inline-flex items-center gap-2 rounded-2xl px-6 py-3.5 font-bold shadow-xl"
                 style={{
                   backgroundColor: theme.colors.primary,
+                  color: 'var(--os-on-primary)',
                   boxShadow: `0 12px 36px ${theme.colors.primary}55`,
                 }}
               >
@@ -243,9 +244,10 @@ const AboutSection: React.FC = () => {
                 whileHover={reduce ? undefined : { y: -2 }}
                 whileTap={reduce ? undefined : { scale: 0.98 }}
                 transition={{ duration: 0.16 }}
-                className="group inline-flex items-center gap-2 rounded-2xl px-6 py-3.5 font-bold text-white shadow-xl"
+                className="group inline-flex items-center gap-2 rounded-2xl px-6 py-3.5 font-bold shadow-xl"
                 style={{
                   backgroundColor: theme.colors.primary,
+                  color: 'var(--os-on-primary)',
                   boxShadow: `0 12px 36px ${theme.colors.primary}55`,
                 }}
               >
