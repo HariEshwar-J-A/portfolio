@@ -131,7 +131,7 @@ const PrivacyPage: React.FC = () => {
         </div>
       </header>
 
-      <main className="relative z-10 min-w-0 flex-1 px-4 pb-8 pt-28">
+      <main className="relative z-10 min-w-0 flex-1 px-4 pb-36 pt-28">
         <m.div
           className="mx-auto min-w-0 max-w-3xl"
           variants={{ show: { transition: { staggerChildren: reduce ? 0 : 0.06 } } }}
