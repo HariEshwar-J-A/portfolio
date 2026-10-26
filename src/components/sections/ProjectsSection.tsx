@@ -276,6 +276,8 @@ const ProjectsSection: React.FC = () => {
                         src={project.image}
                         alt={project.title}
                         className="h-full w-full object-cover transition-transform duration-500 hover:scale-110 motion-reduce:transition-none motion-reduce:hover:scale-100"
+                        loading="lazy"
+                        decoding="async"
                       />
                       {project.featured && (
                         <div
