@@ -19,10 +19,6 @@ if ('scrollRestoration' in window.history) {
 }
 window.scrollTo(0, 0);
 
-// Initialize EmailJS with your public key
-import emailjs from '@emailjs/browser';
-emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
-
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>

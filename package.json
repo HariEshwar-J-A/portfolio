@@ -12,10 +12,10 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@emailjs/browser": "^4.3.3",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.15.10",
+    "@netlify/blobs": "^11.1.6",
     "@react-three/drei": "^9.122.0",
     "@react-three/fiber": "^8.18.0",
     "@react-three/postprocessing": "^2.19.1",

@@ -84,9 +84,6 @@ export interface ContactInfo {
   email: string;
   phone?: string;
   location: string;
-  emailjsServiceId: string;
-  emailjsTemplateId: string;
-  emailjsUserId: string;
 }
 
 export interface ColorScheme {
@@ -530,7 +527,7 @@ export const portfolioData: PortfolioData = {
       id: "portfolio",
       title: "Portfolio Website",
       description:
-        "~9,600 LOC TypeScript engineering site with HARI.AI persona layer, intent-based personalisation, Cmd/Ctrl+K command palette, lazy-loaded React Three Fiber 3D route, /ai mini-game playground, Plotly career map, and EmailJS collaboration wizard — deployed on Netlify.",
+        "~9,600 LOC TypeScript engineering site with HARI.AI persona layer, intent-based personalisation, Cmd/Ctrl+K command palette, lazy-loaded React Three Fiber 3D route, /ai mini-game playground, Plotly career map, and a contact form — deployed on Netlify.",
       technologies: [
         "React 18",
         "TypeScript",
@@ -692,11 +689,8 @@ export const portfolioData: PortfolioData = {
     },
   ],
   contact: {
-    email: "harieshwarja.official@gmail.com",
+    email: "harieshwar.dev@gmail.com",
     location: "Toronto, ON",
-    emailjsServiceId: import.meta.env.VITE_EMAILJS_SERVICE_ID,
-    emailjsTemplateId: import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
-    emailjsUserId: import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
   },
   colors: {
     primary: "#3B82F6",

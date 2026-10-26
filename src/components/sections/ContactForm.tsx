@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { TextField, Button, Snackbar, Alert, CircularProgress, Tooltip } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Send, AlertCircle, CheckCircle } from 'lucide-react';
@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateForm, submitForm, resetStatus } from '../../store/slices/contactSlice';
 import { RootState } from '../../store/store';
 import { useTheme } from '../../hooks/useTheme';
+import { markContactFormOpened, setContactCompany } from '../../lib/contact/clientMeta';
 
 const useMuiTheme = () => {
   const { theme } = useTheme();
@@ -45,6 +46,10 @@ const ContactForm: React.FC = () => {
   );
   const muiTheme = useMuiTheme();
 
+  useEffect(() => {
+    markContactFormOpened();
+  }, []);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     dispatch(updateForm({ [name]: value }));
@@ -62,6 +67,18 @@ const ContactForm: React.FC = () => {
   return (
     <ThemeProvider theme={muiTheme}>
       <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true">
+          <label htmlFor="contact-company">Company</label>
+          <input
+            id="contact-company"
+            name="company"
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            defaultValue=""
+            onChange={(e) => setContactCompany(e.target.value)}
+          />
+        </div>
         <TextField
           fullWidth
           label="Name"
