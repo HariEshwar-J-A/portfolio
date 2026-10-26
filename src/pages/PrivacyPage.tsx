@@ -92,6 +92,15 @@ const PrivacyPage: React.FC = () => {
       ),
     },
     {
+      title: 'Contact form',
+      body: (
+        <p>
+          Messages from the contact form are sent with Resend to Harieshwar&apos;s inbox. This site does not
+          store them. A short confirmation is sent to the address you enter, without a copy of your message.
+        </p>
+      ),
+    },
+    {
       title: 'Questions',
       body: (
         <p>

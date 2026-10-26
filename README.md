@@ -22,7 +22,7 @@ A modern, responsive portfolio website built with React, TypeScript, and Tailwin
 - **Collaboration Wizard**: 'Open to collaboration' launches a guided email-drafting assistant with pre-curated options and a ready-to-send draft
 - **Product Offerings**: Dedicated section spotlighting [InfoSentry](https://github.com/HariEshwar-J-A/info-sentry) — a personal AI intelligence layer (iFeeds, iChat, iGitHub, iVideos, iSurprise). The link is the GitHub source; the old public host is down.
 - **3D Experience**: Immersive WebGL portfolio at /3d built with react-three-fiber
-- **Contact Form**: Integrated email functionality using EmailJS
+- **Contact Form**: Messages go through a Netlify function to Resend. The public address is the one shown on the site.
 - **State Management**: Centralized state management with Redux Toolkit and Redux Saga
 - **TypeScript**: Type-safe code for better developer experience and fewer bugs
 
@@ -61,7 +61,7 @@ A modern, responsive portfolio website built with React, TypeScript, and Tailwin
 - **React-Plotly.js**: React wrapper for Plotly.js
 
 ### Form Handling & Communication
-- **EmailJS**: Client-side email sending without a server
+- **Resend**: Transactional email for the contact form, called from a Netlify function
 
 ### Development & Build Tools
 - **Vite**: Next-generation frontend tooling for faster development and optimized builds
@@ -143,19 +143,15 @@ portfolio-app/
 
 ### Environment Variables
 
-Create a `.env` file in the root directory with the following variables:
+The contact function reads these from the Netlify environment (not from the browser bundle):
 
 ```
-VITE_EMAILJS_SERVICE_ID=your_service_id
-VITE_EMAILJS_TEMPLATE_ID=your_template_id
-VITE_EMAILJS_PUBLIC_KEY=your_public_key
+RESEND_API_KEY=
+CONTACT_TO_EMAIL=
+CONTACT_FROM_EMAIL=
 ```
 
-To set up EmailJS:
-1. Create an account at [EmailJS](https://www.emailjs.com/)
-2. Create a service and template
-3. Get your service ID, template ID, and public key
-4. Add them to your `.env` file
+`CONTACT_FROM_EMAIL` must be an address on the verified sending domain. Do not put those values in a `VITE_` variable.
 
 ### Lighthouse Configuration
 
@@ -301,7 +297,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - [Framer Motion](https://www.framer.com/motion/)
 - [Redux Toolkit](https://redux-toolkit.js.org/)
 - [Material UI](https://mui.com/)
-- [EmailJS](https://www.emailjs.com/)
+- [Resend](https://resend.com/)
 - [D3.js](https://d3js.org/)
 - [Plotly.js](https://plotly.com/javascript/)
 - [Lucide Icons](https://lucide.dev/)

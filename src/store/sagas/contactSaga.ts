@@ -1,8 +1,7 @@
 import { takeLatest, call, put, select } from 'redux-saga/effects';
 import { submitForm, submitSuccess, submitFailure } from '../slices/contactSlice';
-import emailjs from '@emailjs/browser';
-import { portfolioData } from '../../data/portfolioData';
 import type { RootState } from '../store';
+import { contactExtras } from '../../lib/contact/clientMeta';
 
 interface EmailParams {
   name: string;
@@ -11,30 +10,33 @@ interface EmailParams {
   message: string;
 }
 
+const FAILURE = 'Please try again in a moment';
+
 function* handleSubmitForm() {
   try {
     const formData: EmailParams = yield select((state: RootState) => state.contact.form);
-    const { emailjsServiceId, emailjsTemplateId, emailjsUserId } = portfolioData.contact;
-    
-    const templateParams = {
-      name: formData.name,
-      email: formData.email,
-      subject: formData.subject,
-      message: formData.message,
-    };
+    const extras = contactExtras();
+    const response: Response = yield call(fetch, '/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: formData.name,
+        email: formData.email,
+        subject: formData.subject,
+        message: formData.message,
+        company: extras.company,
+        t: extras.t,
+      }),
+    });
 
-    yield call(
-      emailjs.send,
-      emailjsServiceId,
-      emailjsTemplateId,
-      templateParams,
-      emailjsUserId
-    );
-    
+    if (!response.ok) {
+      yield put(submitFailure(FAILURE));
+      return;
+    }
+
     yield put(submitSuccess());
-  } catch (error) {
-    console.error('Email sending error:', error);
-    yield put(submitFailure(error instanceof Error ? error.message : 'Failed to send email'));
+  } catch {
+    yield put(submitFailure(FAILURE));
   }
 }
 
