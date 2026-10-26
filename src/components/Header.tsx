@@ -241,12 +241,12 @@ const Header: React.FC = () => {
         },
         {
           id: 'infosentry',
-          label: 'InfoSentry site',
-          description: 'Opens the product site',
+          label: 'Source',
+          description: 'InfoSentry on GitHub',
           icon: <Newspaper size={16} />,
           onSelect: () => {
             setOpenMenu(null);
-            window.open(OfferingsData.flagship.marketingUrl, '_blank', 'noopener,noreferrer');
+            window.open(OfferingsData.flagship.sourceUrl, '_blank', 'noopener,noreferrer');
           },
         },
       ],

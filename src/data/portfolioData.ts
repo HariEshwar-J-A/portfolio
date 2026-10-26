@@ -363,7 +363,8 @@ export const OfferingsData = {
     tagline: "Your personal multi-agent intelligence layer.",
     description:
       "A self-hosted multi-agent AI platform (~24k LOC) that discovers, scrapes, summarises, and forecasts news across discovery engines, GitHub, and YouTube — with budget-aware model routing under $7.30/month LLM spend.",
-    marketingUrl: "https://sentry.harieshwar.dev",
+    // The public host returns 530, so every visitor control uses the repo.
+    marketingUrl: "https://github.com/HariEshwar-J-A/info-sentry",
     sourceUrl: "https://github.com/HariEshwar-J-A/info-sentry",
     accent: "#6366f1",
     badges: ["Multi-agent", "RAG", "Self-hosted"],
@@ -462,7 +463,6 @@ export const portfolioData: PortfolioData = {
         "Cloudflare Tunnel",
       ],
       image: "https://images.pexels.com/photos/7688336/pexels-photo-7688336.jpeg",
-      demoLink: "https://sentry.harieshwar.dev",
       sourceLink: "https://github.com/HariEshwar-J-A/info-sentry",
       featured: true,
     },

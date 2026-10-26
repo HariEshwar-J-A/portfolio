@@ -109,10 +109,10 @@ const CommandPalette: React.FC = () => {
         id: 'offering-infosentry',
         group: 'Offerings',
         label: `${flagship.name} — ${flagship.tagline}`,
-        hint: 'Open product page',
+        hint: 'Source',
         keywords: 'info sentry product suite intelligence ifeeds ichat igithub ivideos isurprise',
         icon: <Newspaper size={16} />,
-        perform: () => openExternal(flagship.marketingUrl),
+        perform: () => openExternal(flagship.sourceUrl),
       },
       {
         id: 'offering-infosentry-source',
