@@ -38,6 +38,7 @@ import {
 } from 'lucide-react';
 import * as THREE from 'three';
 import { MarketingData, portfolioData } from '../data/portfolioData';
+import { LiveButton } from '../components/LivePreview';
 
 type MousePosition = {
   x: number;
@@ -769,15 +770,14 @@ const ThreeDPortfolioPage: React.FC = () => {
                       </div>
                       <div className="mt-4 flex flex-wrap gap-2">
                         {project.demoLink && (
-                          <a
+                          <LiveButton
+                            projectId={project.id}
+                            title={project.title}
                             href={project.demoLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            primary="#a5f3fc"
+                            iconSize={14}
                             className="inline-flex items-center gap-1.5 rounded-full bg-cyan-400/20 px-3 py-2 text-xs font-bold text-cyan-100 ring-1 ring-cyan-300/35 transition hover:bg-cyan-400/30"
-                          >
-                            <ExternalLink size={14} />
-                            Live demo
-                          </a>
+                          />
                         )}
                         {project.sourceLink && (
                           <a
