@@ -38,6 +38,7 @@ import {
 } from 'lucide-react';
 import * as THREE from 'three';
 import { MarketingData, portfolioData } from '../data/portfolioData';
+import { LiveButton } from '../components/LivePreview';
 
 type MousePosition = {
   x: number;
@@ -379,7 +380,7 @@ const PortfolioWorld: React.FC<{ mouse: MousePosition; scrollProgress: number }>
       <spotLight position={[0, 3.8, 5.2]} angle={0.52} penumbra={0.85} intensity={1.95} color="#fffbeb" />
       <Stars radius={45} depth={20} count={3000} factor={5} saturation={0} fade speed={0.7} />
       <Suspense fallback={null}>
-        <Environment preset="city" environmentIntensity={0.55} />
+        <Environment files="/hdri/potsdamer_platz_1k.hdr" environmentIntensity={0.55} />
       </Suspense>
       <CameraRig mouse={mouse} scrollProgress={scrollProgress} />
       <HeroScene heroSunRef={heroSunRef} />
@@ -713,7 +714,7 @@ const ThreeDPortfolioPage: React.FC = () => {
             {[
               { step: '01', title: 'North star', body: 'Problem and audience, frozen in one line.' },
               { step: '02', title: 'Proof in prod', body: 'What shipped, with metrics that survived reality.' },
-              { step: '03', title: 'Open the hood', body: 'Stack, demo, source — nothing hand-wavy.' },
+              { step: '03', title: 'Open the hood', body: 'Stack, live, source — nothing hand-wavy.' },
             ].map((beat) => (
               <li key={beat.step} className="flex flex-1 flex-col items-center py-4 sm:px-4 sm:py-5">
                 <span className="font-mono text-xs font-black text-cyan-300">{beat.step}</span>
@@ -769,15 +770,14 @@ const ThreeDPortfolioPage: React.FC = () => {
                       </div>
                       <div className="mt-4 flex flex-wrap gap-2">
                         {project.demoLink && (
-                          <a
+                          <LiveButton
+                            projectId={project.id}
+                            title={project.title}
                             href={project.demoLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                            primary="#a5f3fc"
+                            iconSize={14}
                             className="inline-flex items-center gap-1.5 rounded-full bg-cyan-400/20 px-3 py-2 text-xs font-bold text-cyan-100 ring-1 ring-cyan-300/35 transition hover:bg-cyan-400/30"
-                          >
-                            <ExternalLink size={14} />
-                            Live demo
-                          </a>
+                          />
                         )}
                         {project.sourceLink && (
                           <a
@@ -787,7 +787,7 @@ const ThreeDPortfolioPage: React.FC = () => {
                             className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-2 text-xs font-bold text-white ring-1 ring-white/20 transition hover:bg-white/15"
                           >
                             <Github size={14} />
-                            Source code
+                            Source
                           </a>
                         )}
                       </div>

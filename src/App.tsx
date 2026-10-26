@@ -11,6 +11,7 @@ import AiRouteLoader from './components/AiRouteLoader';
 import ScrollToTop from './components/ScrollToTop';
 import RouteErrorBoundary from './components/RouteErrorBoundary';
 import AnalyticsNotice from './components/AnalyticsNotice';
+import { LivePreviewHost } from './components/LivePreview';
 import {
   playgroundImport,
   prefetchPlaygroundRoute,
@@ -125,6 +126,7 @@ function App() {
           <ThemeVariables />
           <ScrollToTop />
           <AppRoutes />
+          <LivePreviewHost />
           <AnalyticsNotice />
         </LazyMotion>
       </MotionConfig>

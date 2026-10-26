@@ -6,9 +6,10 @@ import { useTheme } from '../../hooks/useTheme';
 import { portfolioData, type Project } from '../../data/portfolioData';
 import { useHat } from '../../context/hat-context';
 import { applyOrder, HAT_PROJECT_PREVIEW, projectShortLine } from '../../lib/hatView';
-import { ExternalLink, Github, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Github, ChevronLeft, ChevronRight } from 'lucide-react';
 import SectionShell, { glassPanel } from '../SectionShell';
 import HatDisclosure from '../HatDisclosure';
+import { DevUnavailablePreview, LiveButton } from '../LivePreview';
 
 const ProjectLinks: React.FC<{
   project: Project;
@@ -18,16 +19,14 @@ const ProjectLinks: React.FC<{
 }> = ({ project, primary, emphasize = false, iconSize = 14 }) => (
   <>
     {project.demoLink && (
-      <a
+      <LiveButton
+        projectId={project.id}
+        title={project.title}
         href={project.demoLink}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={`inline-flex items-center text-sm ${emphasize || project.demoLabel ? 'font-semibold' : ''}`}
-        style={{ color: primary }}
-      >
-        <ExternalLink size={iconSize} className="mr-1" />
-        {project.demoLabel ?? 'Demo'}
-      </a>
+        primary={primary}
+        emphasize={emphasize || Boolean(project.demoLabel)}
+        iconSize={iconSize}
+      />
     )}
     {project.sourceLink && (
       <a
@@ -81,7 +80,7 @@ const HatProjectCard: React.FC<{
             {tech}
           </span>
         ))}
-        <span className="ml-auto flex gap-4">
+        <span className="ml-auto flex flex-wrap justify-end gap-x-4 gap-y-2">
           <ProjectLinks project={project} primary={primary} emphasize />
         </span>
       </div>
@@ -157,6 +156,7 @@ const ProjectsSection: React.FC = () => {
         subtitle="Three builds up front. The rest stay one click away."
       >
         <div className="mx-auto flex max-w-3xl flex-col gap-5">
+          <DevUnavailablePreview primary={theme.colors.primary} />
           {preview.map((project) => (
             <HatProjectCard
               key={project.id}
@@ -201,6 +201,7 @@ const ProjectsSection: React.FC = () => {
       title="Projects"
       subtitle="A showcase of my recent work and projects."
     >
+        <DevUnavailablePreview primary={theme.colors.primary} />
         <div className={`flex flex-wrap justify-center mb-8 gap-2 ${isMinimal ? 'hidden' : ''}`}>
           <button
             onClick={() => handleTechFilter(null)}
@@ -310,7 +311,7 @@ const ProjectsSection: React.FC = () => {
                       </div>
                     </div>
 
-                    <div className={`flex justify-between px-6 py-4 ${
+                    <div className={`flex flex-wrap items-center gap-x-4 gap-y-2 px-6 py-4 ${
                       theme.mode === 'dark' ? 'border-t border-slate-700' : 'border-t border-slate-200'
                     }`}>
                       <ProjectLinks project={project} primary={theme.colors.primary} iconSize={16} />

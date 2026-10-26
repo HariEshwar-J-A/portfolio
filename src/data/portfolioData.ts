@@ -66,7 +66,7 @@ export interface Project {
   technologies: string[];
   image: string;
   demoLink?: string;
-  /** Visible label for demoLink. Defaults to "Demo". */
+  /** Visible Live action is always the word "Live". Set when that action should be semibold. */
   demoLabel?: string;
   sourceLink?: string;
   featured: boolean;
@@ -565,7 +565,7 @@ export const portfolioData: PortfolioData = {
       ],
       image: "/assets/images/harbour.jpg",
       demoLink: "https://harieshwar-ai.github.io/deal-tracker/",
-      demoLabel: "Live demo",
+      demoLabel: "Live",
       sourceLink: "https://github.com/harieshwar-ai/deal-tracker",
       featured: false,
     },

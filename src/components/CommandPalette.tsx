@@ -31,6 +31,7 @@ import { buildSearchIndex, matchSnippet } from '../data/personalization';
 import { OPEN_COLLAB_EVENT } from './CollabWizard';
 import { OPEN_INTENT_EVENT } from './IntentWizard';
 import { HAT_LIST } from '../data/hats';
+import { liveActionHint, liveAriaLabel, openLive, useLiveRevision } from './LivePreview';
 
 const SEARCH_INDEX = buildSearchIndex();
 
@@ -45,6 +46,8 @@ interface PaletteItem {
   keywords?: string;
   icon: React.ReactNode;
   perform: () => void;
+  ariaLabel?: string;
+  tooltip?: string;
 }
 
 const SECTION_ICONS: Record<SectionId, React.ReactNode> = {
@@ -81,6 +84,7 @@ const CommandPalette: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const isDark = theme.mode === 'dark';
+  const liveRevision = useLiveRevision();
 
   const close = useCallback(() => {
     setIsOpen(false);
@@ -127,15 +131,27 @@ const CommandPalette: React.FC = () => {
 
     const projectItems: PaletteItem[] = projects
       .filter((project) => project.featured)
-      .map((project) => ({
-        id: `project-${project.title}`,
-        group: 'Featured projects',
-        label: project.title,
-        hint: project.demoLink ? 'Open live demo' : 'Open source code',
-        keywords: project.technologies.join(' '),
-        icon: <FolderGit2 size={16} />,
-        perform: () => openExternal(project.demoLink ?? project.sourceLink ?? '#'),
-      }));
+      .map((project) => {
+        const liveHint = project.demoLink ? liveActionHint(project.id) : undefined;
+        const unavailable = liveHint === 'Live unavailable';
+        return {
+          id: `project-${project.title}`,
+          group: 'Featured projects',
+          label: project.title,
+          hint: project.demoLink ? liveHint : 'Open source code',
+          ariaLabel: project.demoLink ? (unavailable ? 'Live unavailable' : liveAriaLabel(project.title)) : undefined,
+          tooltip: unavailable ? "This app isn't reachable right now" : undefined,
+          keywords: project.technologies.join(' '),
+          icon: <FolderGit2 size={16} />,
+          perform: () => {
+            if (!project.demoLink) {
+              openExternal(project.sourceLink ?? '#');
+              return;
+            }
+            if (openLive(project.id) === 'external') openExternal(project.demoLink);
+          },
+        };
+      });
 
     const viewItems: PaletteItem[] = [
       {
@@ -259,7 +275,7 @@ const CommandPalette: React.FC = () => {
     ];
 
     return [...sectionItems, ...viewItems, ...offeringItems, ...projectItems, ...actionItems, ...connectItems];
-  }, [dispatch, navigate]);
+  }, [dispatch, navigate, liveRevision]);
 
   const viewMode = useSelector((state: RootState) => state.view.mode);
 
@@ -438,6 +454,8 @@ const CommandPalette: React.FC = () => {
                     <button
                       type="button"
                       data-selected={isSelected}
+                      aria-label={item.ariaLabel}
+                      title={item.tooltip}
                       onClick={() => runItem(item)}
                       onMouseMove={() => setSelectedIndex(index)}
                       className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm transition ${
