@@ -4,6 +4,7 @@ import { useTheme } from '../hooks/useTheme';
 import { Github as GitHub, Linkedin, Twitter, Globe } from 'lucide-react';
 import { portfolioData } from '../data/portfolioData';
 import { OPS_PATH } from '../lib/siteNav';
+import { PRIVACY_PATH } from '../lib/privacyCopy';
 
 const Footer: React.FC = () => {
   const { theme } = useTheme();
@@ -30,6 +31,10 @@ const Footer: React.FC = () => {
               © {year} {portfolioData.personal.name}. All rights reserved.{' '}
               <Link to={OPS_PATH} className="underline-offset-4 hover:underline">
                 Ops
+              </Link>
+              {' · '}
+              <Link to={PRIVACY_PATH} className="underline-offset-4 hover:underline">
+                Privacy
               </Link>
             </p>
           </div>

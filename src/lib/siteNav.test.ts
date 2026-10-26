@@ -33,6 +33,8 @@ describe('site nav', () => {
     expect(isPortfolioPath('/3d')).toBe(false);
     expect(isPortfolioPath('/os')).toBe(false);
     expect(isPortfolioPath('/ops')).toBe(false);
+    expect(isPortfolioPath('/privacy')).toBe(false);
+    expect(PRIMARY_SECTIONS.some((section) => section.label === 'Privacy')).toBe(false);
     expect(PRIMARY_SECTIONS.some((section) => section.label === 'Ops')).toBe(false);
     expect(portfolioShellKey('/full-stack')).toBe('portfolio');
     expect(portfolioShellKey('/')).toBe(portfolioShellKey('/ai-engineer'));

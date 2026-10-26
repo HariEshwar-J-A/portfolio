@@ -22,6 +22,10 @@ const ROUTE_SCRIPTS: Record<string, LoaderScript> = {
     title: '3D Experience',
     lines: ['rendering the third dimension…', 'aligning the stars…', 'warming up the shaders…'],
   },
+  '/privacy': {
+    title: 'Privacy',
+    lines: ['opening the short version…', 'checking what stays on this device…'],
+  },
 };
 
 const FALLBACK_SCRIPT: LoaderScript = {
