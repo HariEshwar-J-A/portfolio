@@ -257,7 +257,7 @@ const ProjectsSection: React.FC = () => {
                       <img
                         src={project.image}
                         alt={project.title}
-                        className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                        className="h-full w-full object-cover transition-transform duration-500 hover:scale-110 motion-reduce:transition-none motion-reduce:hover:scale-100"
                         loading="lazy"
                         decoding="async"
                       />
