@@ -20,7 +20,7 @@ A modern, responsive portfolio website built with React, TypeScript, and Tailwin
 - **Keyboard Navigation**: W/S or arrow keys move between sections, number keys jump directly, T cycles theme personas
 - **HARI.AI Playground** (/ai): A never-ending gamified exploration mode — endless quiz (Neural Sync), word scramble (Cipher Scramble), memory match (Pattern Grid), a chess arena (coming soon), and a Fragment Archive that reveals Hari piece by piece, with unbounded XP/levels and an achievement ladder
 - **Collaboration Wizard**: 'Open to collaboration' launches a guided email-drafting assistant with pre-curated options and a ready-to-send draft
-- **Product Offerings**: Dedicated section spotlighting [InfoSentry](https://sentry.harieshwar.dev) — a personal AI intelligence layer (iFeeds, iChat, iGitHub, iVideos, iSurprise)
+- **Product Offerings**: Dedicated section spotlighting [InfoSentry](https://github.com/HariEshwar-J-A/info-sentry) — a personal AI intelligence layer (iFeeds, iChat, iGitHub, iVideos, iSurprise). The link is the GitHub source; the old public host is down.
 - **3D Experience**: Immersive WebGL portfolio at /3d built with react-three-fiber
 - **Contact Form**: Integrated email functionality using EmailJS
 - **State Management**: Centralized state management with Redux Toolkit and Redux Saga

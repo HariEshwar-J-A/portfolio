@@ -5,7 +5,6 @@ import { RootState } from '../../store/store';
 import { useHat } from '../../context/hat-context';
 import HatDisclosure from '../HatDisclosure';
 import {
-  ArrowUpRight,
   GitBranch,
   Github,
   MessageSquare,
@@ -148,26 +147,15 @@ const ProductsSection: React.FC = () => {
                     View on GitHub
                   </a>
                 ) : (
-                  <>
-                    <a
-                      href={flagship.marketingUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 rounded-xl bg-indigo-500 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-indigo-500/30 transition hover:-translate-y-0.5 hover:bg-indigo-400"
-                    >
-                      Explore {flagship.name}
-                      <ArrowUpRight size={16} />
-                    </a>
-                    <a
-                      href={flagship.sourceUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:border-white/35"
-                    >
-                      <Github size={16} />
-                      Source
-                    </a>
-                  </>
+                  <a
+                    href={flagship.sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-xl bg-indigo-500 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-indigo-500/30 transition hover:-translate-y-0.5 hover:bg-indigo-400"
+                  >
+                    <Github size={16} />
+                    Source
+                  </a>
                 )}
               </div>
             </div>

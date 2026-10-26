@@ -253,12 +253,12 @@ const AboutSection: React.FC = () => {
                 <ArrowRight size={18} className="transition group-hover:translate-x-1" />
               </motion.button>
               <a
-                href={OfferingsData.flagship.marketingUrl}
+                href={OfferingsData.flagship.sourceUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`text-sm font-semibold underline-offset-4 hover:underline ${isDark ? 'text-slate-300' : 'text-slate-600'}`}
               >
-                InfoSentry
+                Source
               </a>
               <button
                 type="button"
