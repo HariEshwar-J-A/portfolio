@@ -11,4 +11,6 @@
 # SPA fallback for client routes (/ai, /3d, …).
 # Hat paths are appended at build time by scripts/prerender-hats.mjs:
 # /<hat>/ 301s to /<hat>, and /<hat> rewrites to /<hat>.html.
+/api/health   /.netlify/functions/health   200
+/api/contact  /.netlify/functions/contact  200
 /* /index.html  200
