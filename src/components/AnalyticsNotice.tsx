@@ -28,14 +28,34 @@ const AnalyticsNotice: React.FC = () => {
 
   useEffect(() => {
     if (!open) return;
-    const footer = document.querySelector('footer');
-    if (!footer) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => setFooterVisible(entry.isIntersecting),
-      { threshold: 0.01 },
-    );
-    observer.observe(footer);
-    return () => observer.disconnect();
+    let current: Element | null = null;
+    let observer: IntersectionObserver | null = null;
+
+    const attach = () => {
+      const footer = document.querySelector('footer');
+      if (footer === current) return;
+      observer?.disconnect();
+      current = footer;
+      if (!footer) {
+        setFooterVisible(false);
+        return;
+      }
+      observer = new IntersectionObserver(
+        ([entry]) => setFooterVisible(entry.isIntersecting),
+        { threshold: 0.01 },
+      );
+      observer.observe(footer);
+    };
+
+    attach();
+    // Ops and privacy mount their footer after the lazy chunk, so a one-shot
+    // query on this effect misses it and the note stays on the footer links.
+    const mutations = new MutationObserver(attach);
+    mutations.observe(document.body, { childList: true, subtree: true });
+    return () => {
+      observer?.disconnect();
+      mutations.disconnect();
+    };
   }, [open]);
 
   if (!open) return null;
