@@ -260,7 +260,7 @@ const AboutSection: React.FC = () => {
                 rel="noopener noreferrer"
                 className={`text-sm font-semibold underline-offset-4 hover:underline ${isDark ? 'text-slate-300' : 'text-slate-600'}`}
               >
-                Source
+                InfoSentry source
               </a>
               <button
                 type="button"

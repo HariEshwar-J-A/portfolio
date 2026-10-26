@@ -84,8 +84,8 @@ const AnalyticsNotice: React.FC = () => {
           : 'border-slate-200 bg-white text-slate-800 shadow-slate-300/30'
       }`}
     >
-      <p className="leading-snug max-md:min-w-0 max-md:flex-1 max-md:truncate">
-        This site uses cookieless analytics. No tracking cookies.
+      <p className="leading-snug max-md:min-w-0 max-md:flex-1">
+        Cookieless analytics. No tracking cookies.
       </p>
       <div className="flex shrink-0 items-center gap-1.5 md:mt-2.5 md:gap-2">
         <Link
