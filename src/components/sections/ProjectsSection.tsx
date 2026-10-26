@@ -66,7 +66,7 @@ const HatProjectCard: React.FC<{
       className={`p-5 md:p-6 ${glassPanel(isDark)}`}
     >
       <div className="flex gap-4">
-        <img src={project.image} alt="" className="h-16 w-24 shrink-0 rounded-xl object-cover" />
+        <img src={project.image} alt="" className="h-16 w-24 shrink-0 rounded-xl object-cover" loading="lazy" decoding="async" />
         <div className="min-w-0">
           <h3 className="text-lg font-bold">{project.title}</h3>
           <p className={`mt-1 text-sm leading-relaxed ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>{shortLine}</p>
