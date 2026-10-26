@@ -84,6 +84,7 @@ html.lenis body {
   --os-primary: #38bdf8;
   --os-secondary: #818cf8;
   --os-accent: #f472b6;
+  --os-on-primary: #0f172a;
 }
 
 /* Hover color that follows the persona */
@@ -225,5 +226,16 @@ html.lenis body {
   .os-glitch,
   .os-pulse-glow {
     animation: none;
+  }
+}
+
+/* Section dots are fixed at left: 1.25rem and 1.25rem wide. The centered
+   container is flush at the lg / xl / 2xl breakpoints, which puts those
+   dots on the headline. Inset the column only in those bands. */
+@media (min-width: 1024px) and (max-width: 1099px),
+       (min-width: 1280px) and (max-width: 1359px),
+       (min-width: 1536px) and (max-width: 1615px) {
+  .section-rail-clear {
+    padding-left: 2.75rem;
   }
 }

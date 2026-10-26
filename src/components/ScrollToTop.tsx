@@ -29,14 +29,28 @@ const ScrollToTop = () => {
       (location.state as { keepSection?: boolean } | null)?.keepSection
     );
     // Role switches stay on the section you were reading. Every other
-    // route change still opens at the top.
+    // route change still opens at the top, unless the link named a section.
     if (from && keepSection && isPortfolioPath(from) && isPortfolioPath(location.pathname)) {
       return;
     }
-    scrollDocumentToTop(true);
-    const raf = window.requestAnimationFrame(() => scrollDocumentToTop(true));
+    const hashId = location.hash ? decodeURIComponent(location.hash.slice(1)) : '';
+    const scrollToTarget = () => {
+      const target = hashId ? document.getElementById(hashId) : null;
+      if (!target) {
+        scrollDocumentToTop(true);
+        return;
+      }
+      const lenis = getLenis();
+      if (lenis) {
+        lenis.scrollTo(target, { offset: -80, immediate: true, force: true });
+        return;
+      }
+      target.scrollIntoView({ block: 'start' });
+    };
+    scrollToTarget();
+    const raf = window.requestAnimationFrame(scrollToTarget);
     return () => window.cancelAnimationFrame(raf);
-  }, [location.pathname, location.key, location.state]);
+  }, [location.pathname, location.key, location.state, location.hash]);
 
   return null;
 };

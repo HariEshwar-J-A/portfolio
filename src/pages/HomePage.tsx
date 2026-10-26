@@ -79,8 +79,10 @@ const HomePage: React.FC = () => {
   }, [hat]);
 
   // Pin the hero on first paint (and after Lenis boots) so a restored
-  // scroll offset never opens the page mid-Experience.
+  // scroll offset never opens the page mid-Experience. A hash link, such
+  // as /#contact, keeps its section instead.
   useEffect(() => {
+    if (location.hash) return;
     scrollDocumentToTop(true);
     const t0 = window.setTimeout(() => scrollDocumentToTop(true), 0);
     const t1 = window.setTimeout(() => scrollDocumentToTop(true), 100);
@@ -88,7 +90,7 @@ const HomePage: React.FC = () => {
       window.clearTimeout(t0);
       window.clearTimeout(t1);
     };
-  }, []);
+  }, [location.hash]);
 
   // Role switches keep the section in view. The first paint still opens
   // on the hero (the effect above). "See full portfolio" does not pass
@@ -153,6 +155,7 @@ const HomePage: React.FC = () => {
         <AnimatePresence mode="wait" initial={false}>
           <m.main
             key={hatKey}
+            className="section-rail-clear"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

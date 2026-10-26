@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { RootState } from '../../store/store';
 import { useTheme } from '../../hooks/useTheme';
 import { portfolioData, type Project } from '../../data/portfolioData';
@@ -10,29 +10,63 @@ import { ExternalLink, Github, ChevronLeft, ChevronRight } from 'lucide-react';
 import SectionShell, { glassPanel } from '../SectionShell';
 import HatDisclosure from '../HatDisclosure';
 
+const ProjectLinks: React.FC<{
+  project: Project;
+  primary: string;
+  emphasize?: boolean;
+  iconSize?: number;
+}> = ({ project, primary, emphasize = false, iconSize = 14 }) => (
+  <>
+    {project.demoLink && (
+      <a
+        href={project.demoLink}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`inline-flex items-center text-sm ${emphasize || project.demoLabel ? 'font-semibold' : ''}`}
+        style={{ color: primary }}
+      >
+        <ExternalLink size={iconSize} className="mr-1" />
+        {project.demoLabel ?? 'Demo'}
+      </a>
+    )}
+    {project.sourceLink && (
+      <a
+        href={project.sourceLink}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`inline-flex items-center text-sm ${emphasize ? 'font-semibold' : ''}`}
+        style={{ color: primary }}
+      >
+        <Github size={iconSize} className="mr-1" />
+        Source
+      </a>
+    )}
+  </>
+);
+
 const HatProjectCard: React.FC<{
   project: Project;
   isDark: boolean;
   primary: string;
-  onOpen: (url: string) => void;
-}> = ({ project, isDark, primary, onOpen }) => {
+}> = ({ project, isDark, primary }) => {
   const [open, setOpen] = useState(false);
+  const reduce = useReducedMotion();
   const shortLine = projectShortLine(project.description);
   const fullLine = project.description.replace(/\s+/g, ' ').trim();
   const extraTech = project.technologies.slice(3);
 
   return (
     <motion.article
-      initial={{ opacity: 0, y: 16 }}
+      initial={reduce ? false : { opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.3 }}
-      whileHover={{ y: -3 }}
-      whileTap={{ scale: 0.995 }}
-      transition={{ duration: 0.28, ease: 'easeOut' }}
+      whileHover={reduce ? undefined : { y: -3 }}
+      whileTap={reduce ? undefined : { scale: 0.995 }}
+      transition={{ duration: reduce ? 0 : 0.28, ease: 'easeOut' }}
       className={`p-5 md:p-6 ${glassPanel(isDark)}`}
     >
       <div className="flex gap-4">
-        <img src={project.image} alt="" className="h-16 w-24 shrink-0 rounded-xl object-cover" />
+        <img src={project.image} alt="" className="h-16 w-24 shrink-0 rounded-xl object-cover" loading="lazy" decoding="async" />
         <div className="min-w-0">
           <h3 className="text-lg font-bold">{project.title}</h3>
           <p className={`mt-1 text-sm leading-relaxed ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>{shortLine}</p>
@@ -48,18 +82,7 @@ const HatProjectCard: React.FC<{
           </span>
         ))}
         <span className="ml-auto flex gap-4">
-          {project.demoLink && (
-            <button type="button" onClick={() => onOpen(project.demoLink!)} className="text-sm font-semibold" style={{ color: primary }}>
-              <ExternalLink size={14} className="mr-1 inline" />
-              Demo
-            </button>
-          )}
-          {project.sourceLink && (
-            <button type="button" onClick={() => onOpen(project.sourceLink!)} className="text-sm font-semibold" style={{ color: primary }}>
-              <Github size={14} className="mr-1 inline" />
-              Source
-            </button>
-          )}
+          <ProjectLinks project={project} primary={primary} emphasize />
         </span>
       </div>
       <HatDisclosure open={open}>
@@ -84,6 +107,7 @@ const HatProjectCard: React.FC<{
 
 const ProjectsSection: React.FC = () => {
   const { theme } = useTheme();
+  const reduce = useReducedMotion();
   const hat = useHat();
   const projects = hat
     ? applyOrder(portfolioData.projects, hat.projectOrder, (project) => project.id)
@@ -114,10 +138,6 @@ const ProjectsSection: React.FC = () => {
     setFilter(tech);
   };
   
-  const handleProjectLink = (url: string) => {
-    window.open(url, '_blank', 'noopener,noreferrer');
-  };
-
   const scrollCarousel = (direction: 'left' | 'right') => {
     if (carouselRef.current) {
       const width = carouselRef.current.clientWidth;
@@ -143,7 +163,6 @@ const ProjectsSection: React.FC = () => {
               project={project}
               isDark={theme.mode === 'dark'}
               primary={theme.colors.primary}
-              onOpen={handleProjectLink}
             />
           ))}
           {hidden.length > 0 && (
@@ -156,7 +175,6 @@ const ProjectsSection: React.FC = () => {
                       project={project}
                       isDark={theme.mode === 'dark'}
                       primary={theme.colors.primary}
-                      onOpen={handleProjectLink}
                     />
                   ))}
                 </div>
@@ -188,11 +206,12 @@ const ProjectsSection: React.FC = () => {
             onClick={() => handleTechFilter(null)}
             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
               filter === null
-                ? 'text-white'
+                ? ''
                 : theme.mode === 'dark' ? 'text-slate-300 hover:text-white' : 'text-slate-700 hover:text-black'
             }`}
             style={{ 
               backgroundColor: filter === null ? theme.colors.primary : 'transparent',
+              color: filter === null ? 'var(--os-on-primary)' : undefined,
               border: `1px solid ${filter === null ? theme.colors.primary : theme.mode === 'dark' ? '#4B5563' : '#D1D5DB'}`
             }}
           >
@@ -204,11 +223,12 @@ const ProjectsSection: React.FC = () => {
               onClick={() => handleTechFilter(tech)}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                 filter === tech
-                  ? 'text-white'
+                  ? ''
                   : theme.mode === 'dark' ? 'text-slate-300 hover:text-white' : 'text-slate-700 hover:text-black'
               }`}
               style={{ 
                 backgroundColor: filter === tech ? theme.colors.primary : 'transparent',
+                color: filter === tech ? 'var(--os-on-primary)' : undefined,
                 border: `1px solid ${filter === tech ? theme.colors.primary : theme.mode === 'dark' ? '#4B5563' : '#D1D5DB'}`
               }}
             >
@@ -232,7 +252,7 @@ const ProjectsSection: React.FC = () => {
                   aria-label="Previous projects"
                   onClick={() => scrollCarousel('left')}
                   className="hidden md:flex items-center justify-center absolute left-0 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full shadow"
-                  style={{ backgroundColor: theme.colors.primary, color: 'white' }}
+                  style={{ backgroundColor: theme.colors.primary, color: 'var(--os-on-primary)' }}
                   disabled={filteredProjects.length < 4}
                   aria-disabled={filteredProjects.length < 4}
                 >
@@ -246,9 +266,9 @@ const ProjectsSection: React.FC = () => {
                 {filteredProjects.map((project, index) => (
                   <motion.div
                     key={project.title}
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={reduce ? false : { opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    transition={{ duration: reduce ? 0 : 0.5, delay: reduce ? 0 : index * 0.1 }}
                     className={`flex-shrink-0 w-80 sm:w-96 snap-center overflow-hidden h-full flex flex-col ${glassPanel(
                       theme.mode === 'dark'
                     )}`}
@@ -257,12 +277,14 @@ const ProjectsSection: React.FC = () => {
                       <img
                         src={project.image}
                         alt={project.title}
-                        className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                        className="h-full w-full object-cover transition-transform duration-500 hover:scale-110 motion-reduce:transition-none motion-reduce:hover:scale-100"
+                        loading="lazy"
+                        decoding="async"
                       />
                       {project.featured && (
                         <div
                           className="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold"
-                          style={{ backgroundColor: theme.colors.primary, color: 'white' }}
+                          style={{ backgroundColor: theme.colors.primary, color: 'var(--os-on-primary)' }}
                         >
                           Featured
                         </div>
@@ -288,30 +310,10 @@ const ProjectsSection: React.FC = () => {
                       </div>
                     </div>
 
-                    <div className={`px-6 py-4 flex justify-between ${
+                    <div className={`flex justify-between px-6 py-4 ${
                       theme.mode === 'dark' ? 'border-t border-slate-700' : 'border-t border-slate-200'
                     }`}>
-                      {project.demoLink && (
-                        <button
-                          onClick={() => handleProjectLink(project.demoLink!)}
-                          className="flex items-center transition-colors hover:text-primary"
-                          style={{ color: theme.colors.primary }}
-                        >
-                          <ExternalLink size={16} className="mr-1" />
-                          Demo
-                        </button>
-                      )}
-
-                      {project.sourceLink && (
-                        <button
-                          onClick={() => handleProjectLink(project.sourceLink!)}
-                          className="flex items-center transition-colors hover:text-primary"
-                          style={{ color: theme.colors.primary }}
-                        >
-                          <Github size={16} className="mr-1" />
-                          Source
-                        </button>
-                      )}
+                      <ProjectLinks project={project} primary={theme.colors.primary} iconSize={16} />
                     </div>
                   </motion.div>
                 ))}
@@ -323,7 +325,7 @@ const ProjectsSection: React.FC = () => {
                   aria-label="Next projects"
                   onClick={() => scrollCarousel('right')}
                   className="hidden md:flex items-center justify-center absolute right-0 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full shadow"
-                  style={{ backgroundColor: theme.colors.primary, color: 'white' }}
+                  style={{ backgroundColor: theme.colors.primary, color: 'var(--os-on-primary)' }}
                 >
                   <ChevronRight />
                 </button>

@@ -32,10 +32,12 @@ const EducationSection: React.FC = () => {
               <div className="flex flex-col md:flex-row gap-6">
                 {edu.logo && !isMinimal && (
                   <div className="w-32 h-32 rounded-lg overflow-hidden flex-shrink-0 bg-white p-2">
-                    <img 
-                      src={edu.logo} 
-                      alt={edu.institution} 
+                    <img
+                      src={edu.logo}
+                      alt={edu.institution}
                       className="w-full h-full object-contain"
+                      loading="lazy"
+                      decoding="async"
                     />
                   </div>
                 )}

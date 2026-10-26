@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Suspense, lazy, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { motion } from 'framer-motion';
 import HatDisclosure from '../HatDisclosure';
@@ -9,8 +9,14 @@ import { useHat } from '../../context/hat-context';
 import { bulletsForHat } from '../../lib/hatView';
 import type { LeadBullet } from '../../data/hats';
 import { Calendar, MapPin, Globe, Baseline as Timeline } from 'lucide-react';
-import Plot from 'react-plotly.js';
+import type { PlotParams } from 'react-plotly.js';
 import SectionShell, { glassPanel } from '../SectionShell';
+
+const ExperienceMap = lazy(() => import('./ExperienceMap'));
+
+const preloadExperienceMap = () => {
+  void import('./ExperienceMap');
+};
 
 const MONTHS: Record<string, number> = {
   Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5,
@@ -52,7 +58,7 @@ const CareerGantt: React.FC<{ isDark: boolean }> = ({ isDark }) => {
   const rangeStart = roles[0].start.getTime();
   const rangeEnd = Math.max(...roles.map((role) => role.end.getTime()));
   const span = rangeEnd - rangeStart;
-  const mutedText = isDark ? 'text-slate-500' : 'text-slate-400';
+  const mutedText = isDark ? 'text-slate-300' : 'text-slate-400';
 
   const startYear = new Date(rangeStart).getFullYear();
   const endYear = new Date(rangeEnd).getFullYear();
@@ -268,22 +274,30 @@ const ExperienceSection: React.FC = () => {
             onClick={() => setViewMode('timeline')}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all backdrop-blur ${
               viewMode === 'timeline'
-                ? 'text-white shadow-lg'
+                ? 'shadow-lg'
                 : theme.mode === 'dark' ? 'bg-white/5 border border-white/10' : 'bg-white/60 border border-slate-200'
             }`}
-            style={{ backgroundColor: viewMode === 'timeline' ? theme.colors.primary : undefined }}
+            style={{
+              backgroundColor: viewMode === 'timeline' ? theme.colors.primary : undefined,
+              color: viewMode === 'timeline' ? 'var(--os-on-primary)' : undefined,
+            }}
           >
             <Timeline size={20} />
             Timeline View
           </button>
           <button
             onClick={() => setViewMode('map')}
+            onMouseEnter={preloadExperienceMap}
+            onFocus={preloadExperienceMap}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all backdrop-blur ${
               viewMode === 'map'
-                ? 'text-white shadow-lg'
+                ? 'shadow-lg'
                 : theme.mode === 'dark' ? 'bg-white/5 border border-white/10' : 'bg-white/60 border border-slate-200'
             }`}
-            style={{ backgroundColor: viewMode === 'map' ? theme.colors.primary : undefined }}
+            style={{
+              backgroundColor: viewMode === 'map' ? theme.colors.primary : undefined,
+              color: viewMode === 'map' ? 'var(--os-on-primary)' : undefined,
+            }}
           >
             <Globe size={20} />
             Map View
@@ -305,7 +319,7 @@ const ExperienceSection: React.FC = () => {
                 className={`flex items-center gap-4 p-4 ${glassPanel(theme.mode === 'dark')}`}
               >
                 <div className="h-11 w-11 shrink-0 overflow-hidden rounded-lg bg-white p-1.5">
-                  <img src={exp.logo} alt={exp.company} className="h-full w-full object-contain" />
+                  <img src={exp.logo} alt={exp.company} className="h-full w-full object-contain" loading="lazy" decoding="async" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-bold">{exp.position}</p>
@@ -336,8 +350,9 @@ const ExperienceSection: React.FC = () => {
           {viewMode === 'timeline' ? (
             <CareerGantt isDark={theme.mode === 'dark'} />
           ) : (
-            <Plot
-              data={mapData}
+            <Suspense fallback={<div className="h-[400px] w-full" aria-hidden />}>
+            <ExperienceMap
+              data={mapData as PlotParams['data']}
               layout={{
                 title: {
                   text: 'Global Work Experience',
@@ -383,12 +398,8 @@ const ExperienceSection: React.FC = () => {
                 displayModeBar: false,
                 scrollZoom: false
               }}
-              style={{
-                width: '100%',
-                borderRadius: '12px',
-                overflow: 'hidden'
-              }}
             />
+            </Suspense>
           )}
         </div>
         </HatDisclosure>
@@ -407,10 +418,12 @@ const ExperienceSection: React.FC = () => {
             >
               <div className="flex flex-col md:flex-row md:items-center gap-6">
                 <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-white p-2">
-                  <img 
-                    src={exp.logo} 
-                    alt={exp.company} 
+                  <img
+                    src={exp.logo}
+                    alt={exp.company}
                     className="w-full h-full object-contain"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
                 

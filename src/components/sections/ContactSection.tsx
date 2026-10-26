@@ -2,46 +2,14 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../hooks/useTheme';
 import { portfolioData } from '../../data/portfolioData';
-import { Mail, Phone, MapPin, Send, AlertCircle, CheckCircle, Github as GitHub, Linkedin, Globe } from 'lucide-react';
-import { useDispatch, useSelector } from 'react-redux';
-import { updateForm, submitForm, resetStatus } from '../../store/slices/contactSlice';
-import { RootState } from '../../store/store';
-import { TextField, Button, Snackbar, Alert, CircularProgress, Tooltip } from '@mui/material';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { Mail, Phone, MapPin, Github as GitHub, Linkedin, Globe } from 'lucide-react';
 import SectionShell, { glassPanel } from '../SectionShell';
+import ContactForm, { LinkedInTip } from './ContactForm';
 
 const ContactSection: React.FC = () => {
   const { theme } = useTheme();
-  const dispatch = useDispatch();
-  const { form, isSubmitting, isSuccess, isError, errorMessage } = useSelector((state: RootState) => state.contact);
   const { contact, personal } = portfolioData;
-  
-  const muiTheme = createTheme({
-    palette: {
-      mode: theme.mode,
-      primary: {
-        main: theme.colors.primary,
-      },
-      error: {
-        main: theme.colors.error,
-      },
-    },
-  });
-  
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    dispatch(updateForm({ [name]: value }));
-  };
-  
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    dispatch(submitForm());
-  };
-  
-  const handleCloseSnackbar = () => {
-    dispatch(resetStatus());
-  };
-  
+
   const handleEmailClick = () => {
     window.location.href = `mailto:${contact.email}`;
   };
@@ -63,7 +31,6 @@ const ContactSection: React.FC = () => {
       title="Get In Touch"
       subtitle="Have a question or want to work together? Reach out to me directly."
     >
-      <ThemeProvider theme={muiTheme}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-6xl mx-auto">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
@@ -146,19 +113,19 @@ const ContactSection: React.FC = () => {
                   )}
                   
                   {personal.socialLinks.linkedin && (
-                    <Tooltip title="Connect with me on LinkedIn if email is unavailable!" arrow>
-                      <button 
+                    <LinkedInTip>
+                      <button
                         onClick={() => handleSocialClick(personal.socialLinks.linkedin)}
                         className="p-3 rounded-full transition-all duration-300 hover:scale-110 cursor-pointer"
-                        style={{ 
+                        style={{
                           backgroundColor: theme.colors.primary,
-                          color: 'white'
+                          color: 'white',
                         }}
                         aria-label="LinkedIn"
                       >
                         <Linkedin size={24} />
                       </button>
-                    </Tooltip>
+                    </LinkedInTip>
                   )}
                   
                   {personal.socialLinks.website && (
@@ -192,90 +159,10 @@ const ContactSection: React.FC = () => {
               className={`p-6 ${glassPanel(theme.mode === 'dark')}`}
             >
               <h3 className="text-2xl font-bold mb-6">Send Me a Message</h3>
-              
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <TextField
-                  fullWidth
-                  label="Name"
-                  name="name"
-                  value={form.name}
-                  onChange={handleInputChange}
-                  required
-                  variant="outlined"
-                />
-                
-                <TextField
-                  fullWidth
-                  label="Email"
-                  name="email"
-                  type="email"
-                  value={form.email}
-                  onChange={handleInputChange}
-                  required
-                  variant="outlined"
-                />
-                
-                <TextField
-                  fullWidth
-                  label="Subject"
-                  name="subject"
-                  value={form.subject}
-                  onChange={handleInputChange}
-                  required
-                  variant="outlined"
-                />
-                
-                <TextField
-                  fullWidth
-                  label="Message"
-                  name="message"
-                  value={form.message}
-                  onChange={handleInputChange}
-                  required
-                  multiline
-                  rows={5}
-                  variant="outlined"
-                />
-                
-                <Button 
-                  type="submit"
-                  variant="contained"
-                  disabled={isSubmitting}
-                  fullWidth
-                  size="large"
-                  startIcon={isSubmitting ? <CircularProgress size={20} /> : <Send />}
-                >
-                  {isSubmitting ? 'Sending...' : 'Send Message'}
-                </Button>
-              </form>
+
+              <ContactForm />
             </motion.div>
           </div>
-          
-          <Snackbar 
-            open={isSuccess || isError} 
-            autoHideDuration={6000} 
-            onClose={handleCloseSnackbar}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-          >
-            <Alert 
-              onClose={handleCloseSnackbar} 
-              severity={isSuccess ? 'success' : 'error'}
-              variant="filled"
-              icon={isSuccess ? <CheckCircle /> : <AlertCircle />}
-            >
-              {isSuccess 
-                ? 'Your message has been sent successfully!' 
-                : <>
-                    Failed to send message: {errorMessage}. 
-                    <br />
-                    <span className="font-semibold">
-                      Please reach out via LinkedIn if email is unavailable!
-                    </span>
-                  </>
-              }
-            </Alert>
-          </Snackbar>
-      </ThemeProvider>
     </SectionShell>
   );
 };

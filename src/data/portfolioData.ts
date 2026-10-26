@@ -66,6 +66,8 @@ export interface Project {
   technologies: string[];
   image: string;
   demoLink?: string;
+  /** Visible label for demoLink. Defaults to "Demo". */
+  demoLabel?: string;
   sourceLink?: string;
   featured: boolean;
 }
@@ -363,7 +365,8 @@ export const OfferingsData = {
     tagline: "Your personal multi-agent intelligence layer.",
     description:
       "A self-hosted multi-agent AI platform (~24k LOC) that discovers, scrapes, summarises, and forecasts news across discovery engines, GitHub, and YouTube — with budget-aware model routing under $7.30/month LLM spend.",
-    marketingUrl: "https://sentry.harieshwar.dev",
+    // The public host returns 530, so every visitor control uses the repo.
+    marketingUrl: "https://github.com/HariEshwar-J-A/info-sentry",
     sourceUrl: "https://github.com/HariEshwar-J-A/info-sentry",
     accent: "#6366f1",
     badges: ["Multi-agent", "RAG", "Self-hosted"],
@@ -462,7 +465,6 @@ export const portfolioData: PortfolioData = {
         "Cloudflare Tunnel",
       ],
       image: "https://images.pexels.com/photos/7688336/pexels-photo-7688336.jpeg",
-      demoLink: "https://sentry.harieshwar.dev",
       sourceLink: "https://github.com/HariEshwar-J-A/info-sentry",
       featured: true,
     },
@@ -520,7 +522,8 @@ export const portfolioData: PortfolioData = {
         "Telegram Bot API",
       ],
       image: "https://images.pexels.com/photos/355948/pexels-photo-355948.jpeg",
-      sourceLink: "https://github.com/HariEshwar-J-A/HoraMind",
+      // Canonical GitHub path is lowercase. The API html_url is this URL (HTTP 200).
+      sourceLink: "https://github.com/HariEshwar-J-A/horamind",
       featured: true,
     },
     {
@@ -544,6 +547,30 @@ export const portfolioData: PortfolioData = {
       demoLink: "https://harieshwar.dev",
       sourceLink: "https://github.com/HariEshwar-J-A/portfolio",
       featured: true,
+    },
+    {
+      id: "harbour",
+      title: "Harbour",
+      description:
+        "Agent-fed data app for Canadian stores, prices in CAD. A separate assistant checks whitelisted stores once a day and writes price snapshots and deals into Supabase. Anyone can browse the watchlist, stores, deals, item history, and analytics. Only the owner can edit.",
+      technologies: [
+        "React",
+        "TypeScript",
+        "Supabase",
+        "Vite",
+        "Tailwind",
+        "Radix UI",
+        "Motion",
+        "Recharts",
+        "GitHub Pages",
+        "Vitest",
+        "Playwright",
+      ],
+      image: "/assets/images/harbour.jpg",
+      demoLink: "https://harieshwar-ai.github.io/deal-tracker/",
+      demoLabel: "Live demo",
+      sourceLink: "https://github.com/harieshwar-ai/deal-tracker",
+      featured: false,
     },
     {
       id: "expense-tracker",

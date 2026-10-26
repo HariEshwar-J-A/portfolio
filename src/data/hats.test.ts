@@ -138,6 +138,21 @@ describe('hat views', () => {
     ).toEqual({ lead: ['e', 'b', 'a'], rest: ['c', 'd'] });
   });
 
+  it('keeps Harbour behind the hat preview and off personal locations', () => {
+    const harbour = portfolioData.projects.find((project) => project.id === 'harbour');
+    expect(harbour?.title).toBe('Harbour');
+    expect(harbour?.featured).toBe(false);
+    expect(harbour?.demoLink).toBe('https://harieshwar-ai.github.io/deal-tracker/');
+    expect(harbour?.demoLabel).toBe('Live demo');
+    expect(harbour?.sourceLink).toBe('https://github.com/harieshwar-ai/deal-tracker');
+    expect(harbour?.description).toMatch(/agent-fed data app/i);
+    expect(harbour?.description).not.toMatch(/hamilton|ontario|@/i);
+    for (const id of ['full-stack', 'ai-engineer'] as const) {
+      const order = HAT_LIST.find((hat) => hat.id === id)!.projectOrder;
+      expect(order.indexOf('harbour')).toBeGreaterThanOrEqual(3);
+    }
+  });
+
   it('does not publish freelance client names or client sites', () => {
     const published = JSON.stringify({
       experience: portfolioData.experience,
