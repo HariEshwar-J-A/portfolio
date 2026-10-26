@@ -522,7 +522,8 @@ export const portfolioData: PortfolioData = {
         "Telegram Bot API",
       ],
       image: "https://images.pexels.com/photos/355948/pexels-photo-355948.jpeg",
-      sourceLink: "https://github.com/HariEshwar-J-A/HoraMind",
+      // Canonical GitHub path is lowercase. The API html_url is this URL (HTTP 200).
+      sourceLink: "https://github.com/HariEshwar-J-A/horamind",
       featured: true,
     },
     {
