@@ -1,5 +1,6 @@
 import { PROFILE_IMAGE_PATH, SITE_ORIGIN, type HatConfig } from '../data/hats';
 import { OPS_DESCRIPTION, OPS_PATH, OPS_TITLE } from './ops/copy';
+import { PRIVACY_DESCRIPTION, PRIVACY_PATH, PRIVACY_TITLE } from './privacyCopy';
 
 /** Home canonical and og:url. Hat and `/ops` URLs stay slash-free. */
 export const HOME_URL = `${SITE_ORIGIN}/`;
@@ -61,18 +62,23 @@ export const applyPageMeta = (hat: HatConfig | null) => {
   setCanonical(url);
 };
 
-/** `/ops` uses the same no-slash canonical as the hat pages. */
-export const applyOpsMeta = () => {
-  const url = `${SITE_ORIGIN}${OPS_PATH}`;
+const applyStandaloneMeta = (path: string, title: string, description: string) => {
+  const url = `${SITE_ORIGIN}${path}`;
   const image = `${SITE_ORIGIN}${PROFILE_IMAGE_PATH}`;
-  document.title = OPS_TITLE;
-  setMeta('name', 'description', OPS_DESCRIPTION);
-  setMeta('property', 'og:title', OPS_TITLE);
-  setMeta('property', 'og:description', OPS_DESCRIPTION);
+  document.title = title;
+  setMeta('name', 'description', description);
+  setMeta('property', 'og:title', title);
+  setMeta('property', 'og:description', description);
   setMeta('property', 'og:url', url);
   setMeta('property', 'og:image', image);
-  setMeta('name', 'twitter:title', OPS_TITLE);
-  setMeta('name', 'twitter:description', OPS_DESCRIPTION);
+  setMeta('name', 'twitter:title', title);
+  setMeta('name', 'twitter:description', description);
   setMeta('name', 'twitter:image', image);
   setCanonical(url);
 };
+
+/** `/ops` uses the same no-slash canonical as the hat pages. */
+export const applyOpsMeta = () => applyStandaloneMeta(OPS_PATH, OPS_TITLE, OPS_DESCRIPTION);
+
+/** `/privacy` uses the same no-slash canonical as the hat pages. */
+export const applyPrivacyMeta = () => applyStandaloneMeta(PRIVACY_PATH, PRIVACY_TITLE, PRIVACY_DESCRIPTION);

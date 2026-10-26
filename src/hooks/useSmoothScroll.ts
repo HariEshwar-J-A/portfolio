@@ -20,8 +20,14 @@ export const useSmoothScroll = () => {
 
     const lenis = new Lenis({ lerp: 0.1 });
     activeLenis = lenis;
-    // Always open the homepage at the hero — never inherit a restored offset.
-    lenis.scrollTo(0, { immediate: true, force: true });
+    // Open at the hero, unless the link named a section (for example /#contact).
+    const hashId = window.location.hash ? decodeURIComponent(window.location.hash.slice(1)) : '';
+    const target = hashId ? document.getElementById(hashId) : null;
+    if (target) {
+      lenis.scrollTo(target, { offset: -80, immediate: true, force: true });
+    } else {
+      lenis.scrollTo(0, { immediate: true, force: true });
+    }
 
     let frame = 0;
     const raf = (time: number) => {

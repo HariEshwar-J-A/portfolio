@@ -35,6 +35,10 @@ describe('ops degradation', () => {
     expect(body.health.sha).toBe('2439828');
     expect(body).not.toHaveProperty('traffic');
     expect(JSON.stringify(body)).not.toContain('CF_ANALYTICS');
+    expect(body.footnote).toBe(
+      'Data is sampled, and numbers update about every 15 minutes. Groups under 5 visits are hidden.',
+    );
+    expect(body.footnote).not.toMatch(/EU visitors/);
   });
 
   it('warms up when Cloudflare returns an error', async () => {

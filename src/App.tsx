@@ -10,6 +10,7 @@ import ThemeVariables from './components/ThemeVariables';
 import AiRouteLoader from './components/AiRouteLoader';
 import ScrollToTop from './components/ScrollToTop';
 import RouteErrorBoundary from './components/RouteErrorBoundary';
+import AnalyticsNotice from './components/AnalyticsNotice';
 import {
   playgroundImport,
   prefetchPlaygroundRoute,
@@ -19,6 +20,7 @@ import {
 const ThreeDPortfolioPage = lazy(threeDImport);
 const OsPlaygroundPage = lazy(playgroundImport);
 const OpsPage = lazy(() => import('./pages/OpsPage'));
+const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));
 
 /**
  * Suspense is per-route so a lazy suspend cannot tear down the router shell.
@@ -99,6 +101,14 @@ const AppRoutes: React.FC = () => {
               </LazyPage>
             }
           />
+          <Route
+            path="/privacy"
+            element={
+              <LazyPage pathname="/privacy">
+                <PrivacyPage />
+              </LazyPage>
+            }
+          />
         </Routes>
           </div>
         </AnimatePresence>
@@ -115,6 +125,7 @@ function App() {
           <ThemeVariables />
           <ScrollToTop />
           <AppRoutes />
+          <AnalyticsNotice />
         </LazyMotion>
       </MotionConfig>
     </Provider>
