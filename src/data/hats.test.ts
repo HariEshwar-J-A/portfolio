@@ -143,7 +143,7 @@ describe('hat views', () => {
     expect(harbour?.title).toBe('Harbour');
     expect(harbour?.featured).toBe(false);
     expect(harbour?.demoLink).toBe('https://harieshwar-ai.github.io/deal-tracker/');
-    expect(harbour?.demoLabel).toBe('Live demo');
+    expect(harbour?.demoLabel).toBe('Live');
     expect(harbour?.sourceLink).toBe('https://github.com/harieshwar-ai/deal-tracker');
     expect(harbour?.description).toMatch(/agent-fed data app/i);
     expect(harbour?.description).not.toMatch(/hamilton|ontario|@/i);
