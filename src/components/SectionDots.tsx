@@ -29,10 +29,10 @@ const SectionDots: React.FC = () => {
             onClick={() => dispatch(navigateTo(section))}
             aria-label={`Go to ${section}`}
             aria-current={isActive ? 'true' : undefined}
-            className="group relative flex h-5 w-5 items-center justify-center"
+            className="group relative flex h-5 w-5 items-center justify-center rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--os-primary)]"
           >
             <span
-              className="h-2 w-2 rounded-full transition-all duration-300"
+              className="h-2 w-2 rounded-full transition-all duration-300 motion-reduce:transition-none"
               style={{
                 backgroundColor: isActive
                   ? 'var(--os-primary)'
