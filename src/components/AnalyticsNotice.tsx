@@ -57,7 +57,7 @@ const AnalyticsNotice: React.FC = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: reduce ? 0 : 0.35, ease: 'easeOut' }}
       className={`fixed right-3 z-50 w-[min(14.5rem,calc(100vw-5rem))] rounded-2xl border p-3 text-sm shadow-xl backdrop-blur-xl ${
-        footerVisible ? 'bottom-24 sm:bottom-20' : 'bottom-16 sm:bottom-4'
+        footerVisible ? 'bottom-28 sm:bottom-24' : 'bottom-20 xl:bottom-4'
       } ${
         isDark
           ? 'border-white/10 bg-slate-950/75 text-slate-200 shadow-black/20'
