@@ -153,6 +153,7 @@ const HomePage: React.FC = () => {
         <AnimatePresence mode="wait" initial={false}>
           <m.main
             key={hatKey}
+            className="section-rail-clear"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
