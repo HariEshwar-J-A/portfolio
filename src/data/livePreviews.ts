@@ -109,7 +109,7 @@ export function contentSecurityPolicy(): string {
     "frame-ancestors 'self'",
     "script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval' https://static.cloudflareinsights.com",
     "style-src 'self' 'unsafe-inline'",
-    "img-src 'self' data: blob: https://images.pexels.com",
+    "img-src 'self' data: blob:",
     "font-src 'self' data:",
     "connect-src 'self' https://api.emailjs.com https://cloudflareinsights.com https://static.cloudflareinsights.com https://cdn.plot.ly",
     "worker-src 'self' blob:",
