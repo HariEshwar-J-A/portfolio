@@ -21,6 +21,7 @@ import {
 } from '@react-three/postprocessing';
 import { BlendFunction, KernelSize } from 'postprocessing';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
+import { applyThreeDMeta } from '../lib/pageMeta';
 import {
   ArrowLeft,
   ArrowRight,
@@ -510,7 +511,7 @@ const ThreeDPortfolioPage: React.FC = () => {
   };
 
   useEffect(() => {
-    document.title = 'Harieshwar J A | 3D Portfolio Experience';
+    applyThreeDMeta();
     document.body.className = 'bg-slate-950 text-white';
   }, []);
 

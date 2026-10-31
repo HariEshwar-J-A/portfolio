@@ -19,6 +19,7 @@ const ThemeVariables: React.FC = () => {
     // Light persona fills (aurora, grandmaster, circuit) fail white-on-primary.
     // Daylight's blue is dark enough for white.
     root.setProperty('--os-on-primary', palette.mode === 'dark' ? '#0f172a' : '#ffffff');
+    root.setProperty('--os-muted', palette.mode === 'dark' ? '#94a3b8' : '#475569');
   }, [palette]);
 
   return null;

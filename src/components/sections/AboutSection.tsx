@@ -178,6 +178,8 @@ const HatHero: React.FC<{ hat: HatConfig }> = ({ hat }) => {
               <img
                 src={photo}
                 alt={name}
+                width={2256}
+                height={3008}
                 className="h-auto max-h-64 w-full rounded-[1.6rem] object-cover md:max-h-[460px]"
               />
             </div>
@@ -346,6 +348,8 @@ const AboutSection: React.FC = () => {
               <img
                 src={photo}
                 alt={name}
+                width={2256}
+                height={3008}
                 className="h-auto max-h-64 w-full rounded-[1.6rem] object-cover md:max-h-[460px]"
               />
             </div>

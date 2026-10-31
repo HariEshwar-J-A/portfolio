@@ -1,9 +1,27 @@
 import { PROFILE_IMAGE_PATH, SITE_ORIGIN, type HatConfig } from '../data/hats';
 import { OPS_DESCRIPTION, OPS_PATH, OPS_TITLE } from './ops/copy';
 import { PRIVACY_DESCRIPTION, PRIVACY_PATH, PRIVACY_TITLE } from './privacyCopy';
+import {
+  PLAYGROUND_DESCRIPTION,
+  PLAYGROUND_PATH,
+  PLAYGROUND_TITLE,
+  THREE_D_DESCRIPTION,
+  THREE_D_PATH,
+  THREE_D_TITLE,
+} from './routeMeta';
+
+export {
+  PLAYGROUND_DESCRIPTION,
+  PLAYGROUND_PATH,
+  PLAYGROUND_TITLE,
+  THREE_D_DESCRIPTION,
+  THREE_D_PATH,
+  THREE_D_TITLE,
+};
 
 /** Home canonical and og:url. Hat and `/ops` URLs stay slash-free. */
 export const HOME_URL = `${SITE_ORIGIN}/`;
+export const PROFILE_IMAGE_URL = `${SITE_ORIGIN}${PROFILE_IMAGE_PATH}`;
 
 const DEFAULT_TITLE = 'Harieshwar J A | Senior Full-Stack Developer';
 const DEFAULT_DESCRIPTION =
@@ -40,16 +58,16 @@ export const applyPageMeta = (hat: HatConfig | null) => {
     setMeta('property', 'og:title', DEFAULT_OG_TITLE);
     setMeta('property', 'og:description', DEFAULT_OG_DESCRIPTION);
     setMeta('property', 'og:url', HOME_URL);
-    setMeta('property', 'og:image', PROFILE_IMAGE_PATH);
+    setMeta('property', 'og:image', PROFILE_IMAGE_URL);
     setMeta('name', 'twitter:title', DEFAULT_OG_TITLE);
     setMeta('name', 'twitter:description', DEFAULT_OG_DESCRIPTION);
-    setMeta('name', 'twitter:image', PROFILE_IMAGE_PATH);
+    setMeta('name', 'twitter:image', PROFILE_IMAGE_URL);
     setCanonical(HOME_URL);
     return;
   }
 
   const url = `${SITE_ORIGIN}${hat.path}`;
-  const image = `${SITE_ORIGIN}${PROFILE_IMAGE_PATH}`;
+  const image = PROFILE_IMAGE_URL;
   document.title = hat.seo.title;
   setMeta('name', 'description', hat.seo.description);
   setMeta('property', 'og:title', hat.seo.title);
@@ -64,7 +82,7 @@ export const applyPageMeta = (hat: HatConfig | null) => {
 
 const applyStandaloneMeta = (path: string, title: string, description: string) => {
   const url = `${SITE_ORIGIN}${path}`;
-  const image = `${SITE_ORIGIN}${PROFILE_IMAGE_PATH}`;
+  const image = PROFILE_IMAGE_URL;
   document.title = title;
   setMeta('name', 'description', description);
   setMeta('property', 'og:title', title);
@@ -82,3 +100,8 @@ export const applyOpsMeta = () => applyStandaloneMeta(OPS_PATH, OPS_TITLE, OPS_D
 
 /** `/privacy` uses the same no-slash canonical as the hat pages. */
 export const applyPrivacyMeta = () => applyStandaloneMeta(PRIVACY_PATH, PRIVACY_TITLE, PRIVACY_DESCRIPTION);
+
+export const applyThreeDMeta = () => applyStandaloneMeta(THREE_D_PATH, THREE_D_TITLE, THREE_D_DESCRIPTION);
+
+export const applyPlaygroundMeta = () =>
+  applyStandaloneMeta(PLAYGROUND_PATH, PLAYGROUND_TITLE, PLAYGROUND_DESCRIPTION);

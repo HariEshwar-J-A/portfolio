@@ -85,6 +85,25 @@ html.lenis body {
   --os-secondary: #818cf8;
   --os-accent: #f472b6;
   --os-on-primary: #0f172a;
+  /* Daylight muted text. #475569 is 7.5:1 on white. Dark themes do not use this. */
+  --os-muted: #94a3b8;
+}
+
+/* slate-400 and slate-500 miss 4.5:1 on white and slate-50. Daylight body is bg-slate-50.
+   Dark themes keep their own slate utilities. Dark panels opt out. */
+body.bg-slate-50 .text-slate-400,
+body.bg-slate-50 .text-slate-500,
+body.bg-slate-50 .placeholder\:text-slate-400::placeholder,
+body.bg-slate-50 .placeholder\:text-slate-500::placeholder {
+  color: var(--os-muted);
+}
+
+body.bg-slate-50 .os-dark-surface .text-slate-400 {
+  color: #94a3b8;
+}
+
+body.bg-slate-50 .os-dark-surface .text-slate-500 {
+  color: #64748b;
 }
 
 /* Hover color that follows the persona */

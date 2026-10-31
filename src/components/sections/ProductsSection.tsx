@@ -62,7 +62,7 @@ const ProductsSection: React.FC = () => {
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: hat ? 0.35 : 0.7 }}
           whileHover={hat ? { y: -3 } : undefined}
-          className="relative mx-auto max-w-5xl overflow-hidden rounded-3xl border border-indigo-500/30 bg-[#0a0a14] p-8 text-white shadow-2xl shadow-indigo-950/40 md:p-12"
+          className="os-dark-surface relative mx-auto max-w-5xl overflow-hidden rounded-3xl border border-indigo-500/30 bg-[#0a0a14] p-8 text-white shadow-2xl shadow-indigo-950/40 md:p-12"
         >
           <div
             aria-hidden
@@ -136,27 +136,15 @@ const ProductsSection: React.FC = () => {
                 </div>
               ))}
               <div className="ml-auto flex flex-wrap gap-3">
-                {hat ? (
-                  <a
-                    href={flagship.sourceUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-xl bg-indigo-500 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-indigo-500/30 transition hover:-translate-y-0.5 hover:bg-indigo-400"
-                  >
-                    <Github size={16} />
-                    View on GitHub
-                  </a>
-                ) : (
-                  <a
-                    href={flagship.sourceUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-xl bg-indigo-500 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-indigo-500/30 transition hover:-translate-y-0.5 hover:bg-indigo-400"
-                  >
-                    <Github size={16} />
-                    Source
-                  </a>
-                )}
+                <a
+                  href={flagship.sourceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-indigo-500/30 transition hover:-translate-y-0.5 hover:bg-indigo-500"
+                >
+                  <Github size={16} />
+                  Source
+                </a>
               </div>
             </div>
           </div>
