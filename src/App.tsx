@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useEffect } from 'react';
+import React, { Suspense, lazy } from 'react';
 import { Provider } from 'react-redux';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { AnimatePresence, LazyMotion, MotionConfig, domAnimation, m } from 'framer-motion';
@@ -12,11 +12,7 @@ import ScrollToTop from './components/ScrollToTop';
 import RouteErrorBoundary from './components/RouteErrorBoundary';
 import AnalyticsNotice from './components/AnalyticsNotice';
 import { LivePreviewHost } from './components/LivePreview';
-import {
-  playgroundImport,
-  prefetchPlaygroundRoute,
-  threeDImport,
-} from './lib/experienceRoutes';
+import { playgroundImport, threeDImport } from './lib/experienceRoutes';
 
 const ThreeDPortfolioPage = lazy(threeDImport);
 const OsPlaygroundPage = lazy(playgroundImport);
@@ -42,19 +38,6 @@ const LazyPage: React.FC<{ pathname: string; children: React.ReactNode }> = ({
 const AppRoutes: React.FC = () => {
   const location = useLocation();
   const shellKey = portfolioShellKey(location.pathname);
-  // Prefetch the small Games chunk on idle; 3D waits for hover (see Header).
-  useEffect(() => {
-    const ric = window.requestIdleCallback as
-      | ((cb: () => void, opts?: { timeout: number }) => number)
-      | undefined;
-    const cancelRic = window.cancelIdleCallback as ((id: number) => void) | undefined;
-    const idle = ric?.(prefetchPlaygroundRoute, { timeout: 1500 });
-    const fallback = idle == null ? window.setTimeout(prefetchPlaygroundRoute, 600) : null;
-    return () => {
-      if (idle != null) cancelRic?.(idle);
-      if (fallback != null) window.clearTimeout(fallback);
-    };
-  }, []);
 
   return (
     <AnimatePresence mode="wait">

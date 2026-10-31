@@ -1,14 +1,58 @@
-import React from 'react';
+import React, { Suspense, lazy, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../hooks/useTheme';
 import { portfolioData } from '../../data/portfolioData';
 import { Mail, Phone, MapPin, Github as GitHub, Linkedin, Globe } from 'lucide-react';
 import SectionShell, { glassPanel } from '../SectionShell';
-import ContactForm, { LinkedInTip } from './ContactForm';
+const ContactForm = lazy(() => import('./ContactForm'));
+const LinkedInTip = lazy(() => import('./ContactForm').then((mod) => ({ default: mod.LinkedInTip })));
+
+const LinkedInButton: React.FC<{
+  ready: boolean;
+  onClick: () => void;
+  backgroundColor: string;
+}> = ({ ready, onClick, backgroundColor }) => {
+  const button = (
+    <button
+      type="button"
+      onClick={onClick}
+      className="cursor-pointer rounded-full p-3 transition-all duration-300 hover:scale-110"
+      style={{ backgroundColor, color: 'white' }}
+      aria-label="LinkedIn"
+    >
+      <Linkedin size={24} />
+    </button>
+  );
+  if (!ready) return button;
+  return (
+    <Suspense fallback={button}>
+      <LinkedInTip>{button}</LinkedInTip>
+    </Suspense>
+  );
+};
 
 const ContactSection: React.FC = () => {
   const { theme } = useTheme();
   const { contact, personal } = portfolioData;
+  const [muiReady, setMuiReady] = useState(false);
+
+  useEffect(() => {
+    const node = document.getElementById('contact');
+    if (!node || typeof IntersectionObserver === 'undefined') {
+      setMuiReady(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+        setMuiReady(true);
+        observer.disconnect();
+      },
+      { rootMargin: '240px' },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
 
   const handleEmailClick = () => {
     window.location.href = `mailto:${contact.email}`;
@@ -113,19 +157,11 @@ const ContactSection: React.FC = () => {
                   )}
                   
                   {personal.socialLinks.linkedin && (
-                    <LinkedInTip>
-                      <button
-                        onClick={() => handleSocialClick(personal.socialLinks.linkedin)}
-                        className="p-3 rounded-full transition-all duration-300 hover:scale-110 cursor-pointer"
-                        style={{
-                          backgroundColor: theme.colors.primary,
-                          color: 'white',
-                        }}
-                        aria-label="LinkedIn"
-                      >
-                        <Linkedin size={24} />
-                      </button>
-                    </LinkedInTip>
+                    <LinkedInButton
+                      ready={muiReady}
+                      onClick={() => handleSocialClick(personal.socialLinks.linkedin)}
+                      backgroundColor={theme.colors.primary}
+                    />
                   )}
                   
                   {personal.socialLinks.website && (
@@ -160,7 +196,13 @@ const ContactSection: React.FC = () => {
             >
               <h3 className="text-2xl font-bold mb-6">Send Me a Message</h3>
 
-              <ContactForm />
+              {muiReady ? (
+                <Suspense fallback={<div className="min-h-72" aria-hidden />}>
+                  <ContactForm />
+                </Suspense>
+              ) : (
+                <div className="min-h-72" aria-hidden />
+              )}
             </motion.div>
           </div>
     </SectionShell>

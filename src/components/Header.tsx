@@ -242,7 +242,7 @@ const Header: React.FC = () => {
         {
           id: 'infosentry',
           label: 'Source',
-          description: 'InfoSentry on GitHub',
+          description: 'InfoSentry source',
           icon: <Newspaper size={16} />,
           onSelect: () => {
             setOpenMenu(null);

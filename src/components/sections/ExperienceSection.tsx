@@ -150,7 +150,7 @@ const RoleBullets: React.FC<{ bullets: string[]; leads?: LeadBullet[] }> = ({ bu
 
   return (
     <div className="mt-4">
-      <h5 className="font-semibold mb-2">Key Achievements:</h5>
+      <h4 className="font-semibold mb-2">Key Achievements:</h4>
       <ul className="list-disc pl-5 space-y-2">
         {lead.map((achievement) => (
           <li key={achievement}>{achievement}</li>

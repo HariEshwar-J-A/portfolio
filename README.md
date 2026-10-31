@@ -301,8 +301,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - [D3.js](https://d3js.org/)
 - [Plotly.js](https://plotly.com/javascript/)
 - [Lucide Icons](https://lucide.dev/)
-- [Pexels](https://www.pexels.com/) for stock images
-
 ---
 
 Created with ❤️ by Harieshwar J A

@@ -17,6 +17,7 @@ import {
   X,
 } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
+import { applyPlaygroundMeta } from '../lib/pageMeta';
 import { useArcade } from '../hooks/useArcade';
 import AmbientBackground from '../components/AmbientBackground';
 import ThemeSwitcher from '../components/ThemeSwitcher';
@@ -69,7 +70,7 @@ const OsPlaygroundPage: React.FC = () => {
   const focusChessMatch = activeModule === 'chess' && chessMatchActive;
 
   useEffect(() => {
-    document.title = 'HARI.OS Playground | Explore Harieshwar';
+    applyPlaygroundMeta();
     document.body.className = isDark ? 'bg-slate-950 text-white' : 'bg-slate-50 text-slate-900';
   }, [isDark]);
 

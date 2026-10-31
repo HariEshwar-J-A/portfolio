@@ -5,6 +5,14 @@ import { HAT_LIST, PROFILE_IMAGE_PATH, SITE_ORIGIN } from '../src/data/hats.ts';
 import { hatHtmlName, hatRedirectRules } from '../src/lib/hatUrls.ts';
 import { OPS_DESCRIPTION, OPS_PATH, OPS_TITLE } from '../src/lib/ops/copy.ts';
 import { PRIVACY_DESCRIPTION, PRIVACY_PATH, PRIVACY_TITLE } from '../src/lib/privacyCopy.ts';
+import {
+  PLAYGROUND_DESCRIPTION,
+  PLAYGROUND_PATH,
+  PLAYGROUND_TITLE,
+  THREE_D_DESCRIPTION,
+  THREE_D_PATH,
+  THREE_D_TITLE,
+} from '../src/lib/routeMeta.ts';
 import { sitemapXml } from '../src/lib/sitemap.ts';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -53,10 +61,12 @@ const writePage = (path, title, description) => {
 };
 
 for (const hat of HAT_LIST) writePage(hat.path, hat.seo.title, hat.seo.description);
+writePage(THREE_D_PATH, THREE_D_TITLE, THREE_D_DESCRIPTION);
+writePage(PLAYGROUND_PATH, PLAYGROUND_TITLE, PLAYGROUND_DESCRIPTION);
 writePage(OPS_PATH, OPS_TITLE, OPS_DESCRIPTION);
 writePage(PRIVACY_PATH, PRIVACY_TITLE, PRIVACY_DESCRIPTION);
 
-const sitemapPaths = ['/', ...HAT_LIST.map((hat) => hat.path), OPS_PATH, PRIVACY_PATH];
+const sitemapPaths = ['/', ...HAT_LIST.map((hat) => hat.path), THREE_D_PATH, PLAYGROUND_PATH, OPS_PATH, PRIVACY_PATH];
 writeFileSync(resolve(root, 'dist/sitemap.xml'), sitemapXml(SITE_ORIGIN, sitemapPaths));
 console.log(`wrote sitemap.xml (${sitemapPaths.length} urls)`);
 
@@ -70,7 +80,7 @@ const block = [
   '# Hat pages are dist/<id>.html, not a directory index.',
   '# A directory index makes Netlify Pretty URLs 301 the no-slash path to the slash form.',
   '# These rules keep the no-slash URL that canonical, og:url, and in-app links already use.',
-  hatRedirectRules([...HAT_LIST.map((hat) => hat.path), OPS_PATH, PRIVACY_PATH]),
+  hatRedirectRules(sitemapPaths.filter((path) => path !== '/')),
   '',
 ].join('\n');
 if (!redirects.includes(block)) {
