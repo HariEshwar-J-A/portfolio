@@ -13,6 +13,7 @@ describe('sitemap', () => {
     expect(xml).toContain('<loc>https://harieshwar.dev/ai</loc>');
     expect(xml).toContain('<loc>https://harieshwar.dev/ops</loc>');
     expect(xml).toContain('<loc>https://harieshwar.dev/privacy</loc>');
+    expect(xml).toContain('<loc>https://harieshwar.dev/astrology</loc>');
     expect(xml).not.toContain('https://harieshwar.dev/privacy/');
     expect(xml).not.toContain('https://harieshwar.dev/os<');
   });

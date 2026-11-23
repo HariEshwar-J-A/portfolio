@@ -7,3 +7,6 @@ export const PLAYGROUND_PATH = '/ai';
 export const PLAYGROUND_TITLE = 'HARI.OS Playground | Explore Harieshwar';
 export const PLAYGROUND_DESCRIPTION =
   'Quizzes, word puzzles, a memory match, a chess arena, and a fragment archive.';
+
+/** Proxied Vite app. Listed in the sitemap, not prerendered, and not rewritten to HTML. */
+export const ASTROLOGY_PATH = '/astrology';

@@ -13,4 +13,9 @@
 # /<hat>/ 301s to /<hat>, and /<hat> rewrites to /<hat>.html.
 /api/health   /.netlify/functions/health   200
 /api/contact  /.netlify/functions/contact  200
+
+# Proxy the node-jhora app. Keep the /astrology prefix. Must stay above the SPA catch-all.
+/astrology    https://node-jhora-astrology-ai-922e.vercel.app/astrology/          200!
+/astrology/*  https://node-jhora-astrology-ai-922e.vercel.app/astrology/:splat   200!
+
 /* /index.html  200

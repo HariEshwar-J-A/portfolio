@@ -488,9 +488,9 @@ export const portfolioData: PortfolioData = {
     },
     {
       id: "node-jhora",
-      title: "node-jhora",
+      title: "node-jhora astrology",
       description:
-        "Seven-package TypeScript monorepo (~12,500 LOC) delivering a professional astronomical and Vedic astrology computation SDK. Pure-TypeScript JPL DE440s SPK ephemeris reader (no Swiss Ephemeris copyleft), 16 divisional charts, Shadbala, Ashtakavarga, 4 Dasha systems, 263 Jest tests, and a Fastify + Zod REST API.",
+        "Proprietary Vedic astrology engine and web app. Licensing enquiries: https://harieshwar.dev/#contact",
       technologies: [
         "TypeScript",
         "NPM Workspaces",
@@ -502,7 +502,8 @@ export const portfolioData: PortfolioData = {
         "JPL DE440s",
       ],
       image: "/assets/images/node-jhora.webp",
-      sourceLink: "https://github.com/HariEshwar-J-A/node-jhora",
+      demoLink: "https://harieshwar.dev/astrology",
+      demoLabel: "Live",
       featured: true,
     },
     {

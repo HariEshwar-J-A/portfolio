@@ -277,6 +277,16 @@ function requestLiveDialog(projectId: string) {
 }
 
 /** Opens the in-page preview when it is allowed, otherwise a new tab. Never an iframe when the check failed. */
+export function isSameSiteHref(href: string): boolean {
+  if (href.startsWith('/') && !href.startsWith('//')) return true;
+  try {
+    const host = new URL(href).hostname.toLowerCase();
+    return host === 'harieshwar.dev' || host.endsWith('.harieshwar.dev');
+  } catch {
+    return false;
+  }
+}
+
 export function openLive(projectId: string): 'opened' | 'blocked' | 'external' {
   const target = previewForProject(projectId);
   if (!target) return 'external';
@@ -303,11 +313,12 @@ export const LiveButton: React.FC<{
   const target = previewForProject(projectId);
   const classes = className ?? `inline-flex items-center text-sm ${emphasize ? 'font-semibold' : ''}`;
   if (!target || target.url !== href) {
+    const sameSite = isSameSiteHref(href);
     return (
       <a
         href={href}
-        target="_blank"
-        rel="noopener noreferrer"
+        target={sameSite ? undefined : '_blank'}
+        rel={sameSite ? undefined : 'noopener noreferrer'}
         aria-label={liveAriaLabel(title)}
         className={`${classes} ${focusRing}`}
         style={{ color: primary }}

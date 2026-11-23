@@ -31,7 +31,7 @@ import { buildSearchIndex, matchSnippet } from '../data/personalization';
 import { OPEN_COLLAB_EVENT } from './CollabWizard';
 import { OPEN_INTENT_EVENT } from './IntentWizard';
 import { HAT_LIST } from '../data/hats';
-import { liveActionHint, liveAriaLabel, openLive, useLiveRevision } from './LivePreview';
+import { isSameSiteHref, liveActionHint, liveAriaLabel, openLive, useLiveRevision } from './LivePreview';
 
 const SEARCH_INDEX = buildSearchIndex();
 
@@ -148,7 +148,13 @@ const CommandPalette: React.FC = () => {
               openExternal(project.sourceLink ?? '#');
               return;
             }
-            if (openLive(project.id) === 'external') openExternal(project.demoLink);
+            if (openLive(project.id) === 'external') {
+              if (isSameSiteHref(project.demoLink)) {
+                window.location.assign(project.demoLink);
+                return;
+              }
+              openExternal(project.demoLink);
+            }
           },
         };
       });

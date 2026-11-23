@@ -20,8 +20,13 @@ import {
 describe('live preview allowlist', () => {
   it('matches every project demo link and skips repositories', () => {
     const demos = portfolioData.projects.filter((project) => project.demoLink);
-    expect(demos.map((project) => project.id).sort()).toEqual(['habit-tracker', 'harbour', 'portfolio']);
-    for (const project of demos) {
+    const jhora = demos.find((project) => project.id === 'node-jhora');
+    expect(jhora?.demoLink).toBe('https://harieshwar.dev/astrology');
+    expect(jhora?.sourceLink).toBeUndefined();
+    expect(previewForProject('node-jhora')).toBeUndefined();
+    const framed = demos.filter((project) => project.id !== 'node-jhora');
+    expect(framed.map((project) => project.id).sort()).toEqual(['habit-tracker', 'harbour', 'portfolio']);
+    for (const project of framed) {
       const entry = previewForProject(project.id);
       expect(entry?.url).toBe(project.demoLink);
       expect(entry?.url.startsWith('https://')).toBe(true);
@@ -42,6 +47,19 @@ describe('live preview allowlist', () => {
     expect(contentSecurityPolicy()).toContain('https://static.cloudflareinsights.com');
     expect(contentSecurityPolicy()).toContain('https://api.emailjs.com');
     expect(contentSecurityPolicy()).toContain('https://cdn.plot.ly');
+  });
+
+  it('replaces the astrology app noindex tag and leaves the canonical alone', () => {
+    const headers = readFileSync('public/_headers', 'utf8');
+    const toml = readFileSync('netlify.toml', 'utf8');
+    const edge = readFileSync('netlify/edge-functions/astrology-robots.js', 'utf8');
+    expect(headers).toContain('/astrology\n  X-Robots-Tag: all');
+    expect(headers).toContain('/astrology/*\n  X-Robots-Tag: all');
+    expect(toml).toContain('for = "/astrology"');
+    expect(toml).toContain('for = "/astrology/*"');
+    expect(toml).toContain('X-Robots-Tag = "all"');
+    expect(edge).toContain('headers.set("x-robots-tag", "all")');
+    expect(edge).not.toContain('canonical');
   });
 
   it('publishes the same policy and SAMEORIGIN in Netlify headers', () => {

@@ -99,6 +99,8 @@ export function frameSrcOrigins(): string[] {
  * style-src unsafe-inline: MUI/Emotion injects style tags.
  * connect-src cdn.plot.ly: scattergeo fetches topojson from there.
  * Cloudflare beacon and EmailJS stay allowed. frame-src is the allowlist only.
+ * Portfolio documents only. The proxied /astrology app sends its own CSP
+ * and X-Frame-Options, so this policy is not attached to that path.
  */
 export function contentSecurityPolicy(): string {
   const frames = frameSrcOrigins().join(' ');

@@ -26,6 +26,149 @@
 [[headers]]
   for = "/*"
   [headers.values]
-    X-Frame-Options = "SAMEORIGIN"
     X-Content-Type-Options = "nosniff"
+
+# Replaces the proxied app's x-robots-tag: noindex. Canonical URL stays the app's own.
+[[headers]]
+  for = "/astrology"
+  [headers.values]
+    X-Robots-Tag = "all"
+
+[[headers]]
+  for = "/astrology/*"
+  [headers.values]
+    X-Robots-Tag = "all"
+
+[[headers]]
+  for = "/"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+    X-Frame-Options = "SAMEORIGIN"
+    Content-Security-Policy = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://api.emailjs.com https://cloudflareinsights.com https://static.cloudflareinsights.com https://cdn.plot.ly; worker-src 'self' blob:; frame-src https://harieshwar-ai.github.io https://trackmyhabit.netlify.app; media-src 'self' blob:; form-action 'self'"
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+    X-Frame-Options = "SAMEORIGIN"
+    Content-Security-Policy = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://api.emailjs.com https://cloudflareinsights.com https://static.cloudflareinsights.com https://cdn.plot.ly; worker-src 'self' blob:; frame-src https://harieshwar-ai.github.io https://trackmyhabit.netlify.app; media-src 'self' blob:; form-action 'self'"
+
+[[headers]]
+  for = "/full-stack"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    Content-Security-Policy = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://api.emailjs.com https://cloudflareinsights.com https://static.cloudflareinsights.com https://cdn.plot.ly; worker-src 'self' blob:; frame-src https://harieshwar-ai.github.io https://trackmyhabit.netlify.app; media-src 'self' blob:; form-action 'self'"
+
+[[headers]]
+  for = "/full-stack.html"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    Content-Security-Policy = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://api.emailjs.com https://cloudflareinsights.com https://static.cloudflareinsights.com https://cdn.plot.ly; worker-src 'self' blob:; frame-src https://harieshwar-ai.github.io https://trackmyhabit.netlify.app; media-src 'self' blob:; form-action 'self'"
+
+[[headers]]
+  for = "/ai-engineer"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    Content-Security-Policy = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://api.emailjs.com https://cloudflareinsights.com https://static.cloudflareinsights.com https://cdn.plot.ly; worker-src 'self' blob:; frame-src https://harieshwar-ai.github.io https://trackmyhabit.netlify.app; media-src 'self' blob:; form-action 'self'"
+
+[[headers]]
+  for = "/ai-engineer.html"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    Content-Security-Policy = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://api.emailjs.com https://cloudflareinsights.com https://static.cloudflareinsights.com https://cdn.plot.ly; worker-src 'self' blob:; frame-src https://harieshwar-ai.github.io https://trackmyhabit.netlify.app; media-src 'self' blob:; form-action 'self'"
+
+[[headers]]
+  for = "/sde"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    Content-Security-Policy = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://api.emailjs.com https://cloudflareinsights.com https://static.cloudflareinsights.com https://cdn.plot.ly; worker-src 'self' blob:; frame-src https://harieshwar-ai.github.io https://trackmyhabit.netlify.app; media-src 'self' blob:; form-action 'self'"
+
+[[headers]]
+  for = "/sde.html"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    Content-Security-Policy = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://api.emailjs.com https://cloudflareinsights.com https://static.cloudflareinsights.com https://cdn.plot.ly; worker-src 'self' blob:; frame-src https://harieshwar-ai.github.io https://trackmyhabit.netlify.app; media-src 'self' blob:; form-action 'self'"
+
+[[headers]]
+  for = "/chess"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    Content-Security-Policy = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://api.emailjs.com https://cloudflareinsights.com https://static.cloudflareinsights.com https://cdn.plot.ly; worker-src 'self' blob:; frame-src https://harieshwar-ai.github.io https://trackmyhabit.netlify.app; media-src 'self' blob:; form-action 'self'"
+
+[[headers]]
+  for = "/chess.html"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    Content-Security-Policy = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://api.emailjs.com https://cloudflareinsights.com https://static.cloudflareinsights.com https://cdn.plot.ly; worker-src 'self' blob:; frame-src https://harieshwar-ai.github.io https://trackmyhabit.netlify.app; media-src 'self' blob:; form-action 'self'"
+
+[[headers]]
+  for = "/fde"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    Content-Security-Policy = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://api.emailjs.com https://cloudflareinsights.com https://static.cloudflareinsights.com https://cdn.plot.ly; worker-src 'self' blob:; frame-src https://harieshwar-ai.github.io https://trackmyhabit.netlify.app; media-src 'self' blob:; form-action 'self'"
+
+[[headers]]
+  for = "/fde.html"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    Content-Security-Policy = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://api.emailjs.com https://cloudflareinsights.com https://static.cloudflareinsights.com https://cdn.plot.ly; worker-src 'self' blob:; frame-src https://harieshwar-ai.github.io https://trackmyhabit.netlify.app; media-src 'self' blob:; form-action 'self'"
+
+[[headers]]
+  for = "/pm"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    Content-Security-Policy = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://api.emailjs.com https://cloudflareinsights.com https://static.cloudflareinsights.com https://cdn.plot.ly; worker-src 'self' blob:; frame-src https://harieshwar-ai.github.io https://trackmyhabit.netlify.app; media-src 'self' blob:; form-action 'self'"
+
+[[headers]]
+  for = "/pm.html"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    Content-Security-Policy = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://api.emailjs.com https://cloudflareinsights.com https://static.cloudflareinsights.com https://cdn.plot.ly; worker-src 'self' blob:; frame-src https://harieshwar-ai.github.io https://trackmyhabit.netlify.app; media-src 'self' blob:; form-action 'self'"
+
+[[headers]]
+  for = "/3d"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    Content-Security-Policy = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://api.emailjs.com https://cloudflareinsights.com https://static.cloudflareinsights.com https://cdn.plot.ly; worker-src 'self' blob:; frame-src https://harieshwar-ai.github.io https://trackmyhabit.netlify.app; media-src 'self' blob:; form-action 'self'"
+
+[[headers]]
+  for = "/3d.html"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    Content-Security-Policy = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://api.emailjs.com https://cloudflareinsights.com https://static.cloudflareinsights.com https://cdn.plot.ly; worker-src 'self' blob:; frame-src https://harieshwar-ai.github.io https://trackmyhabit.netlify.app; media-src 'self' blob:; form-action 'self'"
+
+[[headers]]
+  for = "/ai"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    Content-Security-Policy = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://api.emailjs.com https://cloudflareinsights.com https://static.cloudflareinsights.com https://cdn.plot.ly; worker-src 'self' blob:; frame-src https://harieshwar-ai.github.io https://trackmyhabit.netlify.app; media-src 'self' blob:; form-action 'self'"
+
+[[headers]]
+  for = "/ai.html"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    Content-Security-Policy = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://api.emailjs.com https://cloudflareinsights.com https://static.cloudflareinsights.com https://cdn.plot.ly; worker-src 'self' blob:; frame-src https://harieshwar-ai.github.io https://trackmyhabit.netlify.app; media-src 'self' blob:; form-action 'self'"
+
+[[headers]]
+  for = "/ops"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    Content-Security-Policy = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://api.emailjs.com https://cloudflareinsights.com https://static.cloudflareinsights.com https://cdn.plot.ly; worker-src 'self' blob:; frame-src https://harieshwar-ai.github.io https://trackmyhabit.netlify.app; media-src 'self' blob:; form-action 'self'"
+
+[[headers]]
+  for = "/ops.html"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    Content-Security-Policy = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://api.emailjs.com https://cloudflareinsights.com https://static.cloudflareinsights.com https://cdn.plot.ly; worker-src 'self' blob:; frame-src https://harieshwar-ai.github.io https://trackmyhabit.netlify.app; media-src 'self' blob:; form-action 'self'"
+
+[[headers]]
+  for = "/privacy"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    Content-Security-Policy = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://api.emailjs.com https://cloudflareinsights.com https://static.cloudflareinsights.com https://cdn.plot.ly; worker-src 'self' blob:; frame-src https://harieshwar-ai.github.io https://trackmyhabit.netlify.app; media-src 'self' blob:; form-action 'self'"
+
+[[headers]]
+  for = "/privacy.html"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
     Content-Security-Policy = "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://api.emailjs.com https://cloudflareinsights.com https://static.cloudflareinsights.com https://cdn.plot.ly; worker-src 'self' blob:; frame-src https://harieshwar-ai.github.io https://trackmyhabit.netlify.app; media-src 'self' blob:; form-action 'self'"
