@@ -1,11 +1,16 @@
 /** Security helpers for Chess Arena — sanitization & clamps. */
 
-const CONTROL_CHARS = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g;
+const isStrippedControl = (code: number) =>
+  code <= 8 || code === 11 || code === 12 || (code >= 14 && code <= 31) || code === 127;
 
 /** Strip control chars and cap length for any user/LLM-facing string. */
 export const sanitizeText = (input: unknown, maxLen = 280): string => {
   if (typeof input !== 'string') return '';
-  return input.replace(CONTROL_CHARS, '').replace(/\s+/g, ' ').trim().slice(0, maxLen);
+  let cleaned = '';
+  for (const char of input) {
+    if (!isStrippedControl(char.charCodeAt(0))) cleaned += char;
+  }
+  return cleaned.replace(/\s+/g, ' ').trim().slice(0, maxLen);
 };
 
 /** PGN tag values cannot contain unescaped quotes or newlines. */

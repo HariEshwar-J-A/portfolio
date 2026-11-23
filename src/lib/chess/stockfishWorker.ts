@@ -124,7 +124,7 @@ export class StockfishEngine {
       this.post(`position fen ${fen}`);
       let scoreCp = 0;
       let gotDepth = 0;
-      const done = new Promise<EngineEvalResult>((resolve, reject) => {
+      const done = new Promise<EngineEvalResult>((resolve) => {
         const timer = window.setTimeout(() => {
           off();
           resolve({ scoreCp, depth: gotDepth });

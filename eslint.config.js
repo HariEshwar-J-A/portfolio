@@ -19,6 +19,10 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
+      // v7 flags existing effects, ref writes, and uniform updates. Keep them visible, not failing.
+      'react-hooks/set-state-in-effect': 'warn',
+      'react-hooks/immutability': 'warn',
+      'react-hooks/refs': 'warn',
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },

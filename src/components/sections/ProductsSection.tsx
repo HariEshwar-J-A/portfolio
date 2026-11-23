@@ -6,12 +6,12 @@ import { useHat } from '../../context/hat-context';
 import HatDisclosure from '../HatDisclosure';
 import {
   GitBranch,
-  Github,
   MessageSquare,
   Rss,
   Sparkles,
   Video,
 } from 'lucide-react';
+import { Github } from '../brandIcons';
 import { OfferingsData } from '../../data/portfolioData';
 import SectionShell from '../SectionShell';
 
