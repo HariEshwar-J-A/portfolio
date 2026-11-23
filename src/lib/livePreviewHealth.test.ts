@@ -20,8 +20,13 @@ import {
 describe('live preview allowlist', () => {
   it('matches every project demo link and skips repositories', () => {
     const demos = portfolioData.projects.filter((project) => project.demoLink);
-    expect(demos.map((project) => project.id).sort()).toEqual(['habit-tracker', 'harbour', 'portfolio']);
-    for (const project of demos) {
+    const jhora = demos.find((project) => project.id === 'node-jhora');
+    expect(jhora?.demoLink).toBe('https://harieshwar.dev/astrology');
+    expect(jhora?.sourceLink).toBeUndefined();
+    expect(previewForProject('node-jhora')).toBeUndefined();
+    const framed = demos.filter((project) => project.id !== 'node-jhora');
+    expect(framed.map((project) => project.id).sort()).toEqual(['habit-tracker', 'harbour', 'portfolio']);
+    for (const project of framed) {
       const entry = previewForProject(project.id);
       expect(entry?.url).toBe(project.demoLink);
       expect(entry?.url.startsWith('https://')).toBe(true);

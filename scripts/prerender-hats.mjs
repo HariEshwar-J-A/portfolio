@@ -6,6 +6,7 @@ import { hatHtmlName, hatRedirectRules } from '../src/lib/hatUrls.ts';
 import { OPS_DESCRIPTION, OPS_PATH, OPS_TITLE } from '../src/lib/ops/copy.ts';
 import { PRIVACY_DESCRIPTION, PRIVACY_PATH, PRIVACY_TITLE } from '../src/lib/privacyCopy.ts';
 import {
+  ASTROLOGY_PATH,
   PLAYGROUND_DESCRIPTION,
   PLAYGROUND_PATH,
   PLAYGROUND_TITLE,
@@ -66,7 +67,15 @@ writePage(PLAYGROUND_PATH, PLAYGROUND_TITLE, PLAYGROUND_DESCRIPTION);
 writePage(OPS_PATH, OPS_TITLE, OPS_DESCRIPTION);
 writePage(PRIVACY_PATH, PRIVACY_TITLE, PRIVACY_DESCRIPTION);
 
-const sitemapPaths = ['/', ...HAT_LIST.map((hat) => hat.path), THREE_D_PATH, PLAYGROUND_PATH, OPS_PATH, PRIVACY_PATH];
+const sitemapPaths = [
+  '/',
+  ...HAT_LIST.map((hat) => hat.path),
+  THREE_D_PATH,
+  PLAYGROUND_PATH,
+  OPS_PATH,
+  PRIVACY_PATH,
+  ASTROLOGY_PATH,
+];
 writeFileSync(resolve(root, 'dist/sitemap.xml'), sitemapXml(SITE_ORIGIN, sitemapPaths));
 console.log(`wrote sitemap.xml (${sitemapPaths.length} urls)`);
 
@@ -80,7 +89,7 @@ const block = [
   '# Hat pages are dist/<id>.html, not a directory index.',
   '# A directory index makes Netlify Pretty URLs 301 the no-slash path to the slash form.',
   '# These rules keep the no-slash URL that canonical, og:url, and in-app links already use.',
-  hatRedirectRules(sitemapPaths.filter((path) => path !== '/')),
+  hatRedirectRules(sitemapPaths.filter((path) => path !== '/' && path !== ASTROLOGY_PATH)),
   '',
 ].join('\n');
 if (!redirects.includes(block)) {

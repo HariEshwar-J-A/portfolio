@@ -138,6 +138,18 @@ describe('hat views', () => {
     ).toEqual({ lead: ['e', 'b', 'a'], rest: ['c', 'd'] });
   });
 
+  it('publishes node-jhora as a same-site live app without a source link or metrics', () => {
+    const project = portfolioData.projects.find((item) => item.id === 'node-jhora');
+    expect(project?.title).toBe('node-jhora astrology');
+    expect(project?.demoLink).toBe('https://harieshwar.dev/astrology');
+    expect(project?.demoLabel).toBe('Live');
+    expect(project?.sourceLink).toBeUndefined();
+    expect(project?.description).toMatch(/Proprietary/);
+    expect(project?.description).toContain('https://harieshwar.dev/#contact');
+    expect(project?.description).not.toMatch(/\d/);
+    expect(JSON.stringify(portfolioData)).not.toContain('github.com/HariEshwar-J-A/node-jhora');
+  });
+
   it('keeps Harbour behind the hat preview and off personal locations', () => {
     const harbour = portfolioData.projects.find((project) => project.id === 'harbour');
     expect(harbour?.title).toBe('Harbour');
