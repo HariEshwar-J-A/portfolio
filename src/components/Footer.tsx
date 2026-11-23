@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../hooks/useTheme';
-import { Github as GitHub, Linkedin, Twitter, Globe } from 'lucide-react';
+import { Globe } from 'lucide-react';
+import { Github as GitHub, Linkedin, Twitter } from './brandIcons';
 import { portfolioData } from '../data/portfolioData';
 import { OPS_PATH } from '../lib/siteNav';
 import { PRIVACY_PATH } from '../lib/privacyCopy';

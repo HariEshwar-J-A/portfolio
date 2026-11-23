@@ -30,13 +30,12 @@ import {
   ChevronDown,
   Copy,
   ExternalLink,
-  Github,
   Layers,
-  Linkedin,
   Mail,
   MousePointer2,
   Sparkles as SparklesIcon,
 } from 'lucide-react';
+import { Github, Linkedin } from '../components/brandIcons';
 import * as THREE from 'three';
 import { MarketingData, portfolioData } from '../data/portfolioData';
 import { LiveButton } from '../components/LivePreview';

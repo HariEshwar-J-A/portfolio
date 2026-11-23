@@ -7,10 +7,8 @@ import {
   Box,
   Briefcase,
   FolderGit2,
-  Github,
   GraduationCap,
   Layers,
-  Linkedin,
   Mail,
   Moon,
   Newspaper,
@@ -19,6 +17,7 @@ import {
   User,
   Wrench,
 } from 'lucide-react';
+import { Github, Linkedin } from './brandIcons';
 import { navigateTo } from '../store/slices/navigationSlice';
 import type { SectionId } from '../store/slices/navigationSlice';
 import { setPalette } from '../store/slices/themeSlice';

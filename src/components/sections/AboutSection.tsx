@@ -11,12 +11,8 @@ import { OPEN_COLLAB_EVENT } from '../CollabWizard';
 import { useHat } from '../../context/hat-context';
 import type { HatConfig } from '../../data/hats';
 import HatDisclosure from '../HatDisclosure';
-import {
-  ArrowRight,
-  Github as GitHub,
-  Globe,
-  Linkedin,
-} from 'lucide-react';
+import { ArrowRight, Globe } from 'lucide-react';
+import { Github as GitHub, Linkedin } from '../brandIcons';
 
 const HatHero: React.FC<{ hat: HatConfig }> = ({ hat }) => {
   const dispatch = useDispatch();
