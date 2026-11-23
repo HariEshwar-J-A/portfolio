@@ -4,8 +4,15 @@
 
 # nosniff is the same value the astrology app sends, so it can stay site-wide.
 # CSP and X-Frame-Options are portfolio documents only. /astrology keeps the upstream headers.
+# The app sends x-robots-tag: noindex. These rules replace that with a single indexable value.
 /*
   X-Content-Type-Options: nosniff
+
+/astrology
+  X-Robots-Tag: all
+
+/astrology/*
+  X-Robots-Tag: all
 
 /
   Cache-Control: public, max-age=0, must-revalidate

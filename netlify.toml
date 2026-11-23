@@ -28,6 +28,17 @@
   [headers.values]
     X-Content-Type-Options = "nosniff"
 
+# Replaces the proxied app's x-robots-tag: noindex. Canonical URL stays the app's own.
+[[headers]]
+  for = "/astrology"
+  [headers.values]
+    X-Robots-Tag = "all"
+
+[[headers]]
+  for = "/astrology/*"
+  [headers.values]
+    X-Robots-Tag = "all"
+
 [[headers]]
   for = "/"
   [headers.values]

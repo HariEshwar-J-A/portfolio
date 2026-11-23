@@ -49,6 +49,19 @@ describe('live preview allowlist', () => {
     expect(contentSecurityPolicy()).toContain('https://cdn.plot.ly');
   });
 
+  it('replaces the astrology app noindex tag and leaves the canonical alone', () => {
+    const headers = readFileSync('public/_headers', 'utf8');
+    const toml = readFileSync('netlify.toml', 'utf8');
+    const edge = readFileSync('netlify/edge-functions/astrology-robots.js', 'utf8');
+    expect(headers).toContain('/astrology\n  X-Robots-Tag: all');
+    expect(headers).toContain('/astrology/*\n  X-Robots-Tag: all');
+    expect(toml).toContain('for = "/astrology"');
+    expect(toml).toContain('for = "/astrology/*"');
+    expect(toml).toContain('X-Robots-Tag = "all"');
+    expect(edge).toContain('headers.set("x-robots-tag", "all")');
+    expect(edge).not.toContain('canonical');
+  });
+
   it('publishes the same policy and SAMEORIGIN in Netlify headers', () => {
     const policy = contentSecurityPolicy();
     const toml = readFileSync('netlify.toml', 'utf8');
